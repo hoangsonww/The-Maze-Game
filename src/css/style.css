@@ -21,14 +21,14 @@ body, html {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px; /* Space between buttons */
+    gap: 10px;
     margin-top: 10px;
 }
 
 .horizontal-controls {
     display: flex;
     justify-content: center;
-    gap: 10px; /* Space between horizontal buttons */
+    gap: 10px;
 }
 
 header {
@@ -53,7 +53,6 @@ canvas {
     }
 }
 
-
 canvas {
     background-color: #fff;
     display: block;
@@ -70,10 +69,13 @@ canvas {
 #regenerateMaze {
     font-family: "Poppins", sans-serif;
     font-size: 16px;
+    background-color: white;
+    border-radius: 8px;
 }
 
 #regenerateMaze:hover {
     cursor: pointer;
+    background-color: #ececec;
 }
 
 header {
@@ -95,4 +97,19 @@ header h2 {
     color: #fff;
 }
 
+#moveUp {
+    margin-left: -5px;
+}
 
+#moveUp, #moveDown, #moveLeft, #moveRight {
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    background-color: white;
+    border-radius: 8px;
+}
+
+#moveUp:hover, #moveDown:hover, #moveLeft:hover, #moveRight:hover {
+    cursor: pointer;
+    background-color: #ececec;
+    border-radius: 8px;
+}
