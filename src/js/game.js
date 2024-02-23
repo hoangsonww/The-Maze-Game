@@ -121,40 +121,8 @@ window.addEventListener('keydown', (e) => {
     checkWin();
 });
 
-let touchStartX = 0;
-let touchStartY = 0;
-let touchEndX = 0;
-let touchEndY = 0;
+document.getElementById('moveUp').addEventListener('click', () => movePlayer(0, -1));
+document.getElementById('moveDown').addEventListener('click', () => movePlayer(0, 1));
+document.getElementById('moveLeft').addEventListener('click', () => movePlayer(-1, 0));
+document.getElementById('moveRight').addEventListener('click', () => movePlayer(1, 0));
 
-canvas.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
-    touchStartY = e.changedTouches[0].screenY;
-}, false);
-
-canvas.addEventListener('touchend', (e) => {
-    touchEndX = e.changedTouches[0].screenX;
-    touchEndY = e.changedTouches[0].screenY;
-    handleTouchMove();
-}, false);
-
-function handleTouchMove() {
-    const dx = touchEndX - touchStartX;
-    const dy = touchEndY - touchStartY;
-    if (Math.abs(dx) > Math.abs(dy)) {
-        if (dx > 0) {
-            movePlayer(1, 0);
-        }
-        else {
-            movePlayer(-1, 0);
-        }
-    }
-    else {
-        if (dy > 0) {
-            movePlayer(0, 1);
-        }
-        else {
-            movePlayer(0, -1);
-        }
-    }
-    checkWin();
-}

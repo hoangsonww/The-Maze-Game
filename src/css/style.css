@@ -17,6 +17,20 @@ body, html {
     text-align: center;
 }
 
+.controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px; /* Space between buttons */
+    margin-top: 10px;
+}
+
+.horizontal-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Space between horizontal buttons */
+}
+
 header {
     margin: 20px 0;
 }
