@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="src/css/style.css">
     <link rel="icon" type="image/x-icon" href="utils/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="manifest" href="manifest.json">
 </head>
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-CZ3YJF00CG"></script>
@@ -20,7 +21,7 @@
 <body>
     <header>
         <h1>The Maze Game</h1>
-        <p>You can use the arrow keys or the buttons below to help the player navigate through the maze.</p>
+        <p>A simple yet fun game to play when you're bored.</p>
     </header>
 
     <div class="game-container">
@@ -34,6 +35,7 @@
             </div>
         </div>
         <button id="regenerateMaze" style="margin-top: 25px">Regenerate Maze</button>
+        <button id="aboutGame" onclick="window.location.href='src/html/about.html'" style="margin-top: 25px">About Game</button>
     </div>
 
     <script src="src/js/game.js"></script>
