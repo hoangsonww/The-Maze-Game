@@ -1,6 +1,9 @@
 document.getElementById('regenerateMaze').addEventListener('click', () => {
+    localStorage.getItem('highScore') ? localStorage.setItem('highScore', parseInt(localStorage.getItem('highScore')) - 1) : localStorage.setItem('highScore', 0);
     window.location.reload();
 });
+
+document.getElementById('lifetimeScore').innerText = localStorage.getItem('highScore') ? `Lifetime Score: ${localStorage.getItem('highScore')}` : 'Lifetime Score: 0';
 
 const canvas = document.getElementById('mazeCanvas');
 const ctx = canvas.getContext('2d');
@@ -96,7 +99,8 @@ function movePlayer(dx, dy) {
 
 function checkWin() {
     if (player.x === exit.x && player.y === exit.y) {
-        alert("Congratulations, you've escaped the maze! Now we dare you to do it again!");
+        localStorage.getItem('highScore') ? localStorage.setItem('highScore', parseInt(localStorage.getItem('highScore')) + 1) : localStorage.setItem('highScore', 1);
+        alert("Congratulations, you've escaped the maze! Now we dare you to do it again! FYI, your lifetime score is currently: " + localStorage.getItem('highScore'));
         window.location.reload();
     }
 }
@@ -125,4 +129,3 @@ document.getElementById('moveUp').addEventListener('click', () => movePlayer(0, 
 document.getElementById('moveDown').addEventListener('click', () => movePlayer(0, 1));
 document.getElementById('moveLeft').addEventListener('click', () => movePlayer(-1, 0));
 document.getElementById('moveRight').addEventListener('click', () => movePlayer(1, 0));
-

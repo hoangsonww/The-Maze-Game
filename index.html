@@ -22,6 +22,7 @@
     <header>
         <h1>The Maze Game</h1>
         <p>A simple yet fun game to play when you're bored.</p>
+        <p id="lifetimeScore">Lifetime Score: 0</p>
     </header>
 
     <div class="game-container">
@@ -34,7 +35,7 @@
                 <button id="moveRight" style="font: inherit; cursor: pointer">Right</button>
             </div>
         </div>
-        <button id="regenerateMaze" style="margin-top: 25px">Regenerate Maze</button>
+        <button id="regenerateMaze" style="margin-top: 25px" title="Too hard? Regenerate the maze! Note that you will lose 1 point for that." onclick="regenerateMaze()">Regenerate Maze</button>
         <button id="aboutGame" onclick="window.location.href='src/html/about.html'" style="margin-top: 25px">About Game</button>
     </div>
 
