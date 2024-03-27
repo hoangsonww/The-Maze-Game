@@ -1,9 +1,9 @@
 document.getElementById('regenerateMaze').addEventListener('click', () => {
-    localStorage.getItem('highScore') ? localStorage.setItem('highScore', parseInt(localStorage.getItem('highScore')) - 1) : localStorage.setItem('highScore', 0);
+    localStorage.getItem('lifetimeScore') ? localStorage.setItem('lifetimeScore', parseInt(localStorage.getItem('lifetimeScore')) - 1) : localStorage.setItem('lifetimeScore', 0);
     window.location.reload();
 });
 
-document.getElementById('lifetimeScore').innerText = localStorage.getItem('highScore') ? `Lifetime Score: ${localStorage.getItem('highScore')}` : 'Lifetime Score: 0';
+document.getElementById('lifetimeScore').innerText = localStorage.getItem('lifetimeScore') ? `Lifetime Score: ${localStorage.getItem('lifetimeScore')}` : 'Lifetime Score: 0';
 
 const canvas = document.getElementById('mazeCanvas');
 const ctx = canvas.getContext('2d');
@@ -99,8 +99,8 @@ function movePlayer(dx, dy) {
 
 function checkWin() {
     if (player.x === exit.x && player.y === exit.y) {
-        localStorage.getItem('highScore') ? localStorage.setItem('highScore', parseInt(localStorage.getItem('highScore')) + 1) : localStorage.setItem('highScore', 1);
-        alert("Congratulations, you've escaped the maze! Now we dare you to do it again! FYI, your lifetime score is currently: " + localStorage.getItem('highScore'));
+        localStorage.getItem('lifetimeScore') ? localStorage.setItem('lifetimeScore', parseInt(localStorage.getItem('lifetimeScore')) + 1) : localStorage.setItem('lifetimeScore', 1);
+        alert("Congratulations, you've escaped the maze! Now we dare you to do it again! FYI, your lifetime score is currently: " + localStorage.getItem('lifetimeScore'));
         window.location.reload();
     }
 }
@@ -117,10 +117,22 @@ draw();
 
 window.addEventListener('keydown', (e) => {
     switch(e.key) {
-        case 'ArrowUp': movePlayer(0, -1); break;
-        case 'ArrowDown': movePlayer(0, 1); break;
-        case 'ArrowLeft': movePlayer(-1, 0); break;
-        case 'ArrowRight': movePlayer(1, 0); break;
+        case 'ArrowUp':
+            movePlayer(0, -1);
+            e.preventDefault();
+            break;
+        case 'ArrowDown':
+            movePlayer(0, 1);
+            e.preventDefault();
+            break;
+        case 'ArrowLeft':
+            movePlayer(-1, 0);
+            e.preventDefault();
+            break;
+        case 'ArrowRight':
+            movePlayer(1, 0);
+            e.preventDefault();
+            break;
     }
     checkWin();
 });
