@@ -1,6 +1,8 @@
 # Maze Game - DFS & Prim Algorithms
 
-A simple yet engaging maze game built with HTML, CSS, and JavaScript. Navigate through a dynamically generated maze to find the exit. Each time you play, a new maze is created, ensuring a unique experience. The game is designed to be lightweight and easy to play, making it suitable for all age groups. 
+A simple yet engaging maze game built by [Son Nguyen](https://github.com/hoangsonww) in 2024. Navigate through a dynamically generated maze to find the exit. Each time you play, a new maze is created, ensuring a unique experience. The game is designed to be lightweight and easy to play, making it suitable for all age groups. 
+
+However, creating it is a pain in the brain, so I hope you'll enjoy it! Star the repository if you like it and feel free to contribute to the project 🌟.
 
 ## Features
 
@@ -9,11 +11,17 @@ A simple yet engaging maze game built with HTML, CSS, and JavaScript. Navigate t
 - **Start and Exit Indicators**: The game visually indicates the starting point and the exit. Reach the green block to win.
 - **Regenerate Maze**: A button allows players to generate a new maze at any time without reloading the page.
 
+## Gameplay
+
+<p align="center">
+  <img src="../utils/MazeUI.png" alt="Maze Game - Gameplay" width="100%" height="400">
+</p>
+
 ## Technologies Used
 
 - **HTML**: Structure of the game canvas and control elements.
 - **CSS**: Styling of the game canvas and alignment of game elements.
-- **JavaScript**: Game logic, including maze generation, player movement, collision detection, and UI interaction.
+- **JavaScript**: Game logic, including maze generation, player movement, collision detection, and UI interaction. Implemented using DFS and Prim algorithms.
 - **Python**: There is also a Python implementation of the maze generation algorithm using the Depth-First Search (DFS) algorithm.
 
 ## Maze Generation Algorithm
@@ -37,7 +45,7 @@ pip install pygame
 
 ## Usage
 
-- Navigate through the maze using the **arrow keys**.
+- Navigate through the maze using the **arrow keys** or the **on-screen controls buttons**.
 - Click the **Regenerate Maze** button below the canvas to start a new game with a new maze layout.
 
 ## Contribution
@@ -46,8 +54,8 @@ Feel free to fork the repository and submit pull requests to contribute to the g
 
 ## License
 
-This project is open-source and available under the MIT License.
+This project is open-source and available under the MIT License. See the [LICENSE](../LICENSE) file for more information.
 
 ## Contact
 
-You can reach out to me at [info@movie-verse.com](mailto:info@movie-verse.com).
+You can reach out to me at [info@movie-verse.com](mailto:info@movie-verse.com) if you have any queries or feedback regarding the project.
