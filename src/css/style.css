@@ -78,6 +78,54 @@ canvas {
     background-color: #ececec;
 }
 
+#regenerateMaze1 {
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    background-color: white;
+    border-radius: 8px;
+}
+
+#regenerateMaze1:hover {
+    cursor: pointer;
+    background-color: #ececec;
+}
+
+#regenerateMaze2 {
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    background-color: white;
+    border-radius: 8px;
+}
+
+#regenerateMaze2:hover {
+    cursor: pointer;
+    background-color: #ececec;
+}
+
+#regenerateMaze3 {
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    background-color: white;
+    border-radius: 8px;
+}
+
+#regenerateMaze3:hover {
+    cursor: pointer;
+    background-color: #ececec;
+}
+
+#regenerateMaze4 {
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    background-color: white;
+    border-radius: 8px;
+}
+
+#regenerateMaze4:hover {
+    cursor: pointer;
+    background-color: #ececec;
+}
+
 #aboutGame {
     font-family: "Poppins", sans-serif;
     font-size: 16px;
