@@ -1,12 +1,12 @@
-# Maze Game - DFS & Prim Algorithms
+# The Maze Game
 
-A simple yet engaging maze game built by [Son Nguyen](https://github.com/hoangsonww) in 2024. Navigate through a dynamically generated maze to find the exit. Each time you play, a new maze is created, ensuring a unique experience. The game is designed to be lightweight and easy to play, making it suitable for all age groups. 
+A simple yet engaging maze game built by [Son Nguyen](https://github.com/hoangsonww) in 2024 with DFS and Prim algorithms. Navigate through a dynamically generated maze to find the exit. Each time you play, a new maze is created, ensuring a unique experience. The game is designed to be lightweight and easy to play, making it suitable for all age groups. 
 
 However, creating it is a pain in the brain, so I hope you'll enjoy it! Star the repository if you like it and feel free to contribute to the project 🌟.
 
 ## Features
 
-- **Randomized Maze Generation**: Each game loads a new maze, thanks to the Depth-First Search (DFS) and Prim algorithms used for maze generation.
+- **Randomized Maze Generation**: Each game loads a new maze, thanks to the **Depth-First Search (DFS)** and **Prim algorithms** used for maze generation.
 - **Player Navigation**: Use the arrow keys to move up, down, left, or right within the maze.
 - **Start and Exit Indicators**: The game visually indicates the starting point and the exit. Reach the green block to win.
 - **Regenerate Maze**: A button allows players to generate a new maze at any time without reloading the page.
@@ -59,3 +59,7 @@ This project is open-source and available under the MIT License. See the [LICENS
 ## Contact
 
 You can reach out to me at [info@movie-verse.com](mailto:info@movie-verse.com) if you have any queries or feedback regarding the project.
+
+---
+
+Created with ❤️ in 2024 by [Son Nguyen](https://github.com/hoangsonww). All rights reserved.
