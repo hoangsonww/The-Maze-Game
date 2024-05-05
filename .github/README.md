@@ -14,7 +14,7 @@ However, creating it is a pain in the brain, so I hope you'll enjoy it! Star the
 ## Gameplay
 
 <p align="center">
-  <img src="../utils/MazeUI.png" alt="Maze Game - Gameplay" width="100%" height="400">
+  <img src="../utils/MazeUI.png" alt="Maze Game - Gameplay" width="100%">
 </p>
 
 ## Technologies Used
