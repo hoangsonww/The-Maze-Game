@@ -47,9 +47,7 @@ function carvePassagesFrom(x, y) {
 
     directions.sort(() => Math.random() - 0.5);
 
-    for (let i = 0; i < directions.length; i++) {
-        const dx = directions[i][0];
-        const dy = directions[i][1];
+    for (const [dx, dy] of directions) {
         const nx = x + dx * 2;
         const ny = y + dy * 2;
 
