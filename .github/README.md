@@ -13,7 +13,7 @@ Feel free to give it a try at [The Maze Game](https://hoangsonww.github.io/The-M
 - **Start and Exit Indicators**: The game visually indicates the starting point and the exit. Reach the green block to win.
 - **Regenerate Maze**: A button allows players to generate a new maze at any time without reloading the page.
 - **Responsive Design**: The game canvas is responsive and adapts to different screen sizes, making it playable on both desktop and mobile devices.
-- 
+- **On-Screen Controls**: For mobile users, on-screen buttons are provided to navigate the player within the maze.
 
 ## Game UI
 
