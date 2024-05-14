@@ -4,7 +4,7 @@ A simple yet engaging maze game built by [Son Nguyen](https://github.com/hoangso
 
 However, creating it is a pain in the brain, so I hope you'll enjoy it! Star the repository if you like it and feel free to contribute to the project 🌟.
 
-Feel free to give it a try at [The Maze Game](https://hoangsonww.github.io/The-Maze-Game/).
+Feel free to give it a try at [The Maze Game](https://hoangsonww.github.io/The-Maze-Game/)!
 
 ## Features
 
@@ -12,6 +12,8 @@ Feel free to give it a try at [The Maze Game](https://hoangsonww.github.io/The-M
 - **Player Navigation**: Use the arrow keys to move up, down, left, or right within the maze.
 - **Start and Exit Indicators**: The game visually indicates the starting point and the exit. Reach the green block to win.
 - **Regenerate Maze**: A button allows players to generate a new maze at any time without reloading the page.
+- **Responsive Design**: The game canvas is responsive and adapts to different screen sizes, making it playable on both desktop and mobile devices.
+- 
 
 ## Game UI
 
