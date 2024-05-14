@@ -4,6 +4,8 @@ A simple yet engaging maze game built by [Son Nguyen](https://github.com/hoangso
 
 However, creating it is a pain in the brain, so I hope you'll enjoy it! Star the repository if you like it and feel free to contribute to the project 🌟.
 
+Feel free to give it a try at [The Maze Game](https://hoangsonww.github.io/The-Maze-Game/).
+
 ## Features
 
 - **Randomized Maze Generation**: Each game loads a new maze, thanks to the **Depth-First Search (DFS)** and **Prim algorithms** used for maze generation.
@@ -11,10 +13,10 @@ However, creating it is a pain in the brain, so I hope you'll enjoy it! Star the
 - **Start and Exit Indicators**: The game visually indicates the starting point and the exit. Reach the green block to win.
 - **Regenerate Maze**: A button allows players to generate a new maze at any time without reloading the page.
 
-## Gameplay
+## Game UI
 
 <p align="center">
-  <img src="../utils/MazeUI.png" alt="Maze Game - Gameplay" width="100%">
+  <img src="../utils/MazeUI.png" alt="Maze Game - Gameplay" width="100%" style="border-radius: 8px">
 </p>
 
 ## Technologies Used
