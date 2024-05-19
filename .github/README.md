@@ -66,4 +66,4 @@ You can reach out to me at [info@movie-verse.com](mailto:info@movie-verse.com) i
 
 ---
 
-Created with ❤️ in 2024 by [Son Nguyen](https://github.com/hoangsonww). All rights reserved.
+Created with ❤️ in 2024 by [Son Nguyen](https://github.com/hoangsonww). Thank you for visiting and playing the game! 🚀
