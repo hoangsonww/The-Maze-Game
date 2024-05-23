@@ -1,6 +1,6 @@
 # The Maze Game
 
-A simple yet engaging maze game built by [Son Nguyen](https://github.com/hoangsonww) in 2024 with DFS and Prim algorithms. Navigate through a dynamically generated maze to find the exit. Each time you play, a new maze is created, ensuring a unique experience. The game is designed to be lightweight and easy to play, making it suitable for all age groups. 
+🚀 A simple yet engaging maze game built by [Son Nguyen](https://github.com/hoangsonww) in 2024 with DFS and Prim algorithms. Navigate through a dynamically generated maze to find the exit. Each time you play, a new maze is created, ensuring a unique experience. The game is designed to be lightweight and easy to play, making it suitable for all age groups. 
 
 However, creating it is a pain in the brain, so I hope you'll enjoy it! Star the repository if you like it and feel free to contribute to the project 🌟.
 
