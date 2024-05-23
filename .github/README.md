@@ -6,6 +6,12 @@ However, creating it is a pain in the brain, so I hope you'll enjoy it! Star the
 
 Feel free to give it a try at [The Maze Game](https://hoangsonww.github.io/The-Maze-Game/)!
 
+## Game UI
+
+<p align="center">
+  <img src="../utils/MazeUI.png" alt="Maze Game - Gameplay" width="100%" style="border-radius: 8px">
+</p>
+
 ## Features
 
 - **Randomized Maze Generation**: Each game loads a new maze, thanks to the **Depth-First Search (DFS)** and **Prim algorithms** used for maze generation.
@@ -14,12 +20,7 @@ Feel free to give it a try at [The Maze Game](https://hoangsonww.github.io/The-M
 - **Regenerate Maze**: A button allows players to generate a new maze at any time without reloading the page.
 - **Responsive Design**: The game canvas is responsive and adapts to different screen sizes, making it playable on both desktop and mobile devices.
 - **On-Screen Controls**: For mobile users, on-screen buttons are provided to navigate the player within the maze.
-
-## Game UI
-
-<p align="center">
-  <img src="../utils/MazeUI.png" alt="Maze Game - Gameplay" width="100%" style="border-radius: 8px">
-</p>
+- **Lifetime Score**: The game keeps track of the number of times you reach the exit. Try to complete the maze in the fewest moves possible, too!
 
 ## Technologies Used
 
@@ -51,7 +52,6 @@ pip install pygame
 
 - Navigate through the maze using the **arrow keys** or the **on-screen controls buttons**.
 - Click the **Regenerate Maze** button below the canvas to start a new game with a new maze layout.
-- **Lifetime Score**: The game keeps track of the number of times you reach the exit. Try to complete the maze in the fewest moves possible, too!
 
 ## Contribution
 
