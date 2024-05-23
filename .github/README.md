@@ -51,6 +51,7 @@ pip install pygame
 
 - Navigate through the maze using the **arrow keys** or the **on-screen controls buttons**.
 - Click the **Regenerate Maze** button below the canvas to start a new game with a new maze layout.
+- **Lifetime Score**: The game keeps track of the number of times you reach the exit. Try to complete the maze in the fewest moves possible, too!
 
 ## Contribution
 
