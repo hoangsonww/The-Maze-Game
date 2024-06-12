@@ -31,14 +31,20 @@ class Player:
 
 
 def draw_maze(maze, player):
+    maze_width = len(maze[0]) * CELL_SIZE
+    maze_height = len(maze) * CELL_SIZE
+
+    x_offset = (SCREEN_WIDTH - maze_width) // 2
+    y_offset = (SCREEN_HEIGHT - maze_height) // 2
+
     for y in range(len(maze)):
         for x in range(len(maze[y])):
             cell = maze[y][x]
             if cell == 'W':
-                pygame.draw.rect(screen, WALL_COLOR, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+                pygame.draw.rect(screen, WALL_COLOR, (x_offset + x * CELL_SIZE, y_offset + y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
             else:
-                pygame.draw.rect(screen, PATH_COLOR, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
-    pygame.draw.rect(screen, PLAYER_COLOR, player.rect)
+                pygame.draw.rect(screen, PATH_COLOR, (x_offset + x * CELL_SIZE, y_offset + y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+    pygame.draw.rect(screen, PLAYER_COLOR, (x_offset + player.rect.x, y_offset + player.rect.y, CELL_SIZE, CELL_SIZE))
 
 
 def is_path(maze, x, y):
