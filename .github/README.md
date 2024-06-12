@@ -28,6 +28,7 @@ Feel free to give it a try at [The Maze Game](https://hoangsonww.github.io/The-M
 - **CSS**: Styling of the game canvas and alignment of game elements.
 - **JavaScript**: Game logic, including maze generation, player movement, collision detection, and UI interaction. Implemented using DFS and Prim algorithms.
 - **Python**: There is also a Python implementation of the maze generation algorithm using the Depth-First Search (DFS) algorithm.
+- **Pygame**: A Python library used for creating the maze generation visualization.
 
 ## Maze Generation Algorithm
 
