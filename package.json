@@ -10,8 +10,8 @@
     "build": "npm run start",
     "test": "http-server -o",
     "serve": "http-server -o",
-    "dev:python": "cd src/python && python main.py",
-    "backend": "cd src/python && python main.py"
+    "dev:python": "cd src/python && pip install -r requirements.txt && python main.py",
+    "backend": "cd src/python && pip install -r requirements.txt && python main.py"
   },
   "keywords": [
     "movie",

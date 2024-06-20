@@ -38,15 +38,21 @@ The maze is generated using a randomized version of the Depth-First Search (DFS)
 
 1. Clone the repository to your local machine.
 2. Open the `index.html` file in a modern web browser.
-3. Alternatively, you can run the Python implementation of the maze generation algorithm by executing the `maze.py` file.
+3. Alternatively, you can run the Python implementation of the maze generation algorithm by executing the `main.py` file.
 
 ```bash
-python maze-gen.py
+python main.py
 ```
 
 Before running the Python script, ensure that you have Python and Pygame installed on your machine.
 ```bash
 pip install pygame
+```
+
+or 
+    
+```bash
+pip install -r requirements.txt
 ```
 
 ## Usage
