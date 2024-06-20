@@ -34,12 +34,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hoangsonww/The-MovieVerse-Database.git"
+    "url": "git+https://github.com/hoangsonww/The-Maze-Game.git"
   },
   "bugs": {
-    "url": "https://github.com/hoangsonww/The-MovieVerse-Database/issues"
+    "url": "https://github.com/hoangsonww/The-Maze-Game/issues"
   },
-  "homepage": "https://movie-verse.com",
+  "homepage": "https://hoangsonww.github.io/The-Maze-Game/",
   "devDependencies": {
     "@babel/core": "^7.23.6",
     "@babel/preset-env": "^7.23.6",
