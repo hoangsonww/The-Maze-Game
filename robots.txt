@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://movie-verse.com/sitemap.xml
+Sitemap: https://hoangsonww.github.io/The-Maze-Game/sitemap.xml
