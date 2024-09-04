@@ -1,66 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>The Maze Game</title>
+        <link rel="stylesheet" href="src/css/style.css">
+        <link rel="icon" type="image/x-icon" href="utils/favicon.ico">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="manifest" href="manifest.json">
+        <meta name="description" content="A simple yet fun game to play when you're bored.">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta property="og:title" content="The Maze Game - A Fun Game to Play When You're Bored" />
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:type" content="website" />
+        <meta http-equiv="content-language" content="en" />
+        <meta property="og:description" content="A simple yet fun game to play when you're bored." />
+        <meta property="og:url" content="https://hoangsonww.github.io/The-Maze-Game/" />
+        <meta property="og:site_name" content="The Maze Game" />
+        <meta name="keywords" content="movies, film guide, directors, actors, movie genres, cinema, film reviews, tv shows, movie verse, movieverse, film" />
+        <meta name="author" content="Son Nguyen">
+        <link rel="canonical" href="https://hoangsonww.github.io/The-Maze-Game/" />
+        <meta name="robots" content="index, follow">
+        <meta name="rating" content="General">
+        <meta name="revisit-after" content="3 days">
+        <meta name="distribution" content="global">
+        <meta name="language" content="en">
+        <meta name="theme-color" content="#000000">
+        <meta name="referrer" content="no-referrer-when-downgrade">
+    </head>
 
-<head>
-    <meta charset="UTF-8">
-    <title>The Maze Game</title>
-    <link rel="stylesheet" href="src/css/style.css">
-    <link rel="icon" type="image/x-icon" href="utils/favicon.ico">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="manifest" href="manifest.json">
-    <meta name="description" content="A simple yet fun game to play when you're bored.">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta property="og:title" content="The Maze Game - A Fun Game to Play When You're Bored" />
-    <meta property="og:locale" content="en_US" />
-    <meta property="og:type" content="website" />
-    <meta http-equiv="content-language" content="en" />
-    <meta property="og:description" content="A simple yet fun game to play when you're bored." />
-    <meta property="og:url" content="https://hoangsonww.github.io/The-Maze-Game/" />
-    <meta property="og:site_name" content="The Maze Game" />
-    <meta name="keywords" content="movies, film guide, directors, actors, movie genres, cinema, film reviews, tv shows, movie verse, movieverse, film" />
-    <meta name="author" content="Son Nguyen">
-    <link rel="canonical" href="https://hoangsonww.github.io/The-Maze-Game/" />
-    <meta name="robots" content="index, follow">
-    <meta name="rating" content="General">
-    <meta name="revisit-after" content="3 days">
-    <meta name="distribution" content="global">
-    <meta name="language" content="en">
-    <meta name="theme-color" content="#000000">
-    <meta name="referrer" content="no-referrer-when-downgrade">
-</head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CZ3YJF00CG"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-CZ3YJF00CG"></script>
-<script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+        gtag('config', 'G-CZ3YJF00CG');
+    </script>
 
-    gtag('config', 'G-CZ3YJF00CG');
-</script>
+    <body>
+        <header>
+            <h1 style="margin-top: 450px">The Maze Game</h1>
+            <p>A simple yet fun game to play when you're bored.</p>
+            <p id="lifetimeScore" style="font-weight: bold">Lifetime Score: 0</p>
+        </header>
 
-<body>
-    <header>
-        <h1 style="margin-top: 450px">The Maze Game</h1>
-        <p>A simple yet fun game to play when you're bored.</p>
-        <p id="lifetimeScore" style="font-weight: bold">Lifetime Score: 0</p>
-    </header>
-
-    <div class="game-container">
-        <canvas id="mazeCanvas"></canvas>
-        <div class="controls">
-            <p style="color: white"><strong>Controls</strong></p>
-            <button id="moveUp" style="font: inherit; cursor: pointer">Up</button>
-            <div class="horizontal-controls">
-                <button id="moveLeft" style="font: inherit; cursor: pointer">Left</button>
-                <button id="moveDown" style="font: inherit; cursor: pointer">Down</button>
-                <button id="moveRight" style="font: inherit; cursor: pointer">Right</button>
+        <div class="game-container">
+            <canvas id="mazeCanvas"></canvas>
+            <div class="controls">
+                <p style="color: white"><strong>Controls</strong></p>
+                <button id="moveUp" style="font: inherit; cursor: pointer">Up</button>
+                <div class="horizontal-controls">
+                    <button id="moveLeft" style="font: inherit; cursor: pointer">Left</button>
+                    <button id="moveDown" style="font: inherit; cursor: pointer">Down</button>
+                    <button id="moveRight" style="font: inherit; cursor: pointer">Right</button>
+                </div>
             </div>
+            <button id="regenerateMaze" style="margin-top: 25px" title="Too hard? Regenerate the maze! Note that you will lose 1 point for that.">Regenerate Maze</button>
+            <button id="aboutGame" onclick="window.location.href='src/html/about.html'" style="margin-top: 25px; margin-bottom: 200px">About</button>
         </div>
-        <button id="regenerateMaze" style="margin-top: 25px" title="Too hard? Regenerate the maze! Note that you will lose 1 point for that.">Regenerate Maze</button>
-        <button id="aboutGame" onclick="window.location.href='src/html/about.html'" style="margin-top: 25px; margin-bottom: 200px">About</button>
-    </div>
 
-    <script src="src/js/game.js"></script>
-</body>
-
+        <script src="src/js/game.js"></script>
+    </body>
 </html>
