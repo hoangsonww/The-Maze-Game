@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Maze Game - Production Ready</title>
+    <link rel="stylesheet" href="src/css/style-enhanced.css">
+    <link rel="icon" type="image/x-icon" href="utils/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="manifest" href="manifest.json">
+    <meta name="description" content="A challenging maze game with multiple difficulty levels, achievements, and leaderboards.">
+    <meta property="og:title" content="The Maze Game - Challenge Your Skills" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta http-equiv="content-language" content="en" />
+    <meta property="og:description" content="Navigate through procedurally generated mazes. Features multiple difficulty levels, achievements, leaderboards, and multiplayer mode." />
+    <meta property="og:url" content="https://hoangsonww.github.io/The-Maze-Game/" />
+    <meta property="og:site_name" content="The Maze Game" />
+    <meta name="keywords" content="maze game, puzzle game, pathfinding, multiplayer game, browser game, achievements, leaderboard" />
+    <meta name="author" content="Son Nguyen">
+    <link rel="canonical" href="https://hoangsonww.github.io/The-Maze-Game/" />
+    <meta name="robots" content="index, follow">
+    <meta name="rating" content="General">
+    <meta name="theme-color" content="#7378c5">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-CZ3YJF00CG"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-CZ3YJF00CG');
+</script>
+
+<body>
+    <!-- Header -->
+    <header class="game-header">
+        <div class="header-content">
+            <h1>🎮 The Maze Game</h1>
+            <p class="subtitle">Navigate. Solve. Conquer.</p>
+        </div>
+    </header>
+
+    <!-- Main Game Container -->
+    <div class="main-container">
+        <!-- Stats Sidebar -->
+        <aside class="stats-sidebar">
+            <div class="stats-section">
+                <h3>📊 Game Stats</h3>
+                <div class="stat-item">
+                    <span class="stat-label">Difficulty:</span>
+                    <span class="stat-value" id="difficulty">MEDIUM</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Current Score:</span>
+                    <span class="stat-value" id="currentScore">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Time:</span>
+                    <span class="stat-value" id="timer">00:00</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Moves:</span>
+                    <span class="stat-value" id="moves">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Hints Used:</span>
+                    <span class="stat-value" id="hints">0</span>
+                </div>
+            </div>
+
+            <div class="stats-section">
+                <h3>🏆 Overall Stats</h3>
+                <div class="stat-item">
+                    <span class="stat-label">Total Score:</span>
+                    <span class="stat-value" id="lifetimeScore">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Games Won:</span>
+                    <span class="stat-value" id="gamesWon">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Best Time:</span>
+                    <span class="stat-value" id="bestTime">--:--</span>
+                </div>
+            </div>
+
+            <div class="stats-section">
+                <h3>⚙️ Settings</h3>
+                <div class="setting-item">
+                    <label for="difficultySelect">Difficulty:</label>
+                    <select id="difficultySelect" class="setting-control">
+                        <option value="easy">Easy</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="hard">Hard</option>
+                        <option value="expert">Expert</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <label for="themeSelect">Theme:</label>
+                    <select id="themeSelect" class="setting-control">
+                        <option value="default">Default</option>
+                        <option value="dark">Dark</option>
+                        <option value="neon">Neon</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <label for="soundToggle">Sound:</label>
+                    <input type="checkbox" id="soundToggle" class="setting-control" checked>
+                </div>
+            </div>
+
+            <div class="stats-section">
+                <h3>🎯 Quick Actions</h3>
+                <button id="viewLeaderboard" class="action-button" onclick="showLeaderboard()">
+                    📊 Leaderboard
+                </button>
+                <button id="viewAchievements" class="action-button" onclick="showAchievements()">
+                    🏅 Achievements
+                </button>
+                <button id="viewHelp" class="action-button" onclick="showHelp()">
+                    ❓ Help
+                </button>
+            </div>
+        </aside>
+
+        <!-- Game Area -->
+        <main class="game-area">
+            <div class="game-canvas-container">
+                <canvas id="mazeCanvas" aria-label="Maze Game Canvas"></canvas>
+            </div>
+
+            <!-- Game Controls -->
+            <div class="game-controls">
+                <div class="control-group">
+                    <h4>🎮 Movement</h4>
+                    <div class="movement-controls">
+                        <button id="moveUp" class="control-btn" aria-label="Move Up" title="Move Up (↑ or W)">↑</button>
+                        <div class="horizontal-controls">
+                            <button id="moveLeft" class="control-btn" aria-label="Move Left" title="Move Left (← or A)">←</button>
+                            <button id="moveDown" class="control-btn" aria-label="Move Down" title="Move Down (↓ or S)">↓</button>
+                            <button id="moveRight" class="control-btn" aria-label="Move Right" title="Move Right (→ or D)">→</button>
+                        </div>
+                    </div>
+                    <p class="control-hint">Use arrow keys or WASD</p>
+                </div>
+
+                <div class="control-group">
+                    <h4>🛠️ Game Actions</h4>
+                    <div class="action-controls">
+                        <button id="pauseGame" class="action-btn pause-btn" title="Pause (P)">⏸️ Pause</button>
+                        <button id="useHint" class="action-btn hint-btn" title="Show Hint (H)">💡 Hint</button>
+                        <button id="regenerateMaze" class="action-btn regen-btn" title="Generate New Maze">🔄 New Maze</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Leaderboard Modal -->
+    <div id="leaderboardModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('leaderboardModal')">&times;</span>
+            <h2>🏆 Leaderboard</h2>
+            <div class="leaderboard-tabs">
+                <button class="tab-btn active" onclick="showLeaderboardTab('all')">All Time</button>
+                <button class="tab-btn" onclick="showLeaderboardTab('daily')">Daily</button>
+                <button class="tab-btn" onclick="showLeaderboardTab('weekly')">Weekly</button>
+                <button class="tab-btn" onclick="showLeaderboardTab('monthly')">Monthly</button>
+            </div>
+            <div id="leaderboardContent" class="leaderboard-list">
+                <p>Loading...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Achievements Modal -->
+    <div id="achievementsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('achievementsModal')">&times;</span>
+            <h2>🏅 Achievements</h2>
+            <div id="achievementsContent" class="achievements-grid">
+                <p>Loading...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('helpModal')">&times;</span>
+            <h2>❓ How to Play</h2>
+            <div class="help-content">
+                <section>
+                    <h3>🎯 Objective</h3>
+                    <p>Navigate from the red player (top-left) to the green exit (bottom-right).</p>
+                </section>
+                <section>
+                    <h3>🎮 Controls</h3>
+                    <ul>
+                        <li><strong>Arrow Keys</strong> or <strong>WASD</strong> - Move your player</li>
+                        <li><strong>P</strong> - Pause/Resume game</li>
+                        <li><strong>H</strong> - Use a hint (costs points)</li>
+                        <li><strong>Click buttons</strong> - Alternative control method</li>
+                    </ul>
+                </section>
+                <section>
+                    <h3>📊 Scoring</h3>
+                    <ul>
+                        <li>Base score starts at 100 points</li>
+                        <li>Penalties: Time, moves, and hints used</li>
+                        <li>Bonus multipliers for higher difficulties</li>
+                        <li>Compete on global leaderboards!</li>
+                    </ul>
+                </section>
+                <section>
+                    <h3>🏆 Difficulty Levels</h3>
+                    <ul>
+                        <li><strong>Easy</strong> - 10x15 maze, more hints</li>
+                        <li><strong>Medium</strong> - 15x20 maze, balanced</li>
+                        <li><strong>Hard</strong> - 20x30 maze, challenging</li>
+                        <li><strong>Expert</strong> - 25x35 maze, ultimate test</li>
+                    </ul>
+                </section>
+                <section>
+                    <h3>🎖️ Achievements</h3>
+                    <p>Unlock special achievements by:</p>
+                    <ul>
+                        <li>Completing games quickly</li>
+                        <li>Winning without hints</li>
+                        <li>Playing on higher difficulties</li>
+                        <li>Reaching milestones (10, 100+ wins)</li>
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="game-footer">
+        <p>&copy; 2024 The Maze Game | Created by Son Nguyen | <a href="src/html/about.html">About</a></p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="src/js/game-enhanced.js"></script>
+    <script src="src/js/ui-components.js"></script>
+</body>
+</html>
