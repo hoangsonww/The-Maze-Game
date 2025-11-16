@@ -10,17 +10,26 @@ const { Server } = require('socket.io');
 const path = require('path');
 
 // Import routes
+const authRoutes = require('./routes/auth');
 const leaderboardRoutes = require('./routes/leaderboard');
 const userRoutes = require('./routes/user');
 const gameRoutes = require('./routes/game');
 const achievementRoutes = require('./routes/achievements');
+const adminRoutes = require('./routes/admin');
+const socialRoutes = require('./routes/social');
+const challengesRoutes = require('./routes/challenges');
+const mazesRoutes = require('./routes/mazes');
 
 // Import middleware
 const errorHandler = require('./middleware/errorHandler');
 const logger = require('./utils/logger');
+const { initSentry, addSentryErrorHandler } = require('./utils/sentry');
 
 const app = express();
 const httpServer = createServer(app);
+
+// Initialize Sentry BEFORE any other middleware
+initSentry(app);
 
 // Initialize Socket.IO for multiplayer
 const io = new Server(httpServer, {
@@ -89,10 +98,15 @@ app.get('/api/health', (req, res) => {
 });
 
 // API Routes
+app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/leaderboard', leaderboardRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/games', gameRoutes);
 app.use('/api/v1/achievements', achievementRoutes);
+app.use('/api/v1/admin', adminRoutes);
+app.use('/api/v1/social', socialRoutes);
+app.use('/api/v1/challenges', challengesRoutes);
+app.use('/api/v1/mazes', mazesRoutes);
 
 // WebSocket connection handling
 io.on('connection', (socket) => {
@@ -146,6 +160,9 @@ io.on('connection', (socket) => {
     logger.info(`Client disconnected: ${socket.id}`);
   });
 });
+
+// Sentry error handler (before custom error handler)
+addSentryErrorHandler(app);
 
 // Serve index.html for all non-API routes (SPA support)
 app.get('*', (req, res) => {
