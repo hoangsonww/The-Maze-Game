@@ -42,6 +42,7 @@
             <h1 style="margin-top: 450px">The Maze Game</h1>
             <p>A simple yet fun game to play when you're bored.</p>
             <p id="lifetimeScore" style="font-weight: bold">Lifetime Score: 0</p>
+            <p id="timer" style="font-weight: bold">Time: 0.0s</p>
         </header>
 
         <div class="game-container">
@@ -57,6 +58,15 @@
             </div>
             <button id="regenerateMaze" style="margin-top: 25px" title="Too hard? Regenerate the maze! Note that you will lose 1 point for that.">Regenerate Maze</button>
             <button id="aboutGame" onclick="window.location.href='src/html/about.html'" style="margin-top: 25px; margin-bottom: 200px">About</button>
+        </div>
+
+        <div id="winModal" class="modal-overlay">
+            <div class="modal-box">
+                <h2>🎉 You did it!</h2>
+                <p id="winMessage">You escaped the maze!</p>
+                <p id="winTime" class="win-time">0.0s</p>
+                <button id="playAgain">Play Again</button>
+            </div>
         </div>
 
         <script src="src/js/game.js"></script>
