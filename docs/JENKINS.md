@@ -22,8 +22,8 @@ This Jenkinsfile implements a comprehensive CI/CD pipeline for The Maze Game pro
 1. **NodeJS Installation**
 
    - Go to: Manage Jenkins → Global Tool Configuration
-   - Add NodeJS installation named "NodeJS 16"
-   - Version: 16.x
+   - Add NodeJS installation named "NodeJS 18"
+   - Version: 18.x (project requires Node >= 18)
 
 2. **Docker**
    - Ensure Docker is installed on Jenkins agent
@@ -34,7 +34,9 @@ This Jenkinsfile implements a comprehensive CI/CD pipeline for The Maze Game pro
 Add the following credentials in Jenkins:
 
 - `docker-hub-credentials`: Docker Hub username/password
-- `postgres-credentials`: PostgreSQL username/password
+- `mongodb-uri`: MongoDB connection string (active datastore)
+- `jwt-secret`: secret for signing auth tokens
+- `postgres-credentials`: PostgreSQL username/password (only if `DB_DRIVER=postgres`)
 - `sentry-dsn`: Sentry DSN token
 - `dev-server-ssh`: SSH key for development server
 - `staging-server-ssh`: SSH key for staging server
@@ -148,9 +150,10 @@ Set these in Jenkins or `.env` file:
 
 - `NODE_ENV`: production/development
 - `PORT`: Application port
-- `DB_HOST`: Database host
-- `REDIS_HOST`: Redis host
-- `SENTRY_DSN`: Error tracking
+- `MONGODB_URI`: MongoDB connection string (active datastore, db `maze-game`)
+- `JWT_SECRET`: signs account auth tokens
+- `DB_DRIVER` / `DATABASE_URL`: only when switching to PostgreSQL
+- `SENTRY_DSN`: Error tracking (optional)
 
 ## Notifications
 

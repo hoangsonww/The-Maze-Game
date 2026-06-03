@@ -6,12 +6,12 @@
 
 [![CI/CD](https://github.com/hoangsonww/The-Maze-Game/workflows/CI-CD%20Pipeline/badge.svg)](https://github.com/hoangsonww/The-Maze-Game/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://github.com/hoangsonww/The-Maze-Game)
+[![Version](https://img.shields.io/badge/version-1.3.0-blue.svg)](https://github.com/hoangsonww/The-Maze-Game)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/hoangsonww/The-Maze-Game/pulls)
 
-**A fully-featured, production-ready maze game with multiplayer support, achievements, and global leaderboards.**
+**A fully-featured maze game: procedural mazes, difficulty levels, A\* hints, accounts, per-user stats & progress, achievements, global leaderboards, and multiplayer — with a MongoDB-backed, Vercel-deployable API documented in Swagger.**
 
-[Play Now](https://hoangsonww.github.io/The-Maze-Game/) | [API Docs](./API_DOCUMENTATION.md) | [Report Bug](https://github.com/hoangsonww/The-Maze-Game/issues) | [Request Feature](https://github.com/hoangsonww/The-Maze-Game/issues)
+[Play Now](https://hoangsonww.github.io/The-Maze-Game/) | [API Docs](./API_DOCUMENTATION.md) | [Live Swagger](https://maze-game-api.vercel.app/api-docs) | [Report Bug](https://github.com/hoangsonww/The-Maze-Game/issues)
 
 </div>
 
@@ -45,37 +45,47 @@
 - **Hint System**: Get pathfinding hints when stuck (costs points)
 - **Pause/Resume**: Pause the game anytime without losing progress
 - **Move Counter**: Track your efficiency
-- **Persistent Statistics**: Lifetime stats saved locally
-- **Achievements System**: 8+ achievements to unlock
+- **Persistent Statistics**: Lifetime stats saved locally (and to your account when signed in)
+- **Achievements System**: 8 achievements to unlock
 - **Sound Effects**: Optional audio feedback
-- **Themes**: Multiple visual themes (Default, Dark, Neon)
+- **Themes**: Three visual themes (Daylight, Midnight, Neon)
+- **Touch Controls**: Swipe to move on mobile
 
-### 🌐 Multiplayer Features
+### 🌐 Multiplayer (backend-ready)
 
-- **Real-time Multiplayer**: Compete against other players using WebSockets
-- **Live Player Tracking**: See opponents' positions in real-time
-- **Room-based Matches**: Join or create game rooms
-- **Winner Announcements**: Instant win notifications
+- **Socket.IO infrastructure**: Room join/leave, position broadcast, and
+  game-finished events on the long-lived server (`npm start`)
+- **Note**: the realtime backend is in place; a multiplayer frontend is on the
+  roadmap. (Socket.IO does not run on the Vercel serverless deployment.)
+
+### 👤 Accounts & Progress
+
+- **Accounts**: Register / log in with JWT auth (bcrypt-hashed passwords)
+- **Per-user stats**: Games played/won, win rate, best score, streaks
+- **Progress tracking**: Level & XP, per-difficulty breakdown, recent games
+- **Profile dashboard**: All of the above in an in-app modal
+- **Anonymous play**: No account needed — stats sync once you sign in
 
 ### 📊 Backend Features
 
+- **MongoDB-backed** (database `maze-game`), with a pluggable datastore layer:
+  swap to **PostgreSQL** (`DB_DRIVER=postgres`) or in-memory at any time
+- **Swagger / OpenAPI**: interactive docs at `/api-docs`, spec at `/openapi.json`
 - **Global Leaderboards**: Compete worldwide with timeframe filters
-- **RESTful API**: Full-featured API for game data
-- **User Management**: Track player profiles and statistics
+- **RESTful API**: Leaderboard, games, achievements, auth, users
 - **Game Sessions**: Server-side game tracking
-- **Rate Limiting**: Protection against abuse
-- **Error Logging**: Winston-based comprehensive logging
+- **Real-time Multiplayer**: Socket.IO rooms (on the long-lived server)
+- **Rate Limiting** + **Winston** logging + optional **Sentry**
 
 ### 🔒 Production Features
 
-- **CI/CD Pipeline**: Automated testing and deployment
+- **Serverless-ready**: Deploys to **Vercel** as one Express function
+- **CI/CD Pipeline**: Automated testing (Jenkins / GitHub Actions)
 - **Docker Support**: Containerized deployment with Docker Compose
-- **Security**: Helmet.js, rate limiting, CORS, CSP headers
-- **PWA Support**: Offline capability and installable
-- **Service Worker**: Advanced caching strategies
-- **Performance Optimization**: Webpack bundling, code splitting, minification
-- **Accessibility**: ARIA labels, keyboard navigation, screen reader support
-- **Responsive Design**: Works on desktop, tablet, and mobile
+- **Security**: Helmet.js, rate limiting, open CORS for the public API
+- **PWA Support**: Offline capability, installable, service-worker caching
+- **Code quality**: Project-wide Prettier, ESLint, Jest (45 tests)
+- **Accessibility & Responsive**: ARIA labels, keyboard nav, mobile/touch
 - **SEO Optimized**: Meta tags, sitemap, robots.txt
 
 ---
@@ -94,16 +104,18 @@
 
 ### Features Preview
 
-| Feature                  | Description                                |
-| ------------------------ | ------------------------------------------ |
-| 🎯 Multiple Difficulties | Easy (10x15) to Expert (25x35) mazes       |
-| ⏱️ Timer                 | Real-time countdown and best time tracking |
-| 💡 Hints                 | A\* pathfinding hints (costs points)       |
-| 🏆 Achievements          | 8 unique achievements to unlock            |
-| 📊 Leaderboards          | Global rankings with filtering             |
-| 🎨 Themes                | Dark mode and custom themes                |
-| 🔊 Sound                 | Optional sound effects                     |
-| ⏸️ Pause                 | Pause and resume anytime                   |
+| Feature                  | Description                               |
+| ------------------------ | ----------------------------------------- |
+| 🎯 Multiple Difficulties | Easy (11×15) to Expert (25×35) mazes      |
+| ⏱️ Timer                 | Real-time timer and best-time tracking    |
+| 💡 Hints                 | A\* pathfinding hints (costs points)      |
+| 🏆 Achievements          | 8 unique achievements to unlock           |
+| 📊 Leaderboards          | Global rankings with timeframe filtering  |
+| 👤 Accounts & Stats      | Sign in to track level, win rate, streaks |
+| 🎨 Themes                | Daylight, Midnight, and Neon              |
+| 📱 Touch                 | Swipe controls on mobile                  |
+| 🔊 Sound                 | Optional sound effects                    |
+| ⏸️ Pause                 | Pause and resume anytime                  |
 
 ---
 
@@ -116,10 +128,11 @@
 git clone https://github.com/hoangsonww/The-Maze-Game.git
 cd The-Maze-Game
 
-# Start with Docker Compose
+# Start with Docker Compose (runs the API server)
 docker-compose up -d
 
-# Access the game at http://localhost:3000
+# API + Swagger docs at http://localhost:3000/api-docs
+# (the game frontend is static — open index.html or use GitHub Pages)
 ```
 
 ### Local Development
@@ -132,11 +145,16 @@ cd The-Maze-Game
 # Install dependencies
 npm install
 
-# Start development server
-npm run dev
+# Start the API server (Express + Swagger + Socket.IO) on :3000
+npm run dev          # API + docs at http://localhost:3000/api-docs
 
-# Access the game at http://localhost:8080
+# In another shell, open the static game frontend
+npm run serve        # opens index.html via http-server
 ```
+
+The frontend talks to `https://maze-game-api.vercel.app` by default. To point it
+at a local backend, set `window.MAZE_API_BASE = 'http://localhost:3000'` before
+the scripts load (or in the console).
 
 ---
 
@@ -144,11 +162,14 @@ npm run dev
 
 ### Prerequisites
 
-- **Node.js** >= 16.x
-- **npm** >= 8.x
+- **Node.js** >= 18.x
+- **npm** >= 9.x
+- **MongoDB** (a free Atlas cluster works) — the active datastore for the API
 - **Docker** (optional, for containerized deployment)
-- **PostgreSQL** >= 15.x (optional, for production)
-- **Redis** >= 7.x (optional, for production)
+- **PostgreSQL** >= 13.x (optional — only if you switch `DB_DRIVER=postgres`)
+
+> The API also runs with **no database** (in-memory driver) for quick local play
+> and tests.
 
 ### Step-by-Step Installation
 
@@ -192,13 +213,15 @@ npm run dev
 #### Controls
 
 - **Arrow Keys** or **WASD** - Move your character
+- **Swipe** - Move on touch devices
 - **P** - Pause/Resume game
 - **H** - Use hint (costs points)
-- **Mouse/Touch** - Click on-screen buttons
+- **R** - Generate a new maze
+- **On-screen buttons** - Alternative controls
 
 #### Objective
 
-Navigate from the red player (top-left) to the green exit (bottom-right) as quickly as possible with minimal moves.
+Guide the **coral player** (top-left) to the **lime exit** (bottom-right) as quickly as possible with minimal moves.
 
 #### Scoring
 
@@ -244,47 +267,40 @@ const response = await fetch('/api/v1/leaderboard', {
 
 ```
 The-Maze-Game/
-├── src/                          # Source code
-│   ├── css/                      # Stylesheets
-│   │   └── style.css            # Game styles
-│   ├── js/                       # JavaScript
-│   │   ├── game.js              # Game engine (canvas, A*, scoring)
-│   │   └── ui-components.js     # UI components and modals
-│   ├── html/                     # HTML pages
-│   │   └── about.html           # About page
-│   └── python/                   # Python implementation
-│       ├── main.py              # Pygame version
-│       └── maze-gen.py          # Maze generator
-├── server/                       # Backend server
-│   ├── index.js                 # Express server
-│   ├── routes/                  # API routes
-│   │   ├── leaderboard.js       # Leaderboard endpoints
-│   │   ├── game.js              # Game session endpoints
-│   │   ├── achievements.js      # Achievements endpoints
-│   │   └── user.js              # User management
-│   ├── middleware/              # Express middleware
-│   │   └── errorHandler.js     # Error handling
-│   └── utils/                   # Utilities
-│       └── logger.js            # Winston logger
-├── __tests__/                    # Test suites
-│   ├── server/                  # Backend tests
-│   └── client/                  # Frontend tests
-├── .github/                      # GitHub configuration
-│   └── workflows/               # CI/CD workflows
-│       └── ci-cd.yml            # GitHub Actions
-├── utils/                        # Static assets
-│   ├── favicon.ico              # Favicon
-│   └── image-*.png              # PWA icons
-├── index.html                    # Game page
-├── manifest.json                 # PWA manifest
-├── service-worker.js             # Service worker for PWA
-├── Dockerfile                    # Docker configuration
-├── docker-compose.yml            # Docker Compose
-├── webpack.config.js             # Webpack bundler config
-├── jest.config.js                # Jest test config
-├── package.json                  # Dependencies
-├── .env.example                  # Environment template
-└── README.md                     # This file
+├── index.html                    # Game page (GitHub Pages frontend)
+├── src/                          # Frontend source
+│   ├── css/style.css             # "Wayfinder" UI styles
+│   ├── js/
+│   │   ├── game.js               # Game engine (canvas, A*, scoring, sessions)
+│   │   ├── ui-components.js      # Modals, leaderboard, achievements
+│   │   └── auth.js               # Accounts, profile & stats dashboard
+│   ├── html/about.html           # About page
+│   └── python/                   # Pygame implementation (main.py, maze-gen.py)
+├── api/
+│   └── index.js                  # Vercel serverless entry (exports the app)
+├── server/                       # Backend
+│   ├── app.js                    # Express app factory (serverless-safe)
+│   ├── index.js                  # Local/Docker entry (+ Socket.IO + listen)
+│   ├── swagger.js                # OpenAPI spec + CDN Swagger UI
+│   ├── database/
+│   │   ├── driver.js             # DB_DRIVER resolver
+│   │   ├── repository.js         # Leaderboard / games / achievements (3 drivers)
+│   │   ├── users.js              # Accounts + stats (3 drivers)
+│   │   ├── mongo.js              # MongoDB connection (db `maze-game`)
+│   │   ├── connection.js         # PostgreSQL pool (lazy)
+│   │   ├── schema.sql            # Full relational schema (auth platform)
+│   │   └── schema-game.sql       # Active gameplay + users_app tables
+│   ├── services/auth.js          # bcrypt + JWT
+│   ├── routes/                   # auth, users, leaderboard, game, achievements, …
+│   ├── middleware/               # auth (JWT), errorHandler
+│   └── utils/                    # logger, email, sentry
+├── __tests__/                    # Jest suites (server: node env, client: jsdom)
+├── vercel.json                   # Serverless routing
+├── .vercelignore                 # Excludes the frontend from the API bundle
+├── .prettierrc.json / .prettierignore
+├── Dockerfile · docker-compose.yml · nginx.conf · Jenkinsfile
+├── webpack.config.js · jest.config.js · manifest.json · service-worker.js
+└── README.md · API_DOCUMENTATION.md
 ```
 
 ### Technology Stack
@@ -296,35 +312,32 @@ The-Maze-Game/
 - CSS3 with Flexbox/Grid
 - Service Worker API (PWA)
 
+**Frontend** (vanilla, GitHub Pages)
+
+- Vanilla JavaScript (ES6+), HTML5 Canvas
+- CSS3 (Grid/Flexbox), Service Worker (PWA)
+- Fonts: Bricolage Grotesque · Sora · JetBrains Mono
+
 **Backend**
 
 - Node.js + Express.js
-- Socket.IO (WebSockets)
-- Winston (Logging)
-- Helmet.js (Security)
+- **MongoDB** (active) · PostgreSQL (switchable) · in-memory (fallback)
+- JWT (`jsonwebtoken`) + bcrypt for accounts
+- Socket.IO (multiplayer), Winston (logging), optional Sentry
+- Swagger / OpenAPI 3 (served from a CDN)
+- Helmet.js, express-rate-limit
 
-**Build Tools**
+**Build & Tooling**
 
-- Webpack 5
-- Babel 7
-- PostCSS
-- Terser
-
-**Testing**
-
-- Jest
-- Supertest
+- Webpack 5, Babel 7
+- Jest + Supertest
+- Prettier, ESLint
 
 **DevOps**
 
-- Docker & Docker Compose
-- GitHub Actions (CI/CD)
-- Nginx (Reverse Proxy)
-
-**Optional Services**
-
-- PostgreSQL (Database)
-- Redis (Caching)
+- Vercel (serverless API) · GitHub Pages (frontend)
+- Docker & Docker Compose, Nginx
+- Jenkins / GitHub Actions (CI/CD)
 
 ---
 
@@ -332,17 +345,30 @@ The-Maze-Game/
 
 Complete API documentation is available in [API_DOCUMENTATION.md](./API_DOCUMENTATION.md).
 
+Interactive docs (Swagger UI) are served at **`/api-docs`**; the OpenAPI spec at
+**`/openapi.json`**.
+
 ### Quick Reference
 
-| Endpoint                     | Method | Description        |
-| ---------------------------- | ------ | ------------------ |
-| `/api/health`                | GET    | Health check       |
-| `/api/v1/leaderboard`        | GET    | Get leaderboard    |
-| `/api/v1/leaderboard`        | POST   | Submit score       |
-| `/api/v1/games/start`        | POST   | Start game session |
-| `/api/v1/games/:id/complete` | PUT    | Complete game      |
-| `/api/v1/achievements`       | GET    | Get achievements   |
-| `/api/v1/users/register`     | POST   | Register user      |
+| Endpoint                         | Method | Auth | Description                |
+| -------------------------------- | ------ | ---- | -------------------------- |
+| `/api/health`                    | GET    |      | Health + active DB driver  |
+| `/api/v1/auth/register`          | POST   |      | Create an account          |
+| `/api/v1/auth/login`             | POST   |      | Log in (username or email) |
+| `/api/v1/auth/me`                | GET    | 🔒   | Current account + stats    |
+| `/api/v1/users/me/stats`         | GET    | 🔒   | Your stats & progress      |
+| `/api/v1/users/me/games`         | POST   | 🔒   | Record a finished game     |
+| `/api/v1/users/:id`              | GET    |      | Public profile             |
+| `/api/v1/leaderboard`            | GET    |      | Get leaderboard            |
+| `/api/v1/leaderboard`            | POST   |      | Submit score               |
+| `/api/v1/leaderboard/rank/:name` | GET    |      | Player rank                |
+| `/api/v1/games/start`            | POST   |      | Start game session         |
+| `/api/v1/games/:id/move`         | PUT    |      | Record a move              |
+| `/api/v1/games/:id/complete`     | PUT    |      | Complete game + score      |
+| `/api/v1/games/stats`            | GET    |      | Aggregate game stats       |
+| `/api/v1/achievements`           | GET    |      | List achievements          |
+| `/api/v1/achievements/user/:id`  | GET    |      | A player's achievements    |
+| `/api/v1/achievements/unlock`    | POST   |      | Unlock an achievement      |
 
 ---
 
@@ -359,15 +385,17 @@ npm run serve:static     # Serve static files
 npm run build            # Production build with webpack
 npm run lint             # Run ESLint
 npm run lint:fix         # Fix ESLint issues
-npm run format           # Format code with Prettier
+npm run format           # Format the whole project with Prettier
+npm run format:check     # Check formatting (CI gate)
 
 # Testing
-npm test                 # Run all tests
-npm run test:watch       # Run tests in watch mode
+npm test                 # Run all tests (45) with coverage
+npm run test:watch       # Watch mode
 
 # Backend
-npm start                # Start production server
-npm run backend          # Run Python version
+npm start                # Start the API server (server/index.js)
+npm run db:migrate:pg    # Apply the Postgres gameplay schema (DB_DRIVER=postgres)
+npm run backend          # Run the Python/Pygame version
 ```
 
 ### Environment Variables
@@ -378,14 +406,28 @@ Create a `.env` file based on `.env.example`:
 NODE_ENV=development
 PORT=3000
 HOST=localhost
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=maze_game
-REDIS_HOST=localhost
-REDIS_PORT=6379
-JWT_SECRET=your_secret_here
-CORS_ORIGIN=http://localhost:3000
+
+# Datastore: mongo (default when MONGODB_URI set) | postgres | memory
+DB_DRIVER=mongo
+MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/
+MONGODB_DB=maze-game
+
+# Accounts (JWT)
+JWT_SECRET=generate_a_long_random_string
+JWT_EXPIRATION=7d
+
+# Optional PostgreSQL (only when DB_DRIVER=postgres)
+DATABASE_URL=
 ```
+
+Generate a strong `JWT_SECRET`:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
+```
+
+With nothing set, the API runs on the in-memory driver — fine for local play
+and tests.
 
 ### Adding New Features
 
@@ -535,14 +577,17 @@ doctl apps create --spec .do/app.yaml
 ### Implemented Security Measures
 
 - ✅ Helmet.js security headers
-- ✅ CORS configuration
-- ✅ Rate limiting
-- ✅ Input validation
-- ✅ SQL injection prevention
-- ✅ XSS protection
-- ✅ CSRF protection
-- ✅ Content Security Policy
-- ✅ HTTPs ready
+- ✅ bcrypt password hashing + JWT auth
+- ✅ Rate limiting (`/api/*`)
+- ✅ Input validation (username/email/password, score fields)
+- ✅ Parameterized SQL (PostgreSQL driver)
+- ✅ Output escaping for user-rendered content (leaderboard, profile)
+- ✅ Open CORS — intentional for a public, read-mostly game API
+- ✅ HTTPS via the host (Vercel) / GitHub Pages
+
+> The API host serves only JSON + the Swagger docs (no same-origin app), so the
+> strict Content-Security-Policy is disabled there; the game frontend ships
+> separately on GitHub Pages.
 
 ### Security Best Practices
 
@@ -608,7 +653,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- 📧 Email: support@mazegame.example.com
 - 🐛 [Report Bugs](https://github.com/hoangsonww/The-Maze-Game/issues)
 - 💡 [Request Features](https://github.com/hoangsonww/The-Maze-Game/issues)
 - 💬 [Discussions](https://github.com/hoangsonww/The-Maze-Game/discussions)
