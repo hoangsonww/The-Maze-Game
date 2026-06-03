@@ -431,10 +431,12 @@
       </div>
 
       <h4 class="profile-sub">By difficulty</h4>
-      <table class="diff-table">
-        <thead><tr><th>Level</th><th>Played</th><th>Won</th><th>Best</th><th>Best time</th><th>Win rate</th></tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
+      <div class="diff-table-wrap">
+        <table class="diff-table">
+          <thead><tr><th>Level</th><th>Played</th><th>Won</th><th>Best</th><th>Best time</th><th>Win rate</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
 
       <h4 class="profile-sub">Recent games</h4>
       ${recent ? `<ul class="recent-list">${recent}</ul>` : '<p class="no-data">No games yet — go solve a maze!</p>'}
