@@ -1478,20 +1478,31 @@ kbd {
 .bar-fill.lime {
   background: linear-gradient(90deg, var(--lime-deep), var(--lime));
 }
+.profile-footer {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: center;
+}
 .logout-btn {
+  width: 100%;
   font-family: var(--font-ui);
-  font-size: 0.82rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: var(--coral);
-  background: rgba(255, 106, 77, 0.1);
-  border: 1px solid rgba(255, 106, 77, 0.3);
+  background: color-mix(in srgb, var(--coral) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--coral) 32%, transparent);
   border-radius: var(--r-btn);
-  padding: 0.5rem 1rem;
+  padding: 0.7rem 1rem;
   cursor: pointer;
-  transition: background 0.18s;
+  transition:
+    background 0.18s,
+    transform 0.16s;
 }
 .logout-btn:hover {
-  background: rgba(255, 106, 77, 0.18);
+  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--coral) 18%, transparent);
 }
 .profile-grid {
   display: grid;

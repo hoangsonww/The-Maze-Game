@@ -90,19 +90,24 @@
 
   async function refreshProfile() {
     if (!isLoggedIn()) return null;
-    const res = await fetch(base() + '/api/v1/auth/me', { headers: authHeaders() });
-    if (res.status === 401) {
-      clearSession();
-      renderHeader();
+    try {
+      const res = await fetch(base() + '/api/v1/auth/me', { headers: authHeaders() });
+      if (res.status === 401) {
+        clearSession();
+        renderHeader();
+        return null;
+      }
+      const json = await res.json().catch(() => ({}));
+      if (json.success && json.data) {
+        localStorage.setItem(USER_KEY, JSON.stringify(json.data));
+        renderHeader();
+        return json.data;
+      }
+      return null;
+    } catch (_) {
+      // Network error: fall back to the cached profile.
       return null;
     }
-    const json = await res.json().catch(() => ({}));
-    if (json.success && json.data) {
-      localStorage.setItem(USER_KEY, JSON.stringify(json.data));
-      renderHeader();
-      return json.data;
-    }
-    return null;
   }
 
   // Record a finished game against the user's stats (called by game.js).
@@ -412,7 +417,6 @@
             <span class="level-next">${s.totalScore || 0} / ${s.nextLevelScore || 0}</span>
           </div>
         </div>
-        <button class="logout-btn" onclick="mazeAuth.logout()">Sign out</button>
       </div>
 
       <div class="profile-grid">
@@ -467,6 +471,10 @@
       </div>
       <button class="auth-submit slim" onclick="mazeAuth.changePassword()">Update password</button>
       <p id="profileMsg" class="profile-msg" hidden></p>
+
+      <div class="profile-footer">
+        <button class="logout-btn" onclick="mazeAuth.logout()">Sign out</button>
+      </div>
     `;
   }
 
