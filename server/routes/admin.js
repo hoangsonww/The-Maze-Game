@@ -108,9 +108,7 @@ router.get('/users', async (req, res, next) => {
       paramIndex++;
     }
 
-    const whereClause = whereConditions.length > 0
-      ? 'WHERE ' + whereConditions.join(' AND ')
-      : '';
+    const whereClause = whereConditions.length > 0 ? 'WHERE ' + whereConditions.join(' AND ') : '';
 
     const result = await query(
       `SELECT
@@ -125,10 +123,7 @@ router.get('/users', async (req, res, next) => {
       [...params, parseInt(limit), parseInt(offset)]
     );
 
-    const countResult = await query(
-      `SELECT COUNT(*) FROM users ${whereClause}`,
-      params
-    );
+    const countResult = await query(`SELECT COUNT(*) FROM users ${whereClause}`, params);
 
     res.json({
       success: true,
@@ -214,10 +209,7 @@ router.delete('/users/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const result = await query(
-      'DELETE FROM users WHERE id = $1 RETURNING username',
-      [id]
-    );
+    const result = await query('DELETE FROM users WHERE id = $1 RETURNING username', [id]);
 
     if (result.rows.length === 0) {
       throw new AppError('User not found', 404);
@@ -263,9 +255,7 @@ router.get('/games', async (req, res, next) => {
       paramIndex++;
     }
 
-    const whereClause = whereConditions.length > 0
-      ? 'WHERE ' + whereConditions.join(' AND ')
-      : '';
+    const whereClause = whereConditions.length > 0 ? 'WHERE ' + whereConditions.join(' AND ') : '';
 
     const result = await query(
       `SELECT
@@ -279,10 +269,7 @@ router.get('/games', async (req, res, next) => {
       [...params, parseInt(limit), parseInt(offset)]
     );
 
-    const countResult = await query(
-      `SELECT COUNT(*) FROM game_sessions ${whereClause}`,
-      params
-    );
+    const countResult = await query(`SELECT COUNT(*) FROM game_sessions ${whereClause}`, params);
 
     res.json({
       success: true,
@@ -321,7 +308,7 @@ router.post('/announcements', async (req, res, next) => {
       `SELECT email FROM users WHERE is_active = true AND is_verified = true ${roleCondition}`
     );
 
-    const emails = result.rows.map(row => row.email);
+    const emails = result.rows.map((row) => row.email);
 
     // Send emails
     await sendBulkEmail(emails, {
@@ -349,9 +336,8 @@ router.get('/analytics', async (req, res, next) => {
   try {
     const { startDate, endDate } = req.query;
 
-    const dateCondition = startDate && endDate
-      ? `WHERE created_at BETWEEN '${startDate}' AND '${endDate}'`
-      : '';
+    const dateCondition =
+      startDate && endDate ? `WHERE created_at BETWEEN '${startDate}' AND '${endDate}'` : '';
 
     const analytics = await transaction(async (client) => {
       // Daily active users
@@ -415,15 +401,8 @@ router.get('/analytics', async (req, res, next) => {
  */
 router.post('/tournaments', async (req, res, next) => {
   try {
-    const {
-      name,
-      description,
-      startTime,
-      endTime,
-      difficulty,
-      prizePool,
-      maxParticipants,
-    } = req.body;
+    const { name, description, startTime, endTime, difficulty, prizePool, maxParticipants } =
+      req.body;
 
     if (!name || !startTime || !endTime || !difficulty) {
       throw new AppError('Missing required fields', 400);

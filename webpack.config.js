@@ -14,7 +14,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 module.exports = {
   mode: isProduction ? 'production' : 'development',
   entry: {
-    main: './src/js/game-enhanced.js',
+    main: './src/js/game.js',
     ui: './src/js/ui-components.js',
   },
   output: {
@@ -34,11 +34,14 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: [
-              ['@babel/preset-env', {
-                targets: '> 0.25%, not dead',
-                useBuiltIns: 'usage',
-                corejs: 3,
-              }],
+              [
+                '@babel/preset-env',
+                {
+                  targets: '> 0.25%, not dead',
+                  useBuiltIns: 'usage',
+                  corejs: 3,
+                },
+              ],
             ],
             plugins: ['@babel/plugin-transform-runtime'],
           },
@@ -80,7 +83,7 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: './index-enhanced.html',
+      template: './index.html',
       filename: 'index.html',
       minify: isProduction && {
         removeComments: true,

@@ -53,7 +53,10 @@ describe('MazeGame Class', () => {
     });
 
     it('should have start and end positions passable', () => {
-      const maze = [[0, 1], [1, 0]];
+      const maze = [
+        [0, 1],
+        [1, 0],
+      ];
 
       expect(maze[0][0]).toBe(0); // Start
       expect(maze[1][1]).toBe(0); // End
@@ -63,7 +66,10 @@ describe('MazeGame Class', () => {
   describe('Player Movement', () => {
     it('should move player to valid positions', () => {
       const player = { x: 0, y: 0 };
-      const maze = [[0, 0], [0, 1]];
+      const maze = [
+        [0, 0],
+        [0, 1],
+      ];
 
       // Move right
       const newX = player.x + 1;
@@ -80,7 +86,10 @@ describe('MazeGame Class', () => {
 
     it('should not move player through walls', () => {
       const player = { x: 0, y: 0 };
-      const maze = [[0, 1], [1, 1]];
+      const maze = [
+        [0, 1],
+        [1, 1],
+      ];
 
       // Try to move right (into wall)
       const newX = player.x + 1;
@@ -124,9 +133,7 @@ describe('MazeGame Class', () => {
       const movePenalty = moves * 0.5;
       const hintPenalty = hintsUsed * hintCost;
 
-      const score = Math.max(0, Math.round(
-        baseScore - timePenalty - movePenalty - hintPenalty
-      ));
+      const score = Math.max(0, Math.round(baseScore - timePenalty - movePenalty - hintPenalty));
 
       expect(score).toBeGreaterThanOrEqual(0);
       expect(score).toBeLessThanOrEqual(baseScore);
@@ -138,7 +145,7 @@ describe('MazeGame Class', () => {
         easy: 1,
         medium: 1.5,
         hard: 2,
-        expert: 3
+        expert: 3,
       };
 
       const mediumScore = baseScore * difficultyMultipliers.medium;
@@ -190,7 +197,7 @@ describe('MazeGame Class', () => {
         gamesPlayed: 10,
         gamesWon: 8,
         totalScore: 1500,
-        bestTime: 45000
+        bestTime: 45000,
       };
 
       localStorage.setItem('mazeGameStats', JSON.stringify(stats));
@@ -205,7 +212,7 @@ describe('MazeGame Class', () => {
       const settings = {
         difficulty: 'hard',
         soundEnabled: false,
-        theme: 'dark'
+        theme: 'dark',
       };
 
       localStorage.setItem('mazeGameSettings', JSON.stringify(settings));
@@ -223,7 +230,7 @@ describe('MazeGame Class', () => {
         easy: { rows: 10, cols: 15 },
         medium: { rows: 15, cols: 20 },
         hard: { rows: 20, cols: 30 },
-        expert: { rows: 25, cols: 35 }
+        expert: { rows: 25, cols: 35 },
       };
 
       expect(config.easy.rows * config.easy.cols).toBe(150);

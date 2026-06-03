@@ -9,6 +9,7 @@
     "start": "node server/index.js",
     "dev": "nodemon server/index.js",
     "build": "webpack --mode production",
+    "vercel-build": "echo 'API-only deploy — no frontend build step'",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
     "serve": "http-server -o",
@@ -17,7 +18,12 @@
     "backend": "cd src/python && pip install -r requirements.txt && python main.py",
     "lint": "eslint src/**/*.js server/**/*.js",
     "lint:fix": "eslint src/**/*.js server/**/*.js --fix",
-    "format": "prettier --write \"**/*.{js,json,css,md}\""
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "db:migrate:pg": "psql \"$DATABASE_URL\" -f server/database/schema-game.sql"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "keywords": [
     "maze",
@@ -89,8 +95,8 @@
     "express-validator": "^7.0.1",
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.3.0",
     "morgan": "^1.10.0",
-    "node": "^16.20.2",
     "nodemailer": "^6.9.7",
     "pg": "^8.11.3",
     "prettier": "^3.1.1",

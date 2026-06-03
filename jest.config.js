@@ -1,16 +1,8 @@
 module.exports = {
   testEnvironment: 'jsdom',
   coverageDirectory: 'coverage',
-  collectCoverageFrom: [
-    'src/**/*.js',
-    'server/**/*.js',
-    '!**/node_modules/**',
-    '!**/vendor/**',
-  ],
-  testMatch: [
-    '**/__tests__/**/*.test.js',
-    '**/?(*.)+(spec|test).js'
-  ],
+  collectCoverageFrom: ['src/**/*.js', 'server/**/*.js', '!**/node_modules/**', '!**/vendor/**'],
+  testMatch: ['**/__tests__/**/*.test.js', '**/?(*.)+(spec|test).js'],
   moduleFileExtensions: ['js', 'json'],
   transform: {
     '^.+\\.js$': 'babel-jest',

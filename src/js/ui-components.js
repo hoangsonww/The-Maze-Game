@@ -2,6 +2,15 @@
  * UI Components and Modal Management
  */
 
+// Backend base URL. Defaults to the deployed API; override with
+// `window.MAZE_API_BASE = ''` for same-origin / local dev.
+function apiBase() {
+  if (typeof window !== 'undefined' && window.MAZE_API_BASE !== undefined) {
+    return window.MAZE_API_BASE;
+  }
+  return 'https://maze-game-api.vercel.app';
+}
+
 // Modal Management
 function showModal(modalId) {
   const modal = document.getElementById(modalId);
@@ -20,7 +29,7 @@ function closeModal(modalId) {
 }
 
 // Close modal when clicking outside
-window.onclick = function(event) {
+window.onclick = function (event) {
   if (event.target.classList.contains('modal')) {
     event.target.style.display = 'none';
     document.body.style.overflow = 'auto';
@@ -39,7 +48,7 @@ async function showLeaderboardTab(timeframe) {
   currentLeaderboardTab = timeframe;
 
   // Update active tab
-  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach((btn) => btn.classList.remove('active'));
   event.target.classList.add('active');
 
   await loadLeaderboard(timeframe);
@@ -50,7 +59,9 @@ async function loadLeaderboard(timeframe = 'all') {
   contentDiv.innerHTML = '<p class="loading">Loading leaderboard...</p>';
 
   try {
-    const response = await fetch(`/api/v1/leaderboard?timeframe=${timeframe}&limit=100`);
+    const response = await fetch(
+      `${apiBase()}/api/v1/leaderboard?timeframe=${timeframe}&limit=100`
+    );
 
     if (!response.ok) {
       throw new Error('Failed to load leaderboard');
@@ -73,7 +84,9 @@ async function loadLeaderboard(timeframe = 'all') {
             </tr>
           </thead>
           <tbody>
-            ${data.data.map((entry, index) => `
+            ${data.data
+              .map(
+                (entry, index) => `
               <tr class="${index < 3 ? 'top-rank rank-' + (index + 1) : ''}">
                 <td class="rank-cell">
                   ${index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : index + 1}
@@ -87,7 +100,9 @@ async function loadLeaderboard(timeframe = 'all') {
                 <td>${entry.moves}</td>
                 <td class="date-cell">${formatDate(entry.timestamp)}</td>
               </tr>
-            `).join('')}
+            `
+              )
+              .join('')}
           </tbody>
         </table>
       `;
@@ -96,7 +111,8 @@ async function loadLeaderboard(timeframe = 'all') {
     }
   } catch (error) {
     console.error('Error loading leaderboard:', error);
-    contentDiv.innerHTML = '<p class="error">Failed to load leaderboard. Please try again later.</p>';
+    contentDiv.innerHTML =
+      '<p class="error">Failed to load leaderboard. Please try again later.</p>';
   }
 }
 
@@ -113,8 +129,8 @@ async function loadAchievements() {
   try {
     const playerId = getPlayerId();
     const [allResponse, userResponse] = await Promise.all([
-      fetch('/api/v1/achievements'),
-      fetch(`/api/v1/achievements/user/${playerId}`)
+      fetch(`${apiBase()}/api/v1/achievements`),
+      fetch(`${apiBase()}/api/v1/achievements/user/${playerId}`),
     ]);
 
     if (!allResponse.ok || !userResponse.ok) {
@@ -131,29 +147,35 @@ async function loadAchievements() {
       contentDiv.innerHTML = `
         <div class="achievements-header">
           <h3>Total Achievement Points: ${totalPoints}</h3>
-          <p>Unlocked: ${achievements.filter(a => a.unlocked).length} / ${achievements.length}</p>
+          <p>Unlocked: ${achievements.filter((a) => a.unlocked).length} / ${achievements.length}</p>
         </div>
         <div class="achievements-grid">
-          ${achievements.map(achievement => `
+          ${achievements
+            .map(
+              (achievement) => `
             <div class="achievement-card ${achievement.unlocked ? 'unlocked' : 'locked'}">
               <div class="achievement-icon">${achievement.icon}</div>
               <div class="achievement-info">
                 <h4>${achievement.name}</h4>
                 <p>${achievement.description}</p>
                 <span class="achievement-points">${achievement.points} pts</span>
-                ${achievement.unlocked ?
-                  `<span class="achievement-date">Unlocked: ${formatDate(achievement.unlockedAt)}</span>` :
-                  '<span class="achievement-locked">🔒 Locked</span>'
+                ${
+                  achievement.unlocked
+                    ? `<span class="achievement-date">Unlocked: ${formatDate(achievement.unlockedAt)}</span>`
+                    : '<span class="achievement-locked">🔒 Locked</span>'
                 }
               </div>
             </div>
-          `).join('')}
+          `
+            )
+            .join('')}
         </div>
       `;
     }
   } catch (error) {
     console.error('Error loading achievements:', error);
-    contentDiv.innerHTML = '<p class="error">Failed to load achievements. Please try again later.</p>';
+    contentDiv.innerHTML =
+      '<p class="error">Failed to load achievements. Please try again later.</p>';
   }
 }
 
@@ -204,14 +226,18 @@ function getPlayerId() {
   return playerId;
 }
 
-// Player Name Prompt
+// Player Name — persisted, editable in Settings (used for leaderboard entries).
 function setupPlayerName() {
-  let playerName = localStorage.getItem('playerName');
-  if (!playerName) {
-    playerName = prompt('Enter your player name for the leaderboard:', 'Anonymous');
-    if (playerName && playerName.trim()) {
-      localStorage.setItem('playerName', playerName.trim().substring(0, 20));
-    }
+  if (!localStorage.getItem('playerName')) {
+    localStorage.setItem('playerName', 'Player');
+  }
+  const input = document.getElementById('playerName');
+  if (input) {
+    input.value = localStorage.getItem('playerName');
+    input.addEventListener('input', () => {
+      const name = input.value.trim().substring(0, 20) || 'Player';
+      localStorage.setItem('playerName', name);
+    });
   }
 }
 
@@ -222,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Keyboard shortcuts
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      document.querySelectorAll('.modal').forEach(modal => {
+      document.querySelectorAll('.modal').forEach((modal) => {
         modal.style.display = 'none';
       });
       document.body.style.overflow = 'auto';
@@ -233,11 +259,12 @@ document.addEventListener('DOMContentLoaded', () => {
 // Service Worker Registration for PWA
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js')
-      .then(registration => {
+    navigator.serviceWorker
+      .register('/service-worker.js')
+      .then((registration) => {
         console.log('ServiceWorker registered:', registration.scope);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log('ServiceWorker registration failed:', err);
       });
   });
@@ -247,25 +274,18 @@ if ('serviceWorker' in navigator) {
 function trackEvent(category, action, label, value) {
   if (typeof gtag !== 'undefined') {
     gtag('event', action, {
-      'event_category': category,
-      'event_label': label,
-      'value': value
+      event_category: category,
+      event_label: label,
+      value: value,
     });
   }
 }
 
-// Track game events
-if (window.game) {
-  // Track game start
-  trackEvent('Game', 'start', window.game.difficulty);
+// Track game events (game.js dispatches these on window)
+window.addEventListener('gameComplete', (e) => {
+  trackEvent('Game', 'complete', e.detail.difficulty, e.detail.score);
+});
 
-  // Track game completion (add this to the game's endGame method)
-  window.addEventListener('gameComplete', (e) => {
-    trackEvent('Game', 'complete', e.detail.difficulty, e.detail.score);
-  });
-
-  // Track hint usage
-  window.addEventListener('hintUsed', () => {
-    trackEvent('Game', 'hint_used', window.game.difficulty);
-  });
-}
+window.addEventListener('hintUsed', (e) => {
+  trackEvent('Game', 'hint_used', e.detail.difficulty);
+});

@@ -1,109 +1,57 @@
 const express = require('express');
 const router = express.Router();
 const { AppError } = require('../middleware/errorHandler');
-const logger = require('../utils/logger');
-
-// In-memory user storage (replace with database)
-let users = [];
+const { authenticate } = require('../middleware/auth');
+const users = require('../database/users');
 
 /**
- * @route   POST /api/v1/users/register
- * @desc    Register a new user
- * @access  Public
+ * @route GET /api/v1/users/me/stats
+ * @desc  Current user's stats + progress
+ * @access Private
  */
-router.post('/register', async (req, res, next) => {
+router.get('/me/stats', authenticate, async (req, res, next) => {
   try {
-    const { username, email } = req.body;
-
-    if (!username || !email) {
-      throw new AppError('Please provide username and email', 400);
-    }
-
-    // Check if user exists
-    const existingUser = users.find(
-      u => u.username === username || u.email === email
-    );
-
-    if (existingUser) {
-      throw new AppError('User already exists', 409);
-    }
-
-    const user = {
-      id: Date.now() + Math.random(),
-      username,
-      email,
-      createdAt: new Date().toISOString(),
-      stats: {
-        gamesPlayed: 0,
-        gamesWon: 0,
-        totalScore: 0,
-        bestTime: null,
-        achievements: [],
-      },
-    };
-
-    users.push(user);
-    logger.info(`New user registered: ${username}`);
-
-    res.status(201).json({
-      success: true,
-      data: user,
-    });
+    const profile = await users.profile(req.user.id);
+    if (!profile) throw new AppError('User not found', 404);
+    res.json({ success: true, data: profile.stats });
   } catch (error) {
     next(error);
   }
 });
 
 /**
- * @route   GET /api/v1/users/:id
- * @desc    Get user profile
- * @access  Public
+ * @route POST /api/v1/users/me/games
+ * @desc  Record a finished game against the user's stats / progress
+ * @access Private
+ */
+router.post('/me/games', authenticate, async (req, res, next) => {
+  try {
+    const { difficulty = 'medium', score = 0, timeMs = 0, moves = 0, won = false } = req.body;
+    const stats = await users.recordGame(req.user.id, {
+      difficulty,
+      score: parseInt(score) || 0,
+      timeMs: parseInt(timeMs) || 0,
+      moves: parseInt(moves) || 0,
+      won: Boolean(won),
+    });
+    if (!stats) throw new AppError('User not found', 404);
+    res.status(201).json({ success: true, data: users.decorateStats(stats) });
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * @route GET /api/v1/users/:id
+ * @desc  Public profile (username + stats, no email)
+ * @access Public
  */
 router.get('/:id', async (req, res, next) => {
   try {
-    const user = users.find(u => u.id === parseFloat(req.params.id));
-
-    if (!user) {
-      throw new AppError('User not found', 404);
-    }
-
-    res.json({
-      success: true,
-      data: user,
-    });
-  } catch (error) {
-    next(error);
-  }
-});
-
-/**
- * @route   PUT /api/v1/users/:id/stats
- * @desc    Update user statistics
- * @access  Public
- */
-router.put('/:id/stats', async (req, res, next) => {
-  try {
-    const user = users.find(u => u.id === parseFloat(req.params.id));
-
-    if (!user) {
-      throw new AppError('User not found', 404);
-    }
-
-    const { gamesPlayed, gamesWon, totalScore, bestTime } = req.body;
-
-    if (gamesPlayed !== undefined) user.stats.gamesPlayed += gamesPlayed;
-    if (gamesWon !== undefined) user.stats.gamesWon += gamesWon;
-    if (totalScore !== undefined) user.stats.totalScore += totalScore;
-    if (bestTime !== undefined) {
-      user.stats.bestTime = user.stats.bestTime
-        ? Math.min(user.stats.bestTime, bestTime)
-        : bestTime;
-    }
-
-    res.json({
-      success: true,
-      data: user,
-    });
+    const profile = await users.profile(req.params.id);
+    if (!profile) throw new AppError('User not found', 404);
+    const { email, recentGames, ...publicProfile } = profile;
+    res.json({ success: true, data: publicProfile });
   } catch (error) {
     next(error);
   }

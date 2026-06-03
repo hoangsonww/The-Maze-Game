@@ -1,69 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { AppError } = require('../middleware/errorHandler');
-
-// Define achievements
-const ACHIEVEMENTS = [
-  {
-    id: 'first_win',
-    name: 'First Victory',
-    description: 'Complete your first maze',
-    icon: '🏆',
-    points: 10,
-  },
-  {
-    id: 'speed_demon',
-    name: 'Speed Demon',
-    description: 'Complete a maze in under 30 seconds',
-    icon: '⚡',
-    points: 25,
-  },
-  {
-    id: 'perfectionist',
-    name: 'Perfectionist',
-    description: 'Complete a maze without using any hints',
-    icon: '💎',
-    points: 20,
-  },
-  {
-    id: 'efficient',
-    name: 'Efficient Navigator',
-    description: 'Complete a maze with minimal moves',
-    icon: '🎯',
-    points: 30,
-  },
-  {
-    id: 'marathon',
-    name: 'Marathon Runner',
-    description: 'Complete 100 mazes',
-    icon: '🏃',
-    points: 50,
-  },
-  {
-    id: 'expert_conqueror',
-    name: 'Expert Conqueror',
-    description: 'Complete an expert difficulty maze',
-    icon: '👑',
-    points: 40,
-  },
-  {
-    id: 'streak_master',
-    name: 'Streak Master',
-    description: 'Win 10 games in a row',
-    icon: '🔥',
-    points: 35,
-  },
-  {
-    id: 'night_owl',
-    name: 'Night Owl',
-    description: 'Play between midnight and 4 AM',
-    icon: '🦉',
-    points: 15,
-  },
-];
-
-// In-memory storage for user achievements
-let userAchievements = {};
+const { achievements } = require('../database/repository');
 
 /**
  * @route   GET /api/v1/achievements
@@ -72,11 +10,8 @@ let userAchievements = {};
  */
 router.get('/', async (req, res, next) => {
   try {
-    res.json({
-      success: true,
-      count: ACHIEVEMENTS.length,
-      data: ACHIEVEMENTS,
-    });
+    const catalog = achievements.catalog();
+    res.json({ success: true, count: catalog.length, data: catalog });
   } catch (error) {
     next(error);
   }
@@ -84,30 +19,13 @@ router.get('/', async (req, res, next) => {
 
 /**
  * @route   GET /api/v1/achievements/user/:userId
- * @desc    Get user's unlocked achievements
+ * @desc    Get a player's achievements with unlocked status and total points
  * @access  Public
  */
 router.get('/user/:userId', async (req, res, next) => {
   try {
-    const { userId } = req.params;
-    const unlocked = userAchievements[userId] || [];
-
-    const achievementsWithStatus = ACHIEVEMENTS.map(achievement => ({
-      ...achievement,
-      unlocked: unlocked.includes(achievement.id),
-      unlockedAt: unlocked.find(a => a.id === achievement.id)?.unlockedAt,
-    }));
-
-    res.json({
-      success: true,
-      data: {
-        achievements: achievementsWithStatus,
-        totalPoints: unlocked.reduce((sum, id) => {
-          const achievement = ACHIEVEMENTS.find(a => a.id === id);
-          return sum + (achievement?.points || 0);
-        }, 0),
-      },
-    });
+    const data = await achievements.getUser(req.params.userId);
+    res.json({ success: true, data });
   } catch (error) {
     next(error);
   }
@@ -115,7 +33,7 @@ router.get('/user/:userId', async (req, res, next) => {
 
 /**
  * @route   POST /api/v1/achievements/unlock
- * @desc    Unlock an achievement for a user
+ * @desc    Unlock an achievement for a player
  * @access  Public
  */
 router.post('/unlock', async (req, res, next) => {
@@ -126,28 +44,17 @@ router.post('/unlock', async (req, res, next) => {
       throw new AppError('Please provide userId and achievementId', 400);
     }
 
-    const achievement = ACHIEVEMENTS.find(a => a.id === achievementId);
+    const achievement = achievements.catalog().find((a) => a.id === achievementId);
     if (!achievement) {
       throw new AppError('Achievement not found', 404);
     }
 
-    if (!userAchievements[userId]) {
-      userAchievements[userId] = [];
-    }
-
-    if (userAchievements[userId].includes(achievementId)) {
+    const result = await achievements.unlock(userId, achievementId);
+    if (result === 'exists') {
       throw new AppError('Achievement already unlocked', 400);
     }
 
-    userAchievements[userId].push({
-      id: achievementId,
-      unlockedAt: new Date().toISOString(),
-    });
-
-    res.status(201).json({
-      success: true,
-      data: achievement,
-    });
+    res.status(201).json({ success: true, data: achievement });
   } catch (error) {
     next(error);
   }

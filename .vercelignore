@@ -1,0 +1,22 @@
+# The game frontend ships on GitHub Pages, not on the Vercel backend.
+# NOTE: patterns are anchored with a leading "/" so they only match the repo
+# root — an unanchored "utils" would also exclude server/utils/ and break the
+# function bundle.
+/index.html
+/404.html
+/manifest.json
+/service-worker.js
+/sitemap.xml
+/robots.txt
+/src
+/utils
+/__tests__
+/__mocks__
+/docs
+/.github
+/.idea
+/Dockerfile
+/docker-compose.yml
+/nginx.conf
+/Jenkinsfile
+/webpack.config.js

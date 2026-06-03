@@ -1,15 +1,18 @@
 # Maze Game API Documentation
 
 ## Base URL
+
 ```
 Production: https://mazegame.example.com/api/v1
 Development: http://localhost:3000/api/v1
 ```
 
 ## Authentication
+
 Currently, the API does not require authentication. User identification is done via player IDs stored in localStorage.
 
 ## Rate Limiting
+
 - API requests: 100 requests per 15 minutes per IP
 - Burst limit: 20 additional requests allowed
 
@@ -20,9 +23,11 @@ Currently, the API does not require authentication. User identification is done 
 ### Health Check
 
 #### GET /api/health
+
 Check API health status.
 
 **Response**
+
 ```json
 {
   "status": "healthy",
@@ -37,6 +42,7 @@ Check API health status.
 ## Leaderboard
 
 ### GET /api/v1/leaderboard
+
 Retrieve leaderboard entries.
 
 **Query Parameters**
@@ -47,6 +53,7 @@ Retrieve leaderboard entries.
 | timeframe | string | 'all' | Filter by time: 'all', 'daily', 'weekly', 'monthly' |
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -67,9 +74,11 @@ Retrieve leaderboard entries.
 ```
 
 ### POST /api/v1/leaderboard
+
 Submit a score to the leaderboard.
 
 **Request Body**
+
 ```json
 {
   "playerName": "string (required, max 20 chars)",
@@ -81,6 +90,7 @@ Submit a score to the leaderboard.
 ```
 
 **Response** (201 Created)
+
 ```json
 {
   "success": true,
@@ -97,12 +107,15 @@ Submit a score to the leaderboard.
 ```
 
 **Error Responses**
+
 - 400: Invalid input (missing required fields, name too long)
 
 ### GET /api/v1/leaderboard/rank/:playerName
+
 Get a player's rank on the leaderboard.
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -123,6 +136,7 @@ Get a player's rank on the leaderboard.
 ```
 
 **Error Responses**
+
 - 404: Player not found
 
 ---
@@ -130,9 +144,11 @@ Get a player's rank on the leaderboard.
 ## Game Sessions
 
 ### POST /api/v1/games/start
+
 Start a new game session.
 
 **Request Body**
+
 ```json
 {
   "playerId": "string (optional)",
@@ -142,6 +158,7 @@ Start a new game session.
 ```
 
 **Response** (201 Created)
+
 ```json
 {
   "success": true,
@@ -159,9 +176,11 @@ Start a new game session.
 ```
 
 ### PUT /api/v1/games/:id/move
+
 Record a move in the game.
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -174,13 +193,16 @@ Record a move in the game.
 ```
 
 **Error Responses**
+
 - 404: Game session not found
 - 400: Game session is not active
 
 ### PUT /api/v1/games/:id/complete
+
 Complete a game session and calculate score.
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -197,9 +219,11 @@ Complete a game session and calculate score.
 ```
 
 ### GET /api/v1/games/stats
+
 Get aggregate game statistics.
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -217,9 +241,11 @@ Get aggregate game statistics.
 ## Achievements
 
 ### GET /api/v1/achievements
+
 Get all available achievements.
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -237,9 +263,11 @@ Get all available achievements.
 ```
 
 ### GET /api/v1/achievements/user/:userId
+
 Get achievements for a specific user.
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -261,9 +289,11 @@ Get achievements for a specific user.
 ```
 
 ### POST /api/v1/achievements/unlock
+
 Unlock an achievement for a user.
 
 **Request Body**
+
 ```json
 {
   "userId": "string (required)",
@@ -272,6 +302,7 @@ Unlock an achievement for a user.
 ```
 
 **Response** (201 Created)
+
 ```json
 {
   "success": true,
@@ -286,6 +317,7 @@ Unlock an achievement for a user.
 ```
 
 **Error Responses**
+
 - 400: Missing required fields or achievement already unlocked
 - 404: Achievement not found
 
@@ -294,9 +326,11 @@ Unlock an achievement for a user.
 ## User Management
 
 ### POST /api/v1/users/register
+
 Register a new user.
 
 **Request Body**
+
 ```json
 {
   "username": "string (required)",
@@ -305,6 +339,7 @@ Register a new user.
 ```
 
 **Response** (201 Created)
+
 ```json
 {
   "success": true,
@@ -325,13 +360,16 @@ Register a new user.
 ```
 
 **Error Responses**
+
 - 400: Missing required fields
 - 409: User already exists
 
 ### GET /api/v1/users/:id
+
 Get user profile.
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -352,12 +390,15 @@ Get user profile.
 ```
 
 **Error Responses**
+
 - 404: User not found
 
 ### PUT /api/v1/users/:id/stats
+
 Update user statistics.
 
 **Request Body**
+
 ```json
 {
   "gamesPlayed": "integer (optional)",
@@ -368,6 +409,7 @@ Update user statistics.
 ```
 
 **Response**
+
 ```json
 {
   "success": true,
@@ -389,6 +431,7 @@ Update user statistics.
 ## WebSocket Events
 
 ### Connection
+
 ```javascript
 const socket = io('http://localhost:3001');
 ```
@@ -396,12 +439,15 @@ const socket = io('http://localhost:3001');
 ### Events
 
 #### join-room
+
 Join a multiplayer game room.
+
 ```javascript
 socket.emit('join-room', roomId);
 ```
 
 **Server Response**
+
 ```javascript
 socket.on('player-joined', (data) => {
   // data: { playerId, playerCount }
@@ -409,12 +455,15 @@ socket.on('player-joined', (data) => {
 ```
 
 #### player-move
+
 Broadcast player movement.
+
 ```javascript
 socket.emit('player-move', { roomId, position: { x, y } });
 ```
 
 **Server Response**
+
 ```javascript
 socket.on('opponent-move', (data) => {
   // data: { playerId, position: { x, y } }
@@ -422,12 +471,15 @@ socket.on('opponent-move', (data) => {
 ```
 
 #### game-complete
+
 Notify when a player completes the game.
+
 ```javascript
 socket.emit('game-complete', { roomId, time, moves });
 ```
 
 **Server Response**
+
 ```javascript
 socket.on('game-finished', (data) => {
   // data: { winner, time, moves }
@@ -435,12 +487,15 @@ socket.on('game-finished', (data) => {
 ```
 
 #### leave-room
+
 Leave a multiplayer room.
+
 ```javascript
 socket.emit('leave-room', roomId);
 ```
 
 **Server Response**
+
 ```javascript
 socket.on('player-left', (data) => {
   // data: { playerId, playerCount }
@@ -452,6 +507,7 @@ socket.on('player-left', (data) => {
 ## Error Responses
 
 All error responses follow this format:
+
 ```json
 {
   "success": false,
@@ -461,6 +517,7 @@ All error responses follow this format:
 ```
 
 ### Common HTTP Status Codes
+
 - 200: Success
 - 201: Created
 - 400: Bad Request
@@ -496,22 +553,23 @@ finalScore = MAX(0, (baseScore - timePenalty - movePenalty - hintPenalty) * diff
 
 ## Achievements List
 
-| ID | Name | Description | Points | Unlock Condition |
-|----|------|-------------|--------|------------------|
-| first_win | First Victory | Complete your first maze | 10 | Win 1 game |
-| speed_demon | Speed Demon | Complete a maze in under 30 seconds | 25 | Complete in < 30s |
-| perfectionist | Perfectionist | Complete a maze without using any hints | 20 | Win with 0 hints |
-| efficient | Efficient Navigator | Complete a maze with minimal moves | 30 | Win with optimal path |
-| marathon | Marathon Runner | Complete 100 mazes | 50 | Win 100 games |
-| expert_conqueror | Expert Conqueror | Complete an expert difficulty maze | 40 | Win on expert |
-| streak_master | Streak Master | Win 10 games in a row | 35 | 10 win streak |
-| night_owl | Night Owl | Play between midnight and 4 AM | 15 | Play 12am-4am |
+| ID               | Name                | Description                             | Points | Unlock Condition      |
+| ---------------- | ------------------- | --------------------------------------- | ------ | --------------------- |
+| first_win        | First Victory       | Complete your first maze                | 10     | Win 1 game            |
+| speed_demon      | Speed Demon         | Complete a maze in under 30 seconds     | 25     | Complete in < 30s     |
+| perfectionist    | Perfectionist       | Complete a maze without using any hints | 20     | Win with 0 hints      |
+| efficient        | Efficient Navigator | Complete a maze with minimal moves      | 30     | Win with optimal path |
+| marathon         | Marathon Runner     | Complete 100 mazes                      | 50     | Win 100 games         |
+| expert_conqueror | Expert Conqueror    | Complete an expert difficulty maze      | 40     | Win on expert         |
+| streak_master    | Streak Master       | Win 10 games in a row                   | 35     | 10 win streak         |
+| night_owl        | Night Owl           | Play between midnight and 4 AM          | 15     | Play 12am-4am         |
 
 ---
 
 ## Examples
 
 ### JavaScript Fetch Example
+
 ```javascript
 // Submit score to leaderboard
 async function submitScore(playerName, score, completionTime) {
@@ -541,6 +599,7 @@ async function submitScore(playerName, score, completionTime) {
 ```
 
 ### cURL Example
+
 ```bash
 # Get leaderboard
 curl -X GET "http://localhost:3000/api/v1/leaderboard?limit=10&timeframe=daily"
@@ -570,5 +629,6 @@ Future versions will be available at `/api/v2/`, etc.
 ## Support
 
 For issues or questions:
+
 - GitHub Issues: https://github.com/hoangsonww/The-Maze-Game/issues
 - Email: support@mazegame.example.com

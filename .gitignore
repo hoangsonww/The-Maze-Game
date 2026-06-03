@@ -43,3 +43,9 @@ Thumbs.db
 tmp
 temp
 *.tmp
+
+# Vercel
+.vercel
+
+# Python venv
+.venv/

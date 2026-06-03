@@ -1,6 +1,12 @@
 // Jest setup file
 require('@testing-library/jest-dom');
 
+// jsdom does not provide TextEncoder/TextDecoder, which some dependencies
+// (e.g. supertest -> formidable -> cuid2) require at load time.
+const { TextEncoder, TextDecoder } = require('util');
+if (typeof global.TextEncoder === 'undefined') global.TextEncoder = TextEncoder;
+if (typeof global.TextDecoder === 'undefined') global.TextDecoder = TextDecoder;
+
 // Mock localStorage
 const localStorageMock = {
   getItem: jest.fn(),
@@ -18,25 +24,27 @@ global.Audio = jest.fn().mockImplementation(() => ({
   volume: 1,
 }));
 
-// Mock canvas
-HTMLCanvasElement.prototype.getContext = jest.fn(() => ({
-  fillRect: jest.fn(),
-  clearRect: jest.fn(),
-  fillStyle: '',
-  strokeStyle: '',
-  lineWidth: 1,
-  beginPath: jest.fn(),
-  moveTo: jest.fn(),
-  lineTo: jest.fn(),
-  stroke: jest.fn(),
-  fill: jest.fn(),
-  arc: jest.fn(),
-  createRadialGradient: jest.fn(() => ({
-    addColorStop: jest.fn(),
-  })),
-  setLineDash: jest.fn(),
-  strokeRect: jest.fn(),
-}));
+// Mock canvas (only in DOM environments; server tests run under `node`).
+if (typeof HTMLCanvasElement !== 'undefined') {
+  HTMLCanvasElement.prototype.getContext = jest.fn(() => ({
+    fillRect: jest.fn(),
+    clearRect: jest.fn(),
+    fillStyle: '',
+    strokeStyle: '',
+    lineWidth: 1,
+    beginPath: jest.fn(),
+    moveTo: jest.fn(),
+    lineTo: jest.fn(),
+    stroke: jest.fn(),
+    fill: jest.fn(),
+    arc: jest.fn(),
+    createRadialGradient: jest.fn(() => ({
+      addColorStop: jest.fn(),
+    })),
+    setLineDash: jest.fn(),
+    strokeRect: jest.fn(),
+  }));
+}
 
 // Mock fetch
 global.fetch = jest.fn(() =>

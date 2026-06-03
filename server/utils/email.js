@@ -1,11 +1,12 @@
 const nodemailer = require('nodemailer');
 const logger = require('./logger');
 
-// Create transporter
+// Create the SMTP transport. Built lazily (on first send) so that simply
+// requiring this module never opens a connection or crashes app boot.
 const createTransporter = () => {
   if (process.env.NODE_ENV === 'production') {
     // Production: Use real SMTP
-    return nodemailer.createTransporter({
+    return nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: parseInt(process.env.SMTP_PORT) || 587,
       secure: false,
@@ -16,7 +17,7 @@ const createTransporter = () => {
     });
   } else {
     // Development: Use Ethereal (test account)
-    return nodemailer.createTransporter({
+    return nodemailer.createTransport({
       host: 'smtp.ethereal.email',
       port: 587,
       auth: {
@@ -27,7 +28,11 @@ const createTransporter = () => {
   }
 };
 
-const transporter = createTransporter();
+let transporter = null;
+const getTransporter = () => {
+  if (!transporter) transporter = createTransporter();
+  return transporter;
+};
 
 // Email templates
 const templates = {
@@ -111,7 +116,7 @@ const sendEmail = async ({ to, subject, text, html, template, data }) => {
       mailOptions.html = templateContent.html;
     }
 
-    const info = await transporter.sendMail(mailOptions);
+    const info = await getTransporter().sendMail(mailOptions);
 
     logger.info(`Email sent: ${info.messageId}`);
 

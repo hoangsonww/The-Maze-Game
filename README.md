@@ -38,6 +38,7 @@
 ## ✨ Features
 
 ### 🎯 Game Features
+
 - **Multiple Difficulty Levels**: Easy, Medium, Hard, and Expert modes
 - **Procedural Maze Generation**: Unique maze every time using Depth-First Search algorithm
 - **Timer & Scoring System**: Compete for the best time and highest score
@@ -50,12 +51,14 @@
 - **Themes**: Multiple visual themes (Default, Dark, Neon)
 
 ### 🌐 Multiplayer Features
+
 - **Real-time Multiplayer**: Compete against other players using WebSockets
 - **Live Player Tracking**: See opponents' positions in real-time
 - **Room-based Matches**: Join or create game rooms
 - **Winner Announcements**: Instant win notifications
 
 ### 📊 Backend Features
+
 - **Global Leaderboards**: Compete worldwide with timeframe filters
 - **RESTful API**: Full-featured API for game data
 - **User Management**: Track player profiles and statistics
@@ -64,6 +67,7 @@
 - **Error Logging**: Winston-based comprehensive logging
 
 ### 🔒 Production Features
+
 - **CI/CD Pipeline**: Automated testing and deployment
 - **Docker Support**: Containerized deployment with Docker Compose
 - **Security**: Helmet.js, rate limiting, CORS, CSP headers
@@ -79,6 +83,7 @@
 ## 🎮 Demo
 
 ### Live Demo
+
 👉 **[Play Now](https://hoangsonww.github.io/The-Maze-Game/)**
 
 ### Screenshots
@@ -89,16 +94,16 @@
 
 ### Features Preview
 
-| Feature | Description |
-|---------|-------------|
-| 🎯 Multiple Difficulties | Easy (10x15) to Expert (25x35) mazes |
-| ⏱️ Timer | Real-time countdown and best time tracking |
-| 💡 Hints | A* pathfinding hints (costs points) |
-| 🏆 Achievements | 8 unique achievements to unlock |
-| 📊 Leaderboards | Global rankings with filtering |
-| 🎨 Themes | Dark mode and custom themes |
-| 🔊 Sound | Optional sound effects |
-| ⏸️ Pause | Pause and resume anytime |
+| Feature                  | Description                                |
+| ------------------------ | ------------------------------------------ |
+| 🎯 Multiple Difficulties | Easy (10x15) to Expert (25x35) mazes       |
+| ⏱️ Timer                 | Real-time countdown and best time tracking |
+| 💡 Hints                 | A\* pathfinding hints (costs points)       |
+| 🏆 Achievements          | 8 unique achievements to unlock            |
+| 📊 Leaderboards          | Global rankings with filtering             |
+| 🎨 Themes                | Dark mode and custom themes                |
+| 🔊 Sound                 | Optional sound effects                     |
+| ⏸️ Pause                 | Pause and resume anytime                   |
 
 ---
 
@@ -148,23 +153,27 @@ npm run dev
 ### Step-by-Step Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/hoangsonww/The-Maze-Game.git
    cd The-Maze-Game
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Configure environment**
+
    ```bash
    cp .env.example .env
    # Edit .env with your configuration
    ```
 
 4. **Build for production**
+
    ```bash
    npm run build
    ```
@@ -181,15 +190,18 @@ npm run dev
 ### Playing the Game
 
 #### Controls
+
 - **Arrow Keys** or **WASD** - Move your character
 - **P** - Pause/Resume game
 - **H** - Use hint (costs points)
 - **Mouse/Touch** - Click on-screen buttons
 
 #### Objective
+
 Navigate from the red player (top-left) to the green exit (bottom-right) as quickly as possible with minimal moves.
 
 #### Scoring
+
 ```
 Base Score: 100 points
 Penalties:
@@ -209,6 +221,7 @@ Difficulty Multipliers:
 See [API Documentation](./API_DOCUMENTATION.md) for complete API reference.
 
 **Example: Submit Score**
+
 ```javascript
 const response = await fetch('/api/v1/leaderboard', {
   method: 'POST',
@@ -218,8 +231,8 @@ const response = await fetch('/api/v1/leaderboard', {
     score: 150,
     completionTime: 45000,
     difficulty: 'medium',
-    moves: 50
-  })
+    moves: 50,
+  }),
 });
 ```
 
@@ -233,11 +246,9 @@ const response = await fetch('/api/v1/leaderboard', {
 The-Maze-Game/
 ├── src/                          # Source code
 │   ├── css/                      # Stylesheets
-│   │   ├── style.css            # Original styles
-│   │   └── style-enhanced.css   # Production styles
+│   │   └── style.css            # Game styles
 │   ├── js/                       # JavaScript
-│   │   ├── game.js              # Original game logic
-│   │   ├── game-enhanced.js     # Enhanced game with features
+│   │   ├── game.js              # Game engine (canvas, A*, scoring)
 │   │   └── ui-components.js     # UI components and modals
 │   ├── html/                     # HTML pages
 │   │   └── about.html           # About page
@@ -264,8 +275,7 @@ The-Maze-Game/
 ├── utils/                        # Static assets
 │   ├── favicon.ico              # Favicon
 │   └── image-*.png              # PWA icons
-├── index.html                    # Original game page
-├── index-enhanced.html           # Production game page
+├── index.html                    # Game page
 ├── manifest.json                 # PWA manifest
 ├── service-worker.js             # Service worker for PWA
 ├── Dockerfile                    # Docker configuration
@@ -280,33 +290,39 @@ The-Maze-Game/
 ### Technology Stack
 
 **Frontend**
+
 - Vanilla JavaScript (ES6+)
 - HTML5 Canvas API
 - CSS3 with Flexbox/Grid
 - Service Worker API (PWA)
 
 **Backend**
+
 - Node.js + Express.js
 - Socket.IO (WebSockets)
 - Winston (Logging)
 - Helmet.js (Security)
 
 **Build Tools**
+
 - Webpack 5
 - Babel 7
 - PostCSS
 - Terser
 
 **Testing**
+
 - Jest
 - Supertest
 
 **DevOps**
+
 - Docker & Docker Compose
 - GitHub Actions (CI/CD)
 - Nginx (Reverse Proxy)
 
 **Optional Services**
+
 - PostgreSQL (Database)
 - Redis (Caching)
 
@@ -318,15 +334,15 @@ Complete API documentation is available in [API_DOCUMENTATION.md](./API_DOCUMENT
 
 ### Quick Reference
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/health` | GET | Health check |
-| `/api/v1/leaderboard` | GET | Get leaderboard |
-| `/api/v1/leaderboard` | POST | Submit score |
-| `/api/v1/games/start` | POST | Start game session |
-| `/api/v1/games/:id/complete` | PUT | Complete game |
-| `/api/v1/achievements` | GET | Get achievements |
-| `/api/v1/users/register` | POST | Register user |
+| Endpoint                     | Method | Description        |
+| ---------------------------- | ------ | ------------------ |
+| `/api/health`                | GET    | Health check       |
+| `/api/v1/leaderboard`        | GET    | Get leaderboard    |
+| `/api/v1/leaderboard`        | POST   | Submit score       |
+| `/api/v1/games/start`        | POST   | Start game session |
+| `/api/v1/games/:id/complete` | PUT    | Complete game      |
+| `/api/v1/achievements`       | GET    | Get achievements   |
+| `/api/v1/users/register`     | POST   | Register user      |
 
 ---
 
@@ -373,10 +389,10 @@ CORS_ORIGIN=http://localhost:3000
 
 ### Adding New Features
 
-1. **Game Features**: Edit `src/js/game-enhanced.js`
+1. **Game Features**: Edit `src/js/game.js`
 2. **UI Components**: Edit `src/js/ui-components.js`
 3. **API Endpoints**: Add routes in `server/routes/`
-4. **Styles**: Edit `src/css/style-enhanced.css`
+4. **Styles**: Edit `src/css/style.css`
 
 ---
 
@@ -445,6 +461,37 @@ npm run build
 NODE_ENV=production npm start
 ```
 
+### Vercel (Backend API + Swagger)
+
+The Express backend is serverless-ready and deploys to Vercel as-is:
+
+```bash
+vercel --prod
+```
+
+- All requests are routed to `api/index.js` (see `vercel.json`), which exports the shared app from `server/app.js`.
+- `GET /` redirects to `/api-docs` — interactive **Swagger UI** whose assets (CSS, JS, favicon) load entirely from a CDN. The raw spec is served at `/openapi.json`.
+- The active datastore is **MongoDB** (database `maze-game`). PostgreSQL is wired and correct but inactive; switch with `DB_DRIVER=postgres` and apply `server/database/schema-game.sql`. With no DB configured the API falls back to an in-memory store.
+- **CORS allows all origins**, so the GitHub Pages frontend (or anything) can call it directly.
+- **Accounts** (`/api/v1/auth/register`, `/login`, `/me`) issue JWTs (bcrypt-hashed passwords); per-user stats and progress live at `/api/v1/users/me/stats` and `/me/games`. Set `JWT_SECRET` to enable them.
+- Real-time multiplayer (Socket.IO) runs only via `npm start` (`server/index.js`), not on serverless.
+
+**Environment variables to set in Vercel:**
+
+| Variable                                          | Required          | Notes                                                             |
+| ------------------------------------------------- | ----------------- | ----------------------------------------------------------------- |
+| `MONGODB_URI`                                     | yes               | MongoDB connection string                                         |
+| `JWT_SECRET`                                      | yes (accounts)    | Long random string; signs auth tokens                             |
+| `MONGODB_DB`                                      | no                | Defaults to `maze-game`                                           |
+| `DB_DRIVER`                                       | no                | `mongo` (default when `MONGODB_URI` set), `postgres`, or `memory` |
+| `NODE_ENV`                                        | recommended       | `production`                                                      |
+| `JWT_EXPIRATION`, `BCRYPT_ROUNDS`                 | optional          | Token TTL (default `7d`) / hash cost (default `10`)               |
+| `DATABASE_URL` / `DB_*`                           | only for Postgres | Used when `DB_DRIVER=postgres`                                    |
+| `SENTRY_DSN`                                      | optional          | Enables error tracking                                            |
+| `RATE_LIMIT_WINDOW_MS`, `RATE_LIMIT_MAX_REQUESTS` | optional          | Rate-limit tuning                                                 |
+
+The static game frontend stays vanilla JS on **GitHub Pages**; point its API calls at the Vercel URL when you deploy the backend.
+
 ### GitHub Pages (Static Only)
 
 Automatic deployment via GitHub Actions to `gh-pages` branch.
@@ -460,6 +507,7 @@ heroku addons:create heroku-postgresql:hobby-dev
 heroku addons:create heroku-redis:hobby-dev
 git push heroku main
 ```
+
 </details>
 
 <details>
@@ -477,6 +525,7 @@ git push heroku main
 ```bash
 doctl apps create --spec .do/app.yaml
 ```
+
 </details>
 
 ---

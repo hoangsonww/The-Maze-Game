@@ -112,7 +112,16 @@ router.post('/custom', authenticate, async (req, res, next) => {
        (user_id, name, description, maze_data, difficulty, rows, cols, is_public)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
        RETURNING *`,
-      [req.user.id, name, description, JSON.stringify(mazeData), difficulty, rows, cols, isPublic || false]
+      [
+        req.user.id,
+        name,
+        description,
+        JSON.stringify(mazeData),
+        difficulty,
+        rows,
+        cols,
+        isPublic || false,
+      ]
     );
 
     // Check for achievement
@@ -202,10 +211,10 @@ router.delete('/custom/:id', authenticate, async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const result = await query(
-      'DELETE FROM custom_mazes WHERE id = $1 AND user_id = $2',
-      [id, req.user.id]
-    );
+    const result = await query('DELETE FROM custom_mazes WHERE id = $1 AND user_id = $2', [
+      id,
+      req.user.id,
+    ]);
 
     if (result.rowCount === 0) {
       throw new AppError('Maze not found or unauthorized', 404);
@@ -229,10 +238,7 @@ router.post('/custom/:id/play', async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    await query(
-      'UPDATE custom_mazes SET play_count = play_count + 1 WHERE id = $1',
-      [id]
-    );
+    await query('UPDATE custom_mazes SET play_count = play_count + 1 WHERE id = $1', [id]);
 
     res.json({
       success: true,
@@ -273,10 +279,10 @@ router.post('/custom/:id/rate', authenticate, async (req, res, next) => {
         [id]
       );
 
-      await client.query(
-        'UPDATE custom_mazes SET rating = $1 WHERE id = $2',
-        [avgResult.rows[0].avg_rating, id]
-      );
+      await client.query('UPDATE custom_mazes SET rating = $1 WHERE id = $2', [
+        avgResult.rows[0].avg_rating,
+        id,
+      ]);
     });
 
     res.json({
