@@ -86,22 +86,83 @@ function checkCollision(x, y) {
     return maze[y][x] === 1;
 }
 
-function movePlayer(dx, dy) {
+// --- Timer: starts on the first move ---
+let startTime = null;
+let timerStarted = false;
+let timerRaf = null;
+let gameWon = false;
+const timerEl = document.getElementById('timer');
+
+function formatTime(ms) {
+    return (ms / 1000).toFixed(1) + 's';
+}
+
+function startTimer() {
+    if (timerStarted) return;
+    timerStarted = true;
+    startTime = performance.now();
+    function tick() {
+        timerEl.innerText = 'Time: ' + formatTime(performance.now() - startTime);
+        timerRaf = requestAnimationFrame(tick);
+    }
+    tick();
+}
+
+// --- Sliding movement: one press glides until a wall (or the exit) ---
+let slideInterval = null;
+const SLIDE_MS = 35; // smaller = faster slide
+
+function stopSliding() {
+    if (slideInterval) {
+        clearInterval(slideInterval);
+        slideInterval = null;
+    }
+}
+
+function step(dx, dy) {
     const newX = player.x + dx;
     const newY = player.y + dy;
     if (newX >= 0 && newX < cols && newY >= 0 && newY < rows && !checkCollision(newX, newY)) {
         player.x = newX;
         player.y = newY;
+        return true;
     }
+    return false;
+}
+
+function slide(dx, dy) {
+    if (gameWon) return;
+    startTimer();
+    stopSliding();
+    // Move at least one cell immediately, then keep gliding.
+    if (!step(dx, dy)) return;
+    if (checkWin()) return;
+    slideInterval = setInterval(() => {
+        if (!step(dx, dy) || checkWin()) {
+            stopSliding();
+        }
+    }, SLIDE_MS);
 }
 
 function checkWin() {
     if (player.x === exit.x && player.y === exit.y) {
+        gameWon = true;
+        stopSliding();
+        cancelAnimationFrame(timerRaf);
+        const elapsed = startTime ? performance.now() - startTime : 0;
+
         localStorage.getItem('lifetimeScore') ? localStorage.setItem('lifetimeScore', parseInt(localStorage.getItem('lifetimeScore')) + 1) : localStorage.setItem('lifetimeScore', 1);
-        alert("Congratulations, you've escaped the maze! Now we dare you to do it again! FYI, your lifetime score is currently: " + localStorage.getItem('lifetimeScore'));
-        window.location.reload();
+
+        document.getElementById('winMessage').innerText =
+            "You escaped the maze! Lifetime score: " + localStorage.getItem('lifetimeScore');
+        document.getElementById('winTime').innerText = 'Your time: ' + formatTime(elapsed);
+        document.getElementById('winModal').classList.add('show');
+        return true;
     }
+    return false;
 }
+
+document.getElementById('playAgain').addEventListener('click', () => window.location.reload());
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -116,26 +177,25 @@ draw();
 window.addEventListener('keydown', (e) => {
     switch(e.key) {
         case 'ArrowUp':
-            movePlayer(0, -1);
+            slide(0, -1);
             e.preventDefault();
             break;
         case 'ArrowDown':
-            movePlayer(0, 1);
+            slide(0, 1);
             e.preventDefault();
             break;
         case 'ArrowLeft':
-            movePlayer(-1, 0);
+            slide(-1, 0);
             e.preventDefault();
             break;
         case 'ArrowRight':
-            movePlayer(1, 0);
+            slide(1, 0);
             e.preventDefault();
             break;
     }
-    checkWin();
 });
 
-document.getElementById('moveUp').addEventListener('click', () => movePlayer(0, -1));
-document.getElementById('moveDown').addEventListener('click', () => movePlayer(0, 1));
-document.getElementById('moveLeft').addEventListener('click', () => movePlayer(-1, 0));
-document.getElementById('moveRight').addEventListener('click', () => movePlayer(1, 0));
+document.getElementById('moveUp').addEventListener('click', () => slide(0, -1));
+document.getElementById('moveDown').addEventListener('click', () => slide(0, 1));
+document.getElementById('moveLeft').addEventListener('click', () => slide(-1, 0));
+document.getElementById('moveRight').addEventListener('click', () => slide(1, 0));

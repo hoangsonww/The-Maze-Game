@@ -159,3 +159,63 @@ header h2 {
     background-color: #ececec;
     border-radius: 8px;
 }
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+.modal-box {
+    background-color: #fff;
+    color: #000;
+    padding: 30px 40px;
+    border-radius: 16px;
+    text-align: center;
+    max-width: 90%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    animation: pop-in 0.25s ease-out;
+}
+
+@keyframes pop-in {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.modal-box h2 {
+    margin: 0 0 10px;
+    font-size: 1.8em;
+}
+
+.modal-box .win-time {
+    font-size: 2em;
+    font-weight: 600;
+    color: #2e7d32;
+    margin: 10px 0 20px;
+}
+
+.modal-box button {
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    background-color: #2e7d32;
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.modal-box button:hover {
+    background-color: #1b5e20;
+}
