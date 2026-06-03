@@ -76,6 +76,69 @@ class MazeGame {
         trail: 'rgba(0,255,213,0.14)',
         glow: true,
       },
+      forest: {
+        wall: '#0a160f',
+        floor: '#15271b',
+        grid: 'rgba(124,242,106,0.08)',
+        player: '#ffc24a',
+        exit: '#7cf26a',
+        trail: 'rgba(124,242,106,0.14)',
+        glow: false,
+      },
+      sunset: {
+        wall: '#2a1224',
+        floor: '#3a1a2e',
+        grid: 'rgba(255,170,90,0.10)',
+        player: '#ffd36e',
+        exit: '#ff7eb3',
+        trail: 'rgba(255,170,90,0.16)',
+        glow: true,
+      },
+      ocean: {
+        wall: '#06182b',
+        floor: '#0d2740',
+        grid: 'rgba(68,224,255,0.10)',
+        player: '#ffd166',
+        exit: '#44e0ff',
+        trail: 'rgba(68,224,255,0.16)',
+        glow: false,
+      },
+      dracula: {
+        wall: '#1a1b26',
+        floor: '#282a36',
+        grid: 'rgba(189,147,249,0.12)',
+        player: '#ff79c6',
+        exit: '#50fa7b',
+        trail: 'rgba(189,147,249,0.16)',
+        glow: true,
+      },
+      mono: {
+        wall: '#0c0c0c',
+        floor: '#1c1c1c',
+        grid: 'rgba(255,255,255,0.07)',
+        player: '#ffffff',
+        exit: '#ffb000',
+        trail: 'rgba(255,176,0,0.14)',
+        glow: false,
+      },
+      candy: {
+        wall: '#3a2350',
+        floor: '#fdeef7',
+        grid: 'rgba(58,35,80,0.06)',
+        player: '#ff5d8f',
+        exit: '#19c39a',
+        trail: 'rgba(124,200,255,0.16)',
+        glow: false,
+      },
+      volcano: {
+        wall: '#190806',
+        floor: '#2a0d08',
+        grid: 'rgba(255,120,60,0.10)',
+        player: '#ffd24a',
+        exit: '#ff5a36',
+        trail: 'rgba(255,120,60,0.18)',
+        glow: true,
+      },
     };
 
     // Sound effects (tiny embedded blips; failures are ignored)
@@ -318,14 +381,18 @@ class MazeGame {
   togglePause() {
     if (this.won) return;
     this.paused = !this.paused;
+    if (this.paused) this.pausedAt = Date.now();
+    else this.gameStartTime += Date.now() - this.pausedAt;
+    this.setPauseButton(this.paused);
+  }
+
+  // Swap the pause button's icon (via .paused class) + label without emojis.
+  setPauseButton(paused) {
     const btn = document.getElementById('pauseGame');
-    if (this.paused) {
-      this.pausedAt = Date.now();
-      if (btn) btn.textContent = '▶️ Resume';
-    } else {
-      this.gameStartTime += Date.now() - this.pausedAt;
-      if (btn) btn.textContent = '⏸️ Pause';
-    }
+    if (!btn) return;
+    btn.classList.toggle('paused', paused);
+    const label = btn.querySelector('.btn-label');
+    if (label) label.textContent = paused ? 'Resume' : 'Pause';
   }
 
   // ---- hints (A*) ----------------------------------------------------------
@@ -445,8 +512,7 @@ class MazeGame {
     this.buildMaze();
     this.resetState();
     this.updateHUD();
-    const btn = document.getElementById('pauseGame');
-    if (btn) btn.textContent = '⏸️ Pause';
+    this.setPauseButton(false);
   }
 
   regenerate() {

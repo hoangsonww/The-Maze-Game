@@ -48,7 +48,7 @@
 - **Persistent Statistics**: Lifetime stats saved locally (and to your account when signed in)
 - **Achievements System**: 8 achievements to unlock
 - **Sound Effects**: Optional audio feedback
-- **Themes**: Three visual themes (Daylight, Midnight, Neon)
+- **Themes**: 10 visual themes (Daylight, Midnight, Neon, Forest, Sunset, Ocean, Dracula, Mono, Candy, Volcano)
 - **Touch Controls**: Swipe to move on mobile
 
 ### 🌐 Multiplayer (backend-ready)
@@ -108,18 +108,18 @@
 
 ### Features Preview
 
-| Feature                  | Description                               |
-| ------------------------ | ----------------------------------------- |
-| 🎯 Multiple Difficulties | Easy (11×15) to Expert (25×35) mazes      |
-| ⏱️ Timer                 | Real-time timer and best-time tracking    |
-| 💡 Hints                 | A\* pathfinding hints (costs points)      |
-| 🏆 Achievements          | 8 unique achievements to unlock           |
-| 📊 Leaderboards          | Global rankings with timeframe filtering  |
-| 👤 Accounts & Stats      | Sign in to track level, win rate, streaks |
-| 🎨 Themes                | Daylight, Midnight, and Neon              |
-| 📱 Touch                 | Swipe controls on mobile                  |
-| 🔊 Sound                 | Optional sound effects                    |
-| ⏸️ Pause                 | Pause and resume anytime                  |
+| Feature                  | Description                                 |
+| ------------------------ | ------------------------------------------- |
+| 🎯 Multiple Difficulties | Easy (11×15) to Expert (25×35) mazes        |
+| ⏱️ Timer                 | Real-time timer and best-time tracking      |
+| 💡 Hints                 | A\* pathfinding hints (costs points)        |
+| 🏆 Achievements          | 8 unique achievements to unlock             |
+| 📊 Leaderboards          | Global rankings with timeframe filtering    |
+| 👤 Accounts & Stats      | Sign in to track level, win rate, streaks   |
+| 🎨 Themes                | 10 themes (Dracula, Sunset, Ocean, Neon, …) |
+| 📱 Touch                 | Swipe controls on mobile                    |
+| 🔊 Sound                 | Optional sound effects                      |
+| ⏸️ Pause                 | Pause and resume anytime                    |
 
 ---
 

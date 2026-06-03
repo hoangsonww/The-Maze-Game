@@ -34,6 +34,10 @@
   --shadow-lg: 0 26px 60px -20px rgba(0, 0, 0, 0.75);
   --glow-lime: 0 0 0 1px rgba(198, 242, 78, 0.35), 0 14px 30px -12px rgba(198, 242, 78, 0.3);
 
+  /* Theme-aware backdrop glows (overridden per body.<theme>-theme) */
+  --glow-1: rgba(198, 242, 78, 0.12);
+  --glow-2: rgba(69, 224, 255, 0.09);
+
   --font-display: "Bricolage Grotesque", sans-serif;
   --font-ui: "Sora", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
@@ -55,8 +59,8 @@ body::before {
   position: fixed;
   inset: 0;
   z-index: -2;
-  background: radial-gradient(900px 520px at 10% -8%, rgba(198, 242, 78, 0.12), transparent 60%),
-    radial-gradient(820px 620px at 102% 112%, rgba(69, 224, 255, 0.09), transparent 55%), var(--ink);
+  background: radial-gradient(900px 520px at 10% -8%, var(--glow-1), transparent 60%),
+    radial-gradient(820px 620px at 102% 112%, var(--glow-2), transparent 55%), var(--ink);
 }
 body::after {
   content: "";
@@ -411,14 +415,38 @@ body::after {
 .action-button:hover {
   transform: translateX(4px);
   border-color: var(--line-lime);
-  background: rgba(198, 242, 78, 0.07);
+  background: color-mix(in srgb, var(--lime) 9%, transparent);
+}
+.action-button:hover .ab-ico {
+  color: var(--lime);
+  border-color: var(--line-lime);
+  background: color-mix(in srgb, var(--lime) 12%, transparent);
 }
 .action-button:hover::before {
   transform: scaleY(1);
 }
 .ab-ico {
-  font-size: 1rem;
-  filter: saturate(1.1);
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  color: var(--muted);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  transition:
+    color 0.18s,
+    background 0.18s,
+    border-color 0.18s;
+}
+.ab-ico svg {
+  width: 17px;
+  height: 17px;
+  display: block;
+}
+.ab-label {
+  flex: 1;
 }
 
 /* ----- Game area ----- */
@@ -598,39 +626,62 @@ kbd {
   gap: 0.7rem;
 }
 .action-btn {
-  padding: 0.78rem 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.72rem 1.2rem;
   border: 1px solid transparent;
   border-radius: var(--r-btn);
   font-family: var(--font-ui);
   font-size: 0.92rem;
   font-weight: 600;
+  letter-spacing: 0.01em;
   cursor: pointer;
+  --accent: var(--lime);
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 13%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 34%, transparent);
   transition:
     transform 0.16s,
     box-shadow 0.18s,
-    filter 0.18s;
+    background 0.18s;
+}
+.action-btn .btn-ico {
+  display: grid;
+  place-items: center;
+}
+.action-btn .btn-ico svg {
+  width: 18px;
+  height: 18px;
+  display: block;
 }
 .pause-btn {
-  background: rgba(69, 224, 255, 0.12);
-  color: var(--cyan);
-  border-color: rgba(69, 224, 255, 0.3);
+  --accent: var(--cyan);
 }
 .hint-btn {
-  background: rgba(198, 242, 78, 0.12);
-  color: var(--lime);
-  border-color: var(--line-lime);
+  --accent: var(--lime);
 }
 .regen-btn {
-  background: rgba(255, 106, 77, 0.12);
-  color: var(--coral);
-  border-color: rgba(255, 106, 77, 0.3);
+  --accent: var(--coral);
 }
 .action-btn:hover {
   transform: translateY(-2px);
-  filter: brightness(1.12);
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
+  box-shadow: 0 10px 22px -14px var(--accent);
 }
 .action-btn:active {
   transform: translateY(0);
+}
+/* Pause/Play icon swap (selectors specific enough to beat .btn-ico svg) */
+.action-btn .btn-ico .ico-play {
+  display: none;
+}
+#pauseGame.paused .btn-ico .ico-pause {
+  display: none;
+}
+#pauseGame.paused .btn-ico .ico-play {
+  display: block;
 }
 
 /* ----- Reveal animation ----- */
@@ -1610,17 +1661,113 @@ kbd {
   }
 }
 
-/* ----- Themes (page chrome) ----- */
+/* ----- Themes (page chrome) -----
+ * Each theme overrides the accent palette, the ink tint, and the two backdrop
+ * glows. The canvas palettes live in src/js/game.js (this.themes). */
 body.dark-theme {
   --ink: #050608;
   --ink-2: #0a0c0e;
+  --glow-1: rgba(198, 242, 78, 0.08);
+  --glow-2: rgba(69, 224, 255, 0.06);
 }
 body.neon-theme {
   --lime: #00ffd5;
   --lime-deep: #00c8a8;
   --coral: #ff2d9b;
   --cyan: #38f0ff;
-  --line-lime: rgba(0, 255, 213, 0.28);
+  --gold: #ffe14a;
+  --ink: #05010f;
+  --ink-2: #0c0322;
+  --line-lime: rgba(0, 255, 213, 0.3);
+  --glow-1: rgba(0, 255, 213, 0.14);
+  --glow-2: rgba(255, 45, 155, 0.12);
+}
+body.forest-theme {
+  --lime: #6fe08a;
+  --lime-deep: #3fb866;
+  --coral: #ffb24a;
+  --cyan: #5fd9c0;
+  --gold: #ffd24a;
+  --ink: #0a140e;
+  --ink-2: #0e1c13;
+  --line-lime: rgba(111, 224, 138, 0.26);
+  --glow-1: rgba(111, 224, 138, 0.12);
+  --glow-2: rgba(255, 178, 74, 0.08);
+}
+body.sunset-theme {
+  --lime: #ff9e6d;
+  --lime-deep: #ff6f5e;
+  --coral: #ff5d8f;
+  --cyan: #ffd36e;
+  --gold: #ffd36e;
+  --ink: #1a0e1c;
+  --ink-2: #241326;
+  --line-lime: rgba(255, 158, 109, 0.28);
+  --glow-1: rgba(255, 158, 109, 0.15);
+  --glow-2: rgba(255, 93, 143, 0.12);
+}
+body.ocean-theme {
+  --lime: #3ad0ff;
+  --lime-deep: #2a9fd6;
+  --coral: #ff7a8a;
+  --cyan: #7af0d0;
+  --gold: #ffd166;
+  --ink: #06121f;
+  --ink-2: #0a1c2e;
+  --line-lime: rgba(58, 208, 255, 0.26);
+  --glow-1: rgba(58, 208, 255, 0.13);
+  --glow-2: rgba(122, 240, 208, 0.1);
+}
+body.dracula-theme {
+  --lime: #bd93f9;
+  --lime-deep: #9d6ff0;
+  --coral: #ff79c6;
+  --cyan: #8be9fd;
+  --gold: #f1fa8c;
+  --ink: #1a1b26;
+  --ink-2: #21222c;
+  --line-lime: rgba(189, 147, 249, 0.3);
+  --glow-1: rgba(189, 147, 249, 0.14);
+  --glow-2: rgba(139, 233, 253, 0.1);
+}
+body.mono-theme {
+  --lime: #ffb000;
+  --lime-deep: #d98e00;
+  --coral: #d9886a;
+  --cyan: #b0b0b0;
+  --gold: #ffb000;
+  --ink: #0a0a0a;
+  --ink-2: #121212;
+  --text: #f1f1f1;
+  --muted: #8c8c8c;
+  --line: rgba(255, 255, 255, 0.1);
+  --line-lime: rgba(255, 176, 0, 0.26);
+  --glow-1: rgba(255, 176, 0, 0.1);
+  --glow-2: rgba(255, 255, 255, 0.05);
+}
+body.candy-theme {
+  --lime: #ff8fcf;
+  --lime-deep: #ff6fb5;
+  --coral: #ff6f91;
+  --cyan: #7ce0ff;
+  --gold: #ffd24a;
+  --ink: #20132a;
+  --ink-2: #2a1838;
+  --line-lime: rgba(255, 143, 207, 0.28);
+  --glow-1: rgba(255, 143, 207, 0.15);
+  --glow-2: rgba(124, 224, 255, 0.12);
+}
+body.volcano-theme {
+  --lime: #ff6a3d;
+  --lime-deep: #e8431f;
+  --coral: #ff3b2f;
+  --cyan: #ffb24a;
+  --gold: #ffd24a;
+  --ink: #160807;
+  --ink-2: #1f0c09;
+  --line-lime: rgba(255, 106, 61, 0.3);
+  --glow-1: rgba(255, 106, 61, 0.16);
+  --glow-2: rgba(255, 178, 74, 0.1);
 }
 
 /* ----- Responsive ----- */

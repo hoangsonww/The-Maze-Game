@@ -17,7 +17,7 @@
 - **Procedural mazes** — a new, always-solvable maze every game (randomized DFS).
 - **Difficulty levels** — Easy, Medium, Hard, Expert (11×15 → 25×35).
 - **Timer, scoring & A\* hints** — race the clock; hints cost points.
-- **Themes** — Daylight, Midnight, Neon. **Sound**, **pause**, **swipe** controls.
+- **10 themes** — Daylight, Midnight, Neon, Forest, Sunset, Ocean, Dracula, Mono, Candy, Volcano. **Sound**, **pause**, **swipe** controls.
 - **Accounts & progress** — sign in (JWT) to track level/XP, win rate, streaks, per-difficulty stats, and recent games. Editable profile, password reset, and guest names for anonymous players.
 - **Global leaderboards** with daily/weekly/monthly filters and **achievements**.
 - **Backend API** — Node/Express on Vercel, MongoDB-backed, documented with **Swagger** (`/api-docs`).
