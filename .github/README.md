@@ -21,6 +21,7 @@
 - **Accounts & progress** — sign in (JWT) to track level/XP, win rate, streaks, per-difficulty stats, and recent games. Editable profile, password reset, and guest names for anonymous players.
 - **Global leaderboards** with daily/weekly/monthly filters and **achievements**.
 - **Backend API** — Node/Express on Vercel, MongoDB-backed, documented with **Swagger** (`/api-docs`).
+- **Fully responsive** — presentable and playable on phones (swipe + on-screen D-pad), tested down to ~360px.
 - **PWA** — installable, offline-capable. **Python/Pygame** version included.
 
 ## Tech

@@ -50,6 +50,8 @@
 - **Sound Effects**: Optional audio feedback
 - **Themes**: 10 visual themes (Daylight, Midnight, Neon, Forest, Sunset, Ocean, Dracula, Mono, Candy, Volcano)
 - **Touch Controls**: Swipe to move on mobile
+- **Fully Responsive**: Presentable and playable from desktop down to small
+  phones (~360px) — swipe + on-screen D-pad, stacked layout, scrollable tables
 
 ### 🌐 Multiplayer (backend-ready)
 
@@ -89,7 +91,9 @@
 - **Security**: Helmet.js, rate limiting, open CORS for the public API
 - **PWA Support**: Offline capability, installable, service-worker caching
 - **Code quality**: Project-wide Prettier, ESLint, Jest (53 tests)
-- **Accessibility & Responsive**: ARIA labels, keyboard nav, mobile/touch
+- **Accessibility & Responsive**: ARIA labels, keyboard nav, focus styles;
+  mobile-first layout that stacks the maze + controls above stats, keeps the
+  account control on phones, and avoids horizontal overflow (verified 360–390px)
 - **SEO Optimized**: Meta tags, sitemap, robots.txt
 
 ---
@@ -222,6 +226,9 @@ the scripts load (or in the console).
 - **H** - Use hint (costs points)
 - **R** - Generate a new maze
 - **On-screen buttons** - Alternative controls
+
+> On phones the maze and controls sit at the top with stats below, and you can
+> play entirely with swipes or the on-screen D-pad.
 
 #### Objective
 
