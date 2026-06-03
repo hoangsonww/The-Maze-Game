@@ -110,4 +110,82 @@ describe('Auth & user stats API', () => {
       expect(res.body.data.bestStreak).toBe(1);
     });
   });
+
+  describe('Password reset', () => {
+    it('verifies a matching username + email (step 1)', async () => {
+      const res = await request(app)
+        .post('/api/v1/auth/reset/verify')
+        .send({ username: creds.username, email: creds.email })
+        .expect(200);
+      expect(res.body.data.verified).toBe(true);
+    });
+
+    it('rejects a mismatched email (step 1)', async () => {
+      await request(app)
+        .post('/api/v1/auth/reset/verify')
+        .send({ username: creds.username, email: 'wrong@example.com' })
+        .expect(404);
+    });
+
+    it('sets a new password and logs in (step 2)', async () => {
+      const res = await request(app)
+        .post('/api/v1/auth/reset')
+        .send({ username: creds.username, email: creds.email, password: 'brandnew1' })
+        .expect(200);
+      expect(res.body.data.token).toEqual(expect.any(String));
+
+      // new password works, old one no longer does
+      await request(app)
+        .post('/api/v1/auth/login')
+        .send({ login: creds.username, password: 'brandnew1' })
+        .expect(200);
+      await request(app)
+        .post('/api/v1/auth/login')
+        .send({ login: creds.username, password: creds.password })
+        .expect(401);
+    });
+
+    it('rejects a short new password', async () => {
+      await request(app)
+        .post('/api/v1/auth/reset')
+        .send({ username: creds.username, email: creds.email, password: '123' })
+        .expect(400);
+    });
+  });
+
+  describe('Profile editing', () => {
+    it('updates the username (PATCH /users/me)', async () => {
+      const res = await request(app)
+        .patch('/api/v1/users/me')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ username: 'mazerunner2' })
+        .expect(200);
+      expect(res.body.data.username).toBe('mazerunner2');
+    });
+
+    it('rejects an invalid username', async () => {
+      await request(app)
+        .patch('/api/v1/users/me')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ username: 'no spaces' })
+        .expect(400);
+    });
+
+    it('requires auth', async () => {
+      await request(app).patch('/api/v1/users/me').send({ username: 'whoever' }).expect(401);
+    });
+
+    it('changes the password (POST /users/me/password)', async () => {
+      await request(app)
+        .post('/api/v1/users/me/password')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ password: 'another1' })
+        .expect(200);
+      // log in with the changed password (username was updated above)
+      await request(app)
+        .post('/api/v1/auth/login')
+        .send({ login: 'mazerunner2', password: 'another1' })
+        .expect(200);
+    });
+  });
 });

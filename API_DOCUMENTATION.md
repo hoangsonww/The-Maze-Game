@@ -129,6 +129,33 @@ Returns the current account with a decorated stats object.
 
 **Errors:** `401` missing/invalid token
 
+### `POST /api/v1/auth/reset/verify`
+
+Password reset, **step 1** — confirm a `username` + `email` pair belongs to one
+account.
+
+```json
+{ "username": "mazerunner", "email": "me@example.com" }
+```
+
+**Response** `200` `{ "success": true, "data": { "verified": true } }`.
+**Errors:** `400` missing fields · `404` no matching account
+
+### `POST /api/v1/auth/reset`
+
+Password reset, **step 2** — set a new password (re-verifies the username +
+email, then logs in).
+
+```json
+{ "username": "mazerunner", "email": "me@example.com", "password": "newpass1" }
+```
+
+**Response** `200` — `{ token, user }` (same shape as login).
+**Errors:** `400` validation · `404` no matching account
+
+> This is an intentionally lightweight reset (knowledge of username + email is
+> sufficient). For a hardened flow, add emailed reset tokens.
+
 ---
 
 ## Users & Stats
@@ -155,6 +182,28 @@ calls this automatically on every win when signed in.
 ```
 
 **Response** `201` — the updated decorated [Stats object](#stats-object).
+
+### `PATCH /api/v1/users/me` 🔒
+
+Update the signed-in user's `username` and/or `email`.
+
+```json
+{ "username": "newname", "email": "new@example.com" }
+```
+
+**Response** `200` — the updated decorated profile.
+**Errors:** `400` validation / nothing to update · `409` username/email taken
+
+### `POST /api/v1/users/me/password` 🔒
+
+Change the signed-in user's password.
+
+```json
+{ "password": "newpass1" }
+```
+
+**Response** `200` `{ "success": true, "data": { "message": "Password updated" } }`.
+**Errors:** `400` too short
 
 ### `GET /api/v1/users/:id`
 

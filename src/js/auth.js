@@ -9,6 +9,8 @@
 (function () {
   const TOKEN_KEY = 'mazeToken';
   const USER_KEY = 'mazeUser';
+  const EYE =
+    '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>';
 
   function base() {
     return typeof apiBase === 'function' ? apiBase() : '';
@@ -142,29 +144,107 @@
     } else {
       el.innerHTML = `<button class="signin-btn" onclick="mazeAuth.openAuth('login')">Sign in</button>`;
     }
+    syncIdentityUI();
+  }
+
+  // The Settings "Leaderboard name" field reflects the anonymous name (editable)
+  // or the account username (read-only — edit it in the profile).
+  function syncIdentityUI() {
+    const input = document.getElementById('playerName');
+    if (!input) return;
+    if (isLoggedIn()) {
+      const u = cachedUser();
+      input.value = u ? u.username : '';
+      input.disabled = true;
+      input.title = 'Manage your username in your profile';
+    } else {
+      input.disabled = false;
+      input.title = '';
+      input.value = localStorage.getItem('playerName') || '';
+    }
+  }
+
+  // ---- Guest name (anonymous players) -------------------------------------
+
+  function maybeAskName() {
+    if (isLoggedIn() || localStorage.getItem('nameChosen')) return;
+    const cur = localStorage.getItem('playerName');
+    const input = document.getElementById('guestName');
+    if (input && cur && cur !== 'Player') input.value = cur;
+    if (typeof showModal === 'function') showModal('nameModal');
+  }
+
+  function saveGuestName(event) {
+    if (event) event.preventDefault();
+    const name =
+      (document.getElementById('guestName').value || '').trim().substring(0, 20) || 'Player';
+    localStorage.setItem('playerName', name);
+    localStorage.setItem('nameChosen', '1');
+    syncIdentityUI();
+    if (typeof closeModal === 'function') closeModal('nameModal');
+    if (window.game && typeof window.game.flashMessage === 'function') {
+      window.game.flashMessage('Playing as ' + name);
+    }
+    return false;
+  }
+
+  function skipGuestName() {
+    localStorage.setItem('nameChosen', '1');
+    if (typeof closeModal === 'function') closeModal('nameModal');
   }
 
   // ---- Auth modal ---------------------------------------------------------
 
-  let mode = 'login';
+  let mode = 'login'; // login | register | reset1 | reset2
+  const resetCreds = { username: '', email: '' };
 
   function openAuth(which) {
     if (typeof showModal === 'function') showModal('authModal');
     tab(which || 'login');
   }
 
+  function show(id, visible) {
+    const el = document.getElementById(id);
+    if (el) el.hidden = !visible;
+  }
+
   function tab(which) {
-    mode = which === 'register' ? 'register' : 'login';
+    mode = ['login', 'register', 'reset1', 'reset2'].includes(which) ? which : 'login';
     document.querySelectorAll('.auth-tab').forEach((b) => {
       b.classList.toggle('active', b.dataset.tab === mode);
     });
-    const reg = mode === 'register';
-    document.getElementById('fieldUsername').hidden = !reg;
-    document.getElementById('fieldEmail').hidden = !reg;
-    document.getElementById('fieldLogin').hidden = reg;
-    document.getElementById('authTitle').textContent = reg ? 'Create account' : 'Welcome back';
-    document.getElementById('authSubmit').textContent = reg ? 'Create account' : 'Log in';
+    show('authTabs', mode === 'login' || mode === 'register');
+
+    show('fieldUsername', mode === 'register' || mode === 'reset1');
+    show('fieldEmail', mode === 'register' || mode === 'reset1');
+    show('fieldLogin', mode === 'login');
+    show('fieldPassword', mode === 'login' || mode === 'register' || mode === 'reset2');
+    show('fieldPasswordConfirm', mode === 'register' || mode === 'reset2');
+    show('authForgot', mode === 'login');
+    show('authBack', mode === 'reset1' || mode === 'reset2');
+
+    const titles = {
+      login: 'Welcome back',
+      register: 'Create account',
+      reset1: 'Reset password',
+      reset2: 'Set a new password',
+    };
+    const submits = {
+      login: 'Log in',
+      register: 'Create account',
+      reset1: 'Verify account',
+      reset2: 'Set new password',
+    };
+    document.getElementById('authTitle').textContent = titles[mode];
+    document.getElementById('authSubmit').textContent = submits[mode];
+
+    ['authPassword', 'authPasswordConfirm'].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    resetPasswordToggles();
     hideError();
+    return false;
   }
 
   function showError(msg) {
@@ -179,29 +259,51 @@
     if (e) e.hidden = true;
   }
 
+  function finishSignedIn(msg) {
+    document.getElementById('authForm').reset();
+    resetPasswordToggles();
+    renderHeader();
+    if (typeof closeModal === 'function') closeModal('authModal');
+    if (window.game && typeof window.game.flashMessage === 'function') {
+      window.game.flashMessage(msg || 'Signed in as ' + cachedUser().username);
+    }
+  }
+
   async function submit(event) {
     event.preventDefault();
     hideError();
     const btn = document.getElementById('authSubmit');
     btn.disabled = true;
+    const val = (id) => (document.getElementById(id).value || '').trim();
+    const pw = () => document.getElementById('authPassword').value;
+    const pwc = () => document.getElementById('authPasswordConfirm').value;
     try {
-      if (mode === 'register') {
-        await register({
-          username: document.getElementById('authUsername').value.trim(),
-          email: document.getElementById('authEmail').value.trim(),
-          password: document.getElementById('authPassword').value,
+      if (mode === 'login') {
+        await login({ login: val('authLogin'), password: pw() });
+        finishSignedIn();
+      } else if (mode === 'register') {
+        if (pw().length < 6) throw new Error('Password must be at least 6 characters');
+        if (pw() !== pwc()) throw new Error('Passwords do not match');
+        await register({ username: val('authUsername'), email: val('authEmail'), password: pw() });
+        finishSignedIn();
+      } else if (mode === 'reset1') {
+        await post('/api/v1/auth/reset/verify', {
+          username: val('authUsername'),
+          email: val('authEmail'),
         });
-      } else {
-        await login({
-          login: document.getElementById('authLogin').value.trim(),
-          password: document.getElementById('authPassword').value,
+        resetCreds.username = val('authUsername');
+        resetCreds.email = val('authEmail');
+        tab('reset2');
+      } else if (mode === 'reset2') {
+        if (pw().length < 6) throw new Error('Password must be at least 6 characters');
+        if (pw() !== pwc()) throw new Error('Passwords do not match');
+        const data = await post('/api/v1/auth/reset', {
+          username: resetCreds.username,
+          email: resetCreds.email,
+          password: pw(),
         });
-      }
-      document.getElementById('authForm').reset();
-      renderHeader();
-      if (typeof closeModal === 'function') closeModal('authModal');
-      if (window.game && typeof window.game.flashMessage === 'function') {
-        window.game.flashMessage('Signed in as ' + cachedUser().username);
+        setSession(data);
+        finishSignedIn('Password updated — signed in');
       }
     } catch (err) {
       showError(err.message);
@@ -209,6 +311,32 @@
       btn.disabled = false;
     }
     return false;
+  }
+
+  // ---- Password show/hide toggles -----------------------------------------
+
+  function initPasswordToggles() {
+    document.querySelectorAll('.pw-toggle').forEach((btn) => {
+      if (btn.dataset.wired) return;
+      btn.dataset.wired = '1';
+      btn.addEventListener('click', () => {
+        const input = document.getElementById(btn.dataset.target);
+        if (!input) return;
+        const reveal = input.type === 'password';
+        input.type = reveal ? 'text' : 'password';
+        btn.classList.toggle('revealed', reveal);
+        btn.setAttribute('aria-label', reveal ? 'Hide password' : 'Show password');
+      });
+    });
+  }
+
+  function resetPasswordToggles() {
+    document.querySelectorAll('.pw-toggle').forEach((btn) => {
+      btn.classList.remove('revealed');
+      btn.setAttribute('aria-label', 'Show password');
+      const input = document.getElementById(btn.dataset.target);
+      if (input) input.type = 'password';
+    });
   }
 
   // ---- Profile modal ------------------------------------------------------
@@ -223,6 +351,7 @@
       return;
     }
     content.innerHTML = renderProfile(profile);
+    initPasswordToggles();
   }
 
   function bar(pct, cls) {
@@ -295,7 +424,93 @@
 
       <h4 class="profile-sub">Recent games</h4>
       ${recent ? `<ul class="recent-list">${recent}</ul>` : '<p class="no-data">No games yet — go solve a maze!</p>'}
+
+      <h4 class="profile-sub">Account</h4>
+      <div class="edit-grid">
+        <div class="field">
+          <label for="editUsername">Username</label>
+          <input type="text" id="editUsername" class="setting-control" maxlength="20" value="${escapeText(p.username)}" />
+        </div>
+        <div class="field">
+          <label for="editEmail">Email</label>
+          <input type="email" id="editEmail" class="setting-control" value="${escapeText(p.email || '')}" />
+        </div>
+      </div>
+      <button class="auth-submit slim" onclick="mazeAuth.saveProfile()">Save changes</button>
+
+      <h4 class="profile-sub">Change password</h4>
+      <div class="edit-grid">
+        <div class="field">
+          <label for="editPassword">New password</label>
+          <div class="password-field">
+            <input type="password" id="editPassword" class="setting-control" placeholder="••••••••" />
+            <button type="button" class="pw-toggle" data-target="editPassword" aria-label="Show password">${EYE}</button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="editPasswordConfirm">Confirm</label>
+          <div class="password-field">
+            <input type="password" id="editPasswordConfirm" class="setting-control" placeholder="••••••••" />
+            <button type="button" class="pw-toggle" data-target="editPasswordConfirm" aria-label="Show password">${EYE}</button>
+          </div>
+        </div>
+      </div>
+      <button class="auth-submit slim" onclick="mazeAuth.changePassword()">Update password</button>
+      <p id="profileMsg" class="profile-msg" hidden></p>
     `;
+  }
+
+  function profileMsg(msg, isError) {
+    const el = document.getElementById('profileMsg');
+    if (!el) return;
+    el.textContent = msg;
+    el.hidden = false;
+    el.classList.toggle('error', !!isError);
+  }
+
+  async function saveProfile() {
+    const username = (document.getElementById('editUsername').value || '').trim();
+    const email = (document.getElementById('editEmail').value || '').trim();
+    try {
+      const res = await fetch(base() + '/api/v1/users/me', {
+        method: 'PATCH',
+        headers: authHeaders(),
+        body: JSON.stringify({ username, email }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Update failed');
+      localStorage.setItem(USER_KEY, JSON.stringify(json.data));
+      localStorage.setItem('playerName', json.data.username);
+      localStorage.setItem('playerId', json.data.id);
+      renderHeader();
+      document.getElementById('profileContent').innerHTML = renderProfile(json.data);
+      initPasswordToggles();
+      profileMsg('Profile updated', false);
+    } catch (err) {
+      profileMsg(err.message, true);
+    }
+  }
+
+  async function changePassword() {
+    const pw = document.getElementById('editPassword').value;
+    const pwc = document.getElementById('editPasswordConfirm').value;
+    if (pw.length < 6) return profileMsg('Password must be at least 6 characters', true);
+    if (pw !== pwc) return profileMsg('Passwords do not match', true);
+    try {
+      const res = await fetch(base() + '/api/v1/users/me/password', {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify({ password: pw }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Failed');
+      document.getElementById('editPassword').value = '';
+      document.getElementById('editPasswordConfirm').value = '';
+      resetPasswordToggles();
+      profileMsg('Password updated', false);
+    } catch (err) {
+      profileMsg(err.message, true);
+    }
   }
 
   function stat(label, value) {
@@ -325,13 +540,23 @@
     openProfile,
     tab,
     submit,
+    saveProfile,
+    changePassword,
+    saveGuestName,
+    skipGuestName,
   };
 
   document.addEventListener('DOMContentLoaded', () => {
     const fy = document.getElementById('footerYear');
     if (fy) fy.textContent = new Date().getFullYear();
     renderHeader();
+    initPasswordToggles();
     // Validate any stored token in the background.
-    if (isLoggedIn()) refreshProfile();
+    if (isLoggedIn()) {
+      refreshProfile();
+    } else {
+      // First-time anonymous players choose a leaderboard name.
+      maybeAskName();
+    }
   });
 })();

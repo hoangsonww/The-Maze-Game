@@ -20,7 +20,8 @@
     "lint:fix": "eslint src/**/*.js server/**/*.js --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "db:migrate:pg": "psql \"$DATABASE_URL\" -f server/database/schema-game.sql"
+    "db:migrate:pg": "psql \"$DATABASE_URL\" -f server/database/schema-game.sql",
+    "clean:leaderboard": "node scripts/clean-leaderboard.js"
   },
   "engines": {
     "node": ">=18"

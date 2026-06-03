@@ -238,6 +238,20 @@ class MazeGame {
   // ---- input / movement ----------------------------------------------------
 
   handleKey(e) {
+    // Ignore game shortcuts while the user is typing in a form control
+    // (or any modal is open), so WASD/P/H/R reach the input instead.
+    const t = e.target;
+    if (
+      t &&
+      (t.tagName === 'INPUT' ||
+        t.tagName === 'TEXTAREA' ||
+        t.tagName === 'SELECT' ||
+        t.isContentEditable)
+    ) {
+      return;
+    }
+    if (document.querySelector('.modal[style*="block"], .modal-overlay.show')) return;
+
     switch (e.key) {
       case 'ArrowUp':
       case 'w':

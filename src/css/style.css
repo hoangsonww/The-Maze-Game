@@ -1289,6 +1289,69 @@ kbd {
   cursor: progress;
 }
 
+/* Password field with show/hide toggle */
+.password-field {
+  position: relative;
+}
+.password-field .setting-control {
+  padding-right: 2.8rem;
+}
+.pw-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.5rem;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition:
+    color 0.18s,
+    background 0.18s;
+}
+.pw-toggle:hover {
+  color: var(--lime);
+  background: rgba(198, 242, 78, 0.08);
+}
+.pw-toggle svg {
+  display: block;
+  pointer-events: none;
+}
+/* "Hidden" state strikes the eye, so revealed = open eye */
+.pw-toggle::after {
+  content: "";
+  position: absolute;
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 2px;
+  transform: rotate(-45deg);
+  transition: opacity 0.15s;
+}
+.pw-toggle.revealed::after {
+  opacity: 0;
+}
+
+.auth-links {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+}
+.auth-links a {
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.18s;
+}
+.auth-links a:hover {
+  color: var(--lime);
+}
+
 /* ----- Profile ----- */
 .profile-head {
   display: flex;
@@ -1482,6 +1545,65 @@ kbd {
 .recent-list .num {
   font-family: var(--font-mono);
   color: var(--muted);
+}
+
+/* ----- Guest-name modal + profile editing ----- */
+.modal-sub {
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+}
+.name-actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+.name-actions .auth-submit {
+  flex: 1;
+}
+.ghost-btn {
+  flex: 1;
+  font-family: var(--font-ui);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-btn);
+  padding: 0.8rem;
+  cursor: pointer;
+  transition:
+    border-color 0.18s,
+    background 0.18s;
+}
+.ghost-btn:hover {
+  border-color: var(--line-lime);
+  background: rgba(198, 242, 78, 0.06);
+}
+.edit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+.auth-submit.slim {
+  width: auto;
+  padding: 0.6rem 1.3rem;
+  margin-top: 0.25rem;
+}
+.profile-msg {
+  margin-top: 0.9rem;
+  font-size: 0.85rem;
+  color: var(--lime);
+  font-family: var(--font-mono);
+}
+.profile-msg.error {
+  color: var(--coral);
+}
+@media (max-width: 600px) {
+  .edit-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ----- Themes (page chrome) ----- */

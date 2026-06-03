@@ -84,7 +84,7 @@
 - **Docker Support**: Containerized deployment with Docker Compose
 - **Security**: Helmet.js, rate limiting, open CORS for the public API
 - **PWA Support**: Offline capability, installable, service-worker caching
-- **Code quality**: Project-wide Prettier, ESLint, Jest (45 tests)
+- **Code quality**: Project-wide Prettier, ESLint, Jest (53 tests)
 - **Accessibility & Responsive**: ARIA labels, keyboard nav, mobile/touch
 - **SEO Optimized**: Meta tags, sitemap, robots.txt
 
@@ -350,25 +350,29 @@ Interactive docs (Swagger UI) are served at **`/api-docs`**; the OpenAPI spec at
 
 ### Quick Reference
 
-| Endpoint                         | Method | Auth | Description                |
-| -------------------------------- | ------ | ---- | -------------------------- |
-| `/api/health`                    | GET    |      | Health + active DB driver  |
-| `/api/v1/auth/register`          | POST   |      | Create an account          |
-| `/api/v1/auth/login`             | POST   |      | Log in (username or email) |
-| `/api/v1/auth/me`                | GET    | 🔒   | Current account + stats    |
-| `/api/v1/users/me/stats`         | GET    | 🔒   | Your stats & progress      |
-| `/api/v1/users/me/games`         | POST   | 🔒   | Record a finished game     |
-| `/api/v1/users/:id`              | GET    |      | Public profile             |
-| `/api/v1/leaderboard`            | GET    |      | Get leaderboard            |
-| `/api/v1/leaderboard`            | POST   |      | Submit score               |
-| `/api/v1/leaderboard/rank/:name` | GET    |      | Player rank                |
-| `/api/v1/games/start`            | POST   |      | Start game session         |
-| `/api/v1/games/:id/move`         | PUT    |      | Record a move              |
-| `/api/v1/games/:id/complete`     | PUT    |      | Complete game + score      |
-| `/api/v1/games/stats`            | GET    |      | Aggregate game stats       |
-| `/api/v1/achievements`           | GET    |      | List achievements          |
-| `/api/v1/achievements/user/:id`  | GET    |      | A player's achievements    |
-| `/api/v1/achievements/unlock`    | POST   |      | Unlock an achievement      |
+| Endpoint                         | Method | Auth | Description                 |
+| -------------------------------- | ------ | ---- | --------------------------- |
+| `/api/health`                    | GET    |      | Health + active DB driver   |
+| `/api/v1/auth/register`          | POST   |      | Create an account           |
+| `/api/v1/auth/login`             | POST   |      | Log in (username or email)  |
+| `/api/v1/auth/me`                | GET    | 🔒   | Current account + stats     |
+| `/api/v1/auth/reset/verify`      | POST   |      | Reset step 1 (verify)       |
+| `/api/v1/auth/reset`             | POST   |      | Reset step 2 (new password) |
+| `/api/v1/users/me/stats`         | GET    | 🔒   | Your stats & progress       |
+| `/api/v1/users/me/games`         | POST   | 🔒   | Record a finished game      |
+| `/api/v1/users/me`               | PATCH  | 🔒   | Edit username / email       |
+| `/api/v1/users/me/password`      | POST   | 🔒   | Change password             |
+| `/api/v1/users/:id`              | GET    |      | Public profile              |
+| `/api/v1/leaderboard`            | GET    |      | Get leaderboard             |
+| `/api/v1/leaderboard`            | POST   |      | Submit score                |
+| `/api/v1/leaderboard/rank/:name` | GET    |      | Player rank                 |
+| `/api/v1/games/start`            | POST   |      | Start game session          |
+| `/api/v1/games/:id/move`         | PUT    |      | Record a move               |
+| `/api/v1/games/:id/complete`     | PUT    |      | Complete game + score       |
+| `/api/v1/games/stats`            | GET    |      | Aggregate game stats        |
+| `/api/v1/achievements`           | GET    |      | List achievements           |
+| `/api/v1/achievements/user/:id`  | GET    |      | A player's achievements     |
+| `/api/v1/achievements/unlock`    | POST   |      | Unlock an achievement       |
 
 ---
 
@@ -389,7 +393,7 @@ npm run format           # Format the whole project with Prettier
 npm run format:check     # Check formatting (CI gate)
 
 # Testing
-npm test                 # Run all tests (45) with coverage
+npm test                 # Run all tests (53) with coverage
 npm run test:watch       # Watch mode
 
 # Backend

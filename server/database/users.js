@@ -143,6 +143,25 @@ const memory = {
     pushRecent(u, { ...result, at: new Date().toISOString() });
     return u.stats;
   },
+  async updatePassword(id, passwordHash) {
+    const u = await memory.findById(id);
+    if (!u) return false;
+    u.passwordHash = passwordHash;
+    return true;
+  },
+  async updateProfile(id, fields) {
+    const u = await memory.findById(id);
+    if (!u) return null;
+    if (fields.username) {
+      u.username = fields.username;
+      u.usernameLower = fields.username.toLowerCase();
+    }
+    if (fields.email) {
+      u.email = fields.email;
+      u.emailLower = fields.email.toLowerCase();
+    }
+    return u;
+  },
 };
 
 // ===========================================================================
@@ -210,6 +229,27 @@ const mongo = {
     ].slice(0, 20);
     await (await usersCol()).updateOne({ _id: toObjectId(id) }, { $set: { stats, recentGames } });
     return stats;
+  },
+  async updatePassword(id, passwordHash) {
+    const oid = toObjectId(id);
+    if (!oid) return false;
+    const res = await (await usersCol()).updateOne({ _id: oid }, { $set: { passwordHash } });
+    return res.matchedCount > 0;
+  },
+  async updateProfile(id, fields) {
+    const oid = toObjectId(id);
+    if (!oid) return null;
+    const set = {};
+    if (fields.username) {
+      set.username = fields.username;
+      set.usernameLower = fields.username.toLowerCase();
+    }
+    if (fields.email) {
+      set.email = fields.email;
+      set.emailLower = fields.email.toLowerCase();
+    }
+    if (Object.keys(set).length) await (await usersCol()).updateOne({ _id: oid }, { $set: set });
+    return mongo.findById(id);
   },
 };
 
@@ -301,6 +341,30 @@ const postgres = {
     ]);
     return stats;
   },
+  async updatePassword(id, passwordHash) {
+    const res = await pg().query('UPDATE users_app SET password_hash = $2 WHERE id = $1', [
+      id,
+      passwordHash,
+    ]);
+    return res.rowCount > 0;
+  },
+  async updateProfile(id, fields) {
+    const sets = [];
+    const params = [id];
+    let i = 2;
+    if (fields.username) {
+      sets.push(`username = $${i++}`, `username_lower = $${i++}`);
+      params.push(fields.username, fields.username.toLowerCase());
+    }
+    if (fields.email) {
+      sets.push(`email = $${i++}`, `email_lower = $${i++}`);
+      params.push(fields.email, fields.email.toLowerCase());
+    }
+    if (sets.length) {
+      await pg().query(`UPDATE users_app SET ${sets.join(', ')} WHERE id = $1`, params);
+    }
+    return postgres.findById(id);
+  },
 };
 
 const DRIVERS = { memory, mongo, postgres };
@@ -319,6 +383,8 @@ module.exports = {
   create: (fields) => active().create(fields),
   touchLogin: (id) => active().touchLogin(id),
   recordGame: (id, result) => active().recordGame(id, result),
+  updatePassword: (id, hash) => active().updatePassword(id, hash),
+  updateProfile: (id, fields) => active().updateProfile(id, fields),
   async profile(id) {
     const u = await active().findById(id);
     if (!u) return null;

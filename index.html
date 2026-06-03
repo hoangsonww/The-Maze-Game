@@ -294,7 +294,7 @@
       <div class="modal-content modal-narrow">
         <span class="close" onclick="closeModal('authModal')">&times;</span>
         <h2 id="authTitle">Sign in</h2>
-        <div class="auth-tabs">
+        <div class="auth-tabs" id="authTabs">
           <button class="auth-tab active" data-tab="login" onclick="mazeAuth.tab('login')">Log in</button>
           <button class="auth-tab" data-tab="register" onclick="mazeAuth.tab('register')">Create account</button>
         </div>
@@ -311,12 +311,81 @@
             <label for="authLogin">Username or email</label>
             <input type="text" id="authLogin" class="setting-control" placeholder="mazerunner" />
           </div>
-          <div class="field">
+          <div class="field" id="fieldPassword">
             <label for="authPassword">Password</label>
-            <input type="password" id="authPassword" class="setting-control" placeholder="••••••••" />
+            <div class="password-field">
+              <input type="password" id="authPassword" class="setting-control" placeholder="••••••••" />
+              <button type="button" class="pw-toggle" data-target="authPassword" aria-label="Show password">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="18"
+                  height="18"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="field" id="fieldPasswordConfirm" hidden>
+            <label for="authPasswordConfirm">Confirm password</label>
+            <div class="password-field">
+              <input type="password" id="authPasswordConfirm" class="setting-control" placeholder="••••••••" />
+              <button type="button" class="pw-toggle" data-target="authPasswordConfirm" aria-label="Show password">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="18"
+                  height="18"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </button>
+            </div>
           </div>
           <p id="authError" class="auth-error" hidden></p>
-          <button type="submit" id="authSubmit" class="auth-submit">Create account</button>
+          <button type="submit" id="authSubmit" class="auth-submit">Log in</button>
+          <div class="auth-links">
+            <a href="#" id="authForgot" onclick="return mazeAuth.tab('reset1')">Forgot password?</a>
+            <a href="#" id="authBack" hidden onclick="return mazeAuth.tab('login')">Back to log in</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Choose-a-name Modal (anonymous players) -->
+    <div id="nameModal" class="modal">
+      <div class="modal-content modal-narrow">
+        <span class="close" onclick="mazeAuth.skipGuestName()">&times;</span>
+        <h2>Pick a name</h2>
+        <p class="modal-sub">
+          Used for the leaderboard. Change it anytime in Settings — or create an account to save your progress and
+          stats.
+        </p>
+        <form onsubmit="return mazeAuth.saveGuestName(event)">
+          <div class="field">
+            <label for="guestName">Username</label>
+            <input type="text" id="guestName" class="setting-control" maxlength="20" placeholder="mazerunner" />
+          </div>
+          <div class="name-actions">
+            <button type="submit" class="auth-submit">Save name</button>
+            <button type="button" class="ghost-btn" onclick="mazeAuth.skipGuestName()">Play as guest</button>
+          </div>
+          <div class="auth-links">
+            <a href="#" onclick="closeModal('nameModal'); mazeAuth.openAuth('register'); return false;"
+              >or create an account →</a
+            >
+          </div>
         </form>
       </div>
     </div>

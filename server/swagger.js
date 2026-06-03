@@ -68,6 +68,36 @@ const spec = {
         },
       },
     },
+    '/api/v1/auth/reset/verify': {
+      post: {
+        tags: ['Auth'],
+        summary: 'Password reset step 1 — verify username + email',
+        requestBody: {
+          required: true,
+          content: { 'application/json': { schema: { $ref: '#/components/schemas/ResetVerify' } } },
+        },
+        responses: {
+          200: { description: 'Match found, proceed to step 2' },
+          400: ok('Missing fields', 'Error'),
+          404: ok('No matching account', 'Error'),
+        },
+      },
+    },
+    '/api/v1/auth/reset': {
+      post: {
+        tags: ['Auth'],
+        summary: 'Password reset step 2 — set a new password (re-verifies, logs in)',
+        requestBody: {
+          required: true,
+          content: { 'application/json': { schema: { $ref: '#/components/schemas/Reset' } } },
+        },
+        responses: {
+          200: ok('Password changed (returns token + user)', 'AuthResponse'),
+          400: ok('Validation error', 'Error'),
+          404: ok('No matching account', 'Error'),
+        },
+      },
+    },
     '/api/v1/auth/me': {
       get: {
         tags: ['Auth'],
@@ -94,6 +124,37 @@ const spec = {
           content: { 'application/json': { schema: { $ref: '#/components/schemas/GameResult' } } },
         },
         responses: { 201: { description: 'Updated stats' }, 401: ok('Unauthorized', 'Error') },
+      },
+    },
+    '/api/v1/users/me': {
+      patch: {
+        tags: ['Users'],
+        summary: 'Update your username and/or email',
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          content: {
+            'application/json': { schema: { $ref: '#/components/schemas/UpdateProfile' } },
+          },
+        },
+        responses: {
+          200: { description: 'Updated profile' },
+          400: ok('Validation error', 'Error'),
+          409: ok('Username/email taken', 'Error'),
+        },
+      },
+    },
+    '/api/v1/users/me/password': {
+      post: {
+        tags: ['Users'],
+        summary: 'Change your password',
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': { schema: { $ref: '#/components/schemas/ChangePassword' } },
+          },
+        },
+        responses: { 200: { description: 'Password updated' }, 400: ok('Too short', 'Error') },
       },
     },
     '/api/v1/users/{id}': {
@@ -250,6 +311,23 @@ const spec = {
           password: { type: 'string', format: 'password', example: 'hunter2!' },
         },
       },
+      ResetVerify: {
+        type: 'object',
+        required: ['username', 'email'],
+        properties: {
+          username: { type: 'string', example: 'mazerunner' },
+          email: { type: 'string', format: 'email', example: 'me@example.com' },
+        },
+      },
+      Reset: {
+        type: 'object',
+        required: ['username', 'email', 'password'],
+        properties: {
+          username: { type: 'string', example: 'mazerunner' },
+          email: { type: 'string', format: 'email', example: 'me@example.com' },
+          password: { type: 'string', format: 'password', minLength: 6, example: 'newpass1' },
+        },
+      },
       AuthResponse: {
         type: 'object',
         properties: {
@@ -271,6 +349,20 @@ const spec = {
           timeMs: { type: 'integer', example: 17000 },
           moves: { type: 'integer', example: 80 },
           won: { type: 'boolean', example: true },
+        },
+      },
+      UpdateProfile: {
+        type: 'object',
+        properties: {
+          username: { type: 'string', example: 'newname' },
+          email: { type: 'string', format: 'email', example: 'new@example.com' },
+        },
+      },
+      ChangePassword: {
+        type: 'object',
+        required: ['password'],
+        properties: {
+          password: { type: 'string', format: 'password', minLength: 6, example: 'newpass1' },
         },
       },
       LeaderboardEntry: {
