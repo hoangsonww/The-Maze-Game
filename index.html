@@ -183,10 +183,62 @@
           <div class="control-group reveal" style="--d: 3">
             <h4>Movement</h4>
             <div class="dpad">
-              <button id="moveUp" class="control-btn" aria-label="Move Up" title="Move Up (↑ or W)">↑</button>
-              <button id="moveLeft" class="control-btn" aria-label="Move Left" title="Move Left (← or A)">←</button>
-              <button id="moveDown" class="control-btn" aria-label="Move Down" title="Move Down (↓ or S)">↓</button>
-              <button id="moveRight" class="control-btn" aria-label="Move Right" title="Move Right (→ or D)">→</button>
+              <button id="moveUp" class="control-btn" aria-label="Move Up" title="Move Up (↑ or W)">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M12 19V5" />
+                  <path d="M5 12l7-7 7 7" />
+                </svg>
+              </button>
+              <button id="moveLeft" class="control-btn" aria-label="Move Left" title="Move Left (← or A)">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M19 12H5" />
+                  <path d="M12 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <button id="moveDown" class="control-btn" aria-label="Move Down" title="Move Down (↓ or S)">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M12 5v14" />
+                  <path d="M19 12l-7 7-7-7" />
+                </svg>
+              </button>
+              <button id="moveRight" class="control-btn" aria-label="Move Right" title="Move Right (→ or D)">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M5 12h14" />
+                  <path d="M12 5l7 7-7 7" />
+                </svg>
+              </button>
             </div>
             <p class="control-hint">Arrow keys / WASD · swipe on touch</p>
           </div>

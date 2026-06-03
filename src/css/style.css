@@ -554,13 +554,17 @@ body::after {
   border-radius: var(--r-btn);
   background: var(--surface-2);
   color: var(--text);
-  font-size: 1.4rem;
   cursor: pointer;
   transition:
     transform 0.12s,
     background 0.18s,
     border-color 0.18s,
     box-shadow 0.18s;
+}
+.control-btn svg {
+  width: 26px;
+  height: 26px;
+  display: block;
 }
 .control-btn:hover {
   background: rgba(198, 242, 78, 0.1);

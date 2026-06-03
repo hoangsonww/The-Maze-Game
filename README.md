@@ -61,10 +61,14 @@
 ### 👤 Accounts & Progress
 
 - **Accounts**: Register / log in with JWT auth (bcrypt-hashed passwords)
+- **Password reset**: Simple 2-step flow (verify username + email → set new password)
+- **Password UX**: Show/hide toggles and confirm-password fields everywhere
+- **Editable profile**: Change username, email, and password in-app
 - **Per-user stats**: Games played/won, win rate, best score, streaks
 - **Progress tracking**: Level & XP, per-difficulty breakdown, recent games
 - **Profile dashboard**: All of the above in an in-app modal
-- **Anonymous play**: No account needed — stats sync once you sign in
+- **Guest play**: Pick a leaderboard name on first launch — no account needed;
+  sign in any time to save progress
 
 ### 📊 Backend Features
 
@@ -399,6 +403,7 @@ npm run test:watch       # Watch mode
 # Backend
 npm start                # Start the API server (server/index.js)
 npm run db:migrate:pg    # Apply the Postgres gameplay schema (DB_DRIVER=postgres)
+npm run clean:leaderboard -- "E2E_*"   # Remove leaderboard rows by name/prefix (needs MONGODB_URI)
 npm run backend          # Run the Python/Pygame version
 ```
 

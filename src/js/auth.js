@@ -166,6 +166,11 @@
 
   // ---- Guest name (anonymous players) -------------------------------------
 
+  // A distinct fallback name so empty/guest entries don't all collide as "Player".
+  function randomGuestName() {
+    return 'Guest' + Math.floor(1000 + Math.random() * 9000);
+  }
+
   function maybeAskName() {
     if (isLoggedIn() || localStorage.getItem('nameChosen')) return;
     const cur = localStorage.getItem('playerName');
@@ -174,10 +179,7 @@
     if (typeof showModal === 'function') showModal('nameModal');
   }
 
-  function saveGuestName(event) {
-    if (event) event.preventDefault();
-    const name =
-      (document.getElementById('guestName').value || '').trim().substring(0, 20) || 'Player';
+  function commitGuestName(name) {
     localStorage.setItem('playerName', name);
     localStorage.setItem('nameChosen', '1');
     syncIdentityUI();
@@ -185,12 +187,20 @@
     if (window.game && typeof window.game.flashMessage === 'function') {
       window.game.flashMessage('Playing as ' + name);
     }
+  }
+
+  function saveGuestName(event) {
+    if (event) event.preventDefault();
+    // No name entered → assign a generated guest name (never blank).
+    const name =
+      (document.getElementById('guestName').value || '').trim().substring(0, 20) ||
+      randomGuestName();
+    commitGuestName(name);
     return false;
   }
 
   function skipGuestName() {
-    localStorage.setItem('nameChosen', '1');
-    if (typeof closeModal === 'function') closeModal('nameModal');
+    commitGuestName(randomGuestName());
   }
 
   // ---- Auth modal ---------------------------------------------------------
