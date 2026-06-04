@@ -49,3 +49,13 @@ temp
 
 # Python venv
 .venv/
+
+# Python build/test artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+build/
+dist/

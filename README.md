@@ -289,7 +289,7 @@ The-Maze-Game/
 │   │   ├── ui-components.js      # Modals, leaderboard, achievements
 │   │   └── auth.js               # Accounts, profile & stats dashboard
 │   ├── html/about.html           # About page
-│   └── python/                   # Pygame implementation (main.py, maze-gen.py)
+│   └── python/                   # `mazeforge` — installable maze library (gen/solve/render) + pygame player
 ├── api/
 │   └── index.js                  # Vercel serverless entry (exports the app)
 ├── server/                       # Backend
@@ -414,7 +414,10 @@ npm run test:watch       # Watch mode
 npm start                # Start the API server (server/index.js)
 npm run db:migrate:pg    # Apply the Postgres gameplay schema (DB_DRIVER=postgres)
 npm run clean:leaderboard -- "E2E_*"   # Remove leaderboard rows by name/prefix (needs MONGODB_URI)
-npm run backend          # Run the Python/Pygame version
+
+# Python (the `mazeforge` library — see src/python/)
+npm run py:play          # install + launch the pygame player
+npm run py:test          # install + run the Python test suite (pytest)
 ```
 
 ### Environment Variables
@@ -457,6 +460,39 @@ and tests.
 
 ---
 
+## 🐍 Python Library (`mazeforge`)
+
+`src/python/` is a standalone, installable, typed Python package — the
+algorithmic engine, usable by any app or dev independently of the web game.
+
+- **11 generators**: recursive backtracker, Prim, Kruskal, Wilson,
+  Aldous-Broder, hunt-and-kill, Eller, recursive division, binary tree,
+  sidewinder, growing tree.
+- **7 solvers**: BFS, DFS, Dijkstra, A\* (Manhattan/Euclidean/Chebyshev),
+  greedy best-first, wall follower, dead-end filling.
+- Distance fields + longest-path (diameter), ASCII & PNG rendering, wall-grid
+  interop, seedable/reproducible, zero core dependencies, `py.typed`.
+
+```bash
+pip install ./src/python            # or pip install "./src/python[image,play]"
+```
+
+```python
+import mazeforge as mf
+maze = mf.generate(20, 30, "recursive_backtracker", seed=42)
+sol = mf.solve(maze, algorithm="astar")
+print(mf.to_ascii(maze, path=sol.path))
+```
+
+```bash
+mazeforge generate -r 20 -c 30 --algo wilson --solve   # CLI
+mazeforge play                                          # pygame player
+```
+
+Details: [`src/python/README.md`](./src/python/README.md). Tests: `pytest src/python`.
+
+---
+
 ## 🧪 Testing
 
 ### Run All Tests
@@ -476,13 +512,16 @@ npm test -- __tests__/client
 
 # Coverage report
 npm test -- --coverage
+
+# Python library tests (51 tests, pytest)
+pip install "./src/python[dev]" && pytest src/python
 ```
 
 ### Test Structure
 
-- **Unit Tests**: Game logic, scoring, pathfinding
-- **Integration Tests**: API endpoints
-- **E2E Tests**: Full game flow (coming soon)
+- **JS unit tests**: Game logic, scoring, pathfinding (Jest, 53)
+- **JS integration tests**: API endpoints (Supertest)
+- **Python tests**: every generator/solver/renderer (pytest, 51) + mypy-clean
 
 ### Coverage Goals
 

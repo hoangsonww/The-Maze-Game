@@ -39,11 +39,11 @@ npm install
 npm run dev          # API + Swagger UI at http://localhost:3000/api-docs
 ```
 
-**Python version:**
+**Python library (`mazeforge`)** — installable maze generation/solving/rendering (11 generators, 7 solvers) + a pygame player:
 
 ```bash
-pip install -r requirements.txt
-python src/python/main.py
+pip install "./src/python[play]"
+mazeforge play          # or: mazeforge generate -r 20 -c 30 --algo wilson --solve
 ```
 
 See the [full README](../README.md) for deployment (Vercel / Docker / GitHub Pages) and the [API documentation](../API_DOCUMENTATION.md).
