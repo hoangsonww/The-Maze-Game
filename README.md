@@ -4,7 +4,7 @@
 
 ![The Maze Game](./utils/MazeUI.png)
 
-[![CI/CD](https://github.com/hoangsonww/The-Maze-Game/workflows/CI-CD%20Pipeline/badge.svg)](https://github.com/hoangsonww/The-Maze-Game/actions)
+[![CI/CD](https://github.com/hoangsonww/The-Maze-Game/actions/workflows/ci.yml/badge.svg)](https://github.com/hoangsonww/The-Maze-Game/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/version-1.3.0-blue.svg)](https://github.com/hoangsonww/The-Maze-Game)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/hoangsonww/The-Maze-Game/pulls)
@@ -309,10 +309,14 @@ The-Maze-Game/
 │   ├── middleware/               # auth (JWT), errorHandler
 │   └── utils/                    # logger, email, sentry
 ├── __tests__/                    # Jest suites (server: node env, client: jsdom)
-├── vercel.json                   # Serverless routing
-├── .vercelignore                 # Excludes the frontend from the API bundle
-├── .prettierrc.json / .prettierignore
-├── Dockerfile · docker-compose.yml · nginx.conf · Jenkinsfile
+├── scripts/                      # build-frontend, gen-secret, check-db, seed, smoke, openapi…
+├── .github/workflows/ci.yml      # CI: format → build server → build frontend → docker → summary
+├── Makefile                      # one-stop targets (make help)
+├── Dockerfile.backend            # API image (node)        ┐ pushed to GHCR by CI
+├── Dockerfile.frontend           # static image (nginx)    ┘
+├── docker/nginx.frontend.conf    # nginx config for the frontend image
+├── docker-compose.yml            # local stack: backend + frontend + mongo
+├── vercel.json · .vercelignore   # serverless routing
 ├── webpack.config.js · jest.config.js · manifest.json · service-worker.js
 └── README.md · API_DOCUMENTATION.md
 ```
@@ -391,6 +395,33 @@ Interactive docs (Swagger UI) are served at **`/api-docs`**; the OpenAPI spec at
 ---
 
 ## 🛠️ Development
+
+### Makefile
+
+A `Makefile` wraps the common tasks — run `make help` for the full list:
+
+```bash
+make install-all     # Node + Python deps
+make dev             # API with hot reload
+make test-all        # JS + Python tests
+make build           # static frontend -> frontend-dist/
+make docker-build    # build both Docker images
+make ci              # run the core CI gate locally
+make secret          # print a JWT secret
+```
+
+### Helper scripts
+
+`scripts/` holds standalone utilities (`build-frontend`, `gen-secret`,
+`check-db`, `seed-leaderboard`, `smoke-test`, `export-openapi`,
+`validate-openapi`, `clean-leaderboard`) — see [`scripts/README.md`](./scripts/README.md).
+
+### CI (GitHub Actions)
+
+`.github/workflows/ci.yml` runs in order: **1)** format check → **2)** build &
+test the server (uploads `server-dist`) → **3)** build the frontend (uploads
+`frontend-dist`) → **4)** build & push both Docker images to GHCR → **5)** a
+summary job. Images are linked to this repo via the OCI `source` label.
 
 ### NPM Scripts
 
@@ -535,20 +566,31 @@ pip install "./src/python[dev]" && pytest src/python
 
 ## 🚢 Deployment
 
-### Docker Deployment
+### Docker
+
+Two images are built from the repo: **`Dockerfile.backend`** (the Express API)
+and **`Dockerfile.frontend`** (the static site on nginx). CI publishes both to
+**GHCR**, linked to this repo:
+
+```
+ghcr.io/hoangsonww/the-maze-game-backend
+ghcr.io/hoangsonww/the-maze-game-frontend
+```
+
+Local full stack (backend + frontend + MongoDB):
 
 ```bash
-# Build and start all services
-docker-compose up -d
+docker compose up --build       # API :3000 (/api-docs) · frontend :8080 · mongo :27017
+docker compose --profile postgres up   # also start PostgreSQL
+make docker-build               # just build both images
+make docker-push                # build + push to a registry (REGISTRY/OWNER/TAG vars)
+```
 
-# View logs
-docker-compose logs -f app
+Pull the published images:
 
-# Stop services
-docker-compose down
-
-# Rebuild after changes
-docker-compose up -d --build
+```bash
+docker pull ghcr.io/hoangsonww/the-maze-game-backend:latest
+docker pull ghcr.io/hoangsonww/the-maze-game-frontend:latest
 ```
 
 ### Manual Deployment

@@ -23,3 +23,14 @@ __tests__
 *.test.js
 *.spec.js
 .github
+.venv
+venv
+__pycache__
+*.egg-info
+src/python
+frontend-dist
+openapi.json
+logs
+.vercel
+.prettierignore
+.prettierrc.json

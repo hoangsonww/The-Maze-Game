@@ -59,3 +59,8 @@ __pycache__/
 .mypy_cache/
 build/
 dist/
+
+# Build outputs
+frontend-dist/
+openapi.json
+logs/

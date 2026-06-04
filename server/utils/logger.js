@@ -30,17 +30,17 @@ const format = winston.format.combine(
   ),
 );
 
-// Define transports
-const transports = [
-  new winston.transports.Console(),
-  new winston.transports.File({
-    filename: path.join(__dirname, '../../logs/error.log'),
-    level: 'error',
-  }),
-  new winston.transports.File({
-    filename: path.join(__dirname, '../../logs/all.log'),
-  }),
-];
+// Containers and serverless should log to stdout (12-factor). File logging is
+// opt-in via LOG_TO_FILE=true (writes to ./logs, which must be writable).
+const transports = [new winston.transports.Console()];
+
+if (process.env.LOG_TO_FILE === 'true') {
+  const logDir = path.join(__dirname, '../../logs');
+  transports.push(
+    new winston.transports.File({ filename: path.join(logDir, 'error.log'), level: 'error' }),
+    new winston.transports.File({ filename: path.join(logDir, 'all.log') })
+  );
+}
 
 // Create logger
 const logger = winston.createLogger({

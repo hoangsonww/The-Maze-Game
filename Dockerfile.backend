@@ -1,0 +1,42 @@
+# syntax=docker/dockerfile:1
+# The Maze Game — backend API image (Express + MongoDB, serverless-twin).
+
+# --- deps: install production dependencies (build tools for any native module) ---
+FROM node:20-bookworm-slim AS deps
+WORKDIR /app
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends python3 make g++ \
+  && rm -rf /var/lib/apt/lists/*
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev && npm cache clean --force
+
+# --- runner: slim runtime with a non-root user ---
+FROM node:20-bookworm-slim AS runner
+ENV NODE_ENV=production \
+    PORT=3000 \
+    HOST=0.0.0.0
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends dumb-init \
+  && rm -rf /var/lib/apt/lists/* \
+  && groupadd -g 1001 nodejs \
+  && useradd -u 1001 -g nodejs -m nodejs
+WORKDIR /app
+
+COPY --chown=nodejs:nodejs package.json package-lock.json ./
+COPY --from=deps --chown=nodejs:nodejs /app/node_modules ./node_modules
+COPY --chown=nodejs:nodejs server ./server
+COPY --chown=nodejs:nodejs api ./api
+
+LABEL org.opencontainers.image.source="https://github.com/hoangsonww/The-Maze-Game" \
+      org.opencontainers.image.description="The Maze Game backend API (Express + MongoDB)" \
+      org.opencontainers.image.licenses="MIT" \
+      org.opencontainers.image.title="the-maze-game-backend"
+
+USER nodejs
+EXPOSE 3000
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:3000/api/health',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"
+
+ENTRYPOINT ["dumb-init", "--"]
+CMD ["node", "server/index.js"]
