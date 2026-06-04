@@ -94,9 +94,9 @@
 - **Achievements System**: 8 achievements to unlock
 - **Sound Effects**: Optional audio feedback
 - **Themes**: 10 visual themes (Daylight, Midnight, Neon, Forest, Sunset, Ocean, Dracula, Mono, Candy, Volcano)
-- **Touch Controls**: Swipe to move on mobile
+- **Touch Controls**: Swipe directly on the maze to move (plus an on-screen D-pad)
 - **Fully Responsive**: Presentable and playable from desktop down to small
-  phones (~360px) — swipe + on-screen D-pad, stacked layout, scrollable tables
+  phones (~360px) — swipe on the maze + on-screen D-pad, stacked layout, scrollable tables
 
 ### 🌐 Multiplayer (backend-ready)
 
@@ -174,7 +174,7 @@
 | 📊 Leaderboards          | Global rankings with timeframe filtering    |
 | 👤 Accounts & Stats      | Sign in to track level, win rate, streaks   |
 | 🎨 Themes                | 10 themes (Dracula, Sunset, Ocean, Neon, …) |
-| 📱 Touch                 | Swipe controls on mobile                    |
+| 📱 Touch                 | Swipe on the maze (or D-pad) on mobile      |
 | 🔊 Sound                 | Optional sound effects                      |
 | ⏸️ Pause                 | Pause and resume anytime                    |
 
@@ -275,15 +275,15 @@ the scripts load (or in the console).
 #### Controls
 
 - **Arrow Keys** or **WASD** - Move your character
-- **Swipe** - Move on touch devices
+- **Swipe on the maze** - Move on touch devices (swipe directly over the maze board)
 - **P** - Pause/Resume game
 - **H** - Use hint (costs points)
 - **R** - Generate a new maze
-- **On-screen buttons** - Alternative controls
+- **On-screen D-pad** - Alternative touch controls
 
 > [!NOTE]
 > On phones the maze and controls sit at the top with stats below, and you can
-> play entirely with swipes or the on-screen D-pad.
+> play entirely by swiping on the maze or using the on-screen D-pad.
 
 #### Objective
 

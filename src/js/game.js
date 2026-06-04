@@ -49,11 +49,13 @@ class MazeGame {
 
     // Difficulty configurations (logical dimensions are normalised to odd
     // numbers in buildMaze so the bottom-right exit is always reachable).
+    // hintSteps = how many cells ahead a hint reveals (a nudge, not the answer).
+    // maxHints  = how many hints are allowed for the whole run.
     this.difficultyConfig = {
-      easy: { rows: 11, cols: 15, hintCost: 5, mult: 1 },
-      medium: { rows: 15, cols: 21, hintCost: 10, mult: 1.5 },
-      hard: { rows: 21, cols: 31, hintCost: 15, mult: 2 },
-      expert: { rows: 25, cols: 35, hintCost: 20, mult: 3 },
+      easy: { rows: 11, cols: 15, hintCost: 5, mult: 1, hintSteps: 3, maxHints: 3 },
+      medium: { rows: 15, cols: 21, hintCost: 10, mult: 1.5, hintSteps: 4, maxHints: 5 },
+      hard: { rows: 21, cols: 31, hintCost: 15, mult: 2, hintSteps: 5, maxHints: 7 },
+      expert: { rows: 25, cols: 35, hintCost: 20, mult: 3, hintSteps: 6, maxHints: 9 },
     };
 
     // Canvas color palettes per theme
@@ -175,6 +177,8 @@ class MazeGame {
     this.cols = cfg.cols | 1;
     this.hintCost = cfg.hintCost;
     this.scoreMult = cfg.mult;
+    this.hintSteps = cfg.hintSteps;
+    this.maxHints = cfg.maxHints;
 
     const cell = Math.floor(Math.min(800 / this.cols, 600 / this.rows));
     this.cellSize = cell;
@@ -210,7 +214,9 @@ class MazeGame {
     this.gameSessionId = null;
     this.setText('timer', '00:00');
     this.setText('currentScore', '0');
+    this.closeHintModal();
     this.showStartOverlay();
+    this.updateHintUI();
   }
 
   // Player pressed Play: reshuffle the maze (so any peeking is moot), start the
@@ -225,10 +231,13 @@ class MazeGame {
     this.hintsUsed = 0;
     this.hintPath = [];
     this.showingHint = false;
+    this.paused = false;
+    this.won = false;
     this.started = true;
     this.gameStartTime = Date.now();
     this.hideStartOverlay();
     this.updateHUD();
+    this.syncActionButtons();
     this.startGameSession();
   }
 
@@ -288,6 +297,8 @@ class MazeGame {
     click('pauseGame', () => this.togglePause());
     click('useHint', () => this.showHint());
     click('regenerateMaze', () => this.regenerate());
+    click('hintConfirm', () => this.applyHint());
+    click('hintCancel', () => this.closeHintModal());
     click('playAgain', () => {
       this.hideWinModal();
       this.reset();
@@ -425,6 +436,7 @@ class MazeGame {
     if (this.paused) this.pausedAt = Date.now();
     else this.gameStartTime += Date.now() - this.pausedAt;
     this.setPauseButton(this.paused);
+    this.syncActionButtons();
   }
 
   // Swap the pause button's icon (via .paused class) + label without emojis.
@@ -438,22 +450,114 @@ class MazeGame {
 
   // ---- hints (A*) ----------------------------------------------------------
 
+  // Clicking Hint (or pressing H) asks for confirmation first — a hint costs
+  // points and you only get a few per run.
   showHint() {
     if (!this.started || this.paused || this.won || this.showingHint) return;
+    const remaining = this.maxHints - this.hintsUsed;
+    if (remaining <= 0) {
+      this.flashMessage('No hints left for this run.');
+      return;
+    }
+    if (this.currentScore() < this.hintCost) {
+      this.flashMessage(`Need ${this.hintCost} points for a hint.`);
+      return;
+    }
+    this.openHintModal(remaining);
+  }
+
+  openHintModal(remaining) {
+    const text = document.getElementById('hintModalText');
+    if (text) {
+      const noun = remaining === 1 ? 'hint' : 'hints';
+      text.innerHTML =
+        `This lights up the next <b>${this.hintSteps}</b> steps toward the exit — not the whole path. ` +
+        `It costs <b>${this.hintCost} pts</b>, and you have <b>${remaining}</b> ${noun} left this run.`;
+    }
+    document.getElementById('hintModal')?.classList.add('show');
+  }
+
+  closeHintModal() {
+    document.getElementById('hintModal')?.classList.remove('show');
+  }
+
+  // Confirmed: spend one hint and reveal only the next few steps.
+  applyHint() {
+    this.closeHintModal();
+    if (!this.started || this.paused || this.won || this.showingHint) return;
+    if (this.hintsUsed >= this.maxHints) {
+      this.flashMessage('No hints left for this run.');
+      return;
+    }
     if (this.currentScore() < this.hintCost) {
       this.flashMessage(`Need ${this.hintCost} points for a hint.`);
       return;
     }
     this.hintsUsed++;
     this.playSound('hint');
-    this.hintPath = this.findPath(this.player.x, this.player.y, this.exit.x, this.exit.y);
+    const full = this.findPath(this.player.x, this.player.y, this.exit.x, this.exit.y);
+    // A nudge, not the answer: current cell + the next `hintSteps` cells.
+    this.hintPath = full.slice(0, this.hintSteps + 1);
     this.showingHint = true;
+    this.scrollToMazeIfNeeded();
     window.dispatchEvent(new CustomEvent('hintUsed', { detail: { difficulty: this.difficulty } }));
     setTimeout(() => {
       this.showingHint = false;
       this.hintPath = [];
+      this.syncActionButtons();
     }, 3000);
-    this.setText('hints', this.hintsUsed);
+    this.updateHintUI();
+  }
+
+  // After confirming a hint, bring the maze into view if the player scrolled away.
+  scrollToMazeIfNeeded() {
+    const target = this.canvas?.closest('.game-canvas-container') || this.canvas;
+    if (!target) return;
+    const rect = target.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    const visible = Math.max(0, Math.min(rect.bottom, vh) - Math.max(rect.top, 0));
+    if (visible / Math.max(rect.height, 1) < 0.45) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  setBtnLocked(id, locked) {
+    const btn = document.getElementById(id);
+    if (!btn) return;
+    btn.classList.toggle('is-locked', locked);
+    if (locked) {
+      btn.disabled = true;
+      btn.setAttribute('aria-disabled', 'true');
+    } else {
+      btn.disabled = false;
+      btn.removeAttribute('disabled');
+      btn.removeAttribute('aria-disabled');
+    }
+  }
+
+  // Pause · Hint · New Maze — locked until Play; hint also locks when spent/paused.
+  syncActionButtons() {
+    const container = document.querySelector('.action-controls');
+    const preRun = !this.started;
+    container?.classList.toggle('is-pre-run', preRun);
+
+    const runLive = this.started && !this.won;
+    this.setBtnLocked('pauseGame', !runLive);
+    this.setBtnLocked('regenerateMaze', !runLive);
+
+    const hintLocked =
+      !runLive ||
+      this.paused ||
+      this.showingHint ||
+      (this.maxHints != null && this.hintsUsed >= this.maxHints);
+    this.setBtnLocked('useHint', hintLocked);
+  }
+
+  updateHintUI() {
+    if (this.maxHints != null) {
+      this.setText('hints', `${this.hintsUsed} / ${this.maxHints}`);
+    }
+    this.syncActionButtons();
   }
 
   findPath(sx, sy, ex, ey) {
@@ -558,6 +662,7 @@ class MazeGame {
   }
 
   regenerate() {
+    if (!this.started) return;
     if (this.won) {
       this.reset();
       return;
@@ -816,11 +921,11 @@ class MazeGame {
   updateHUD() {
     this.setText('difficulty', this.difficulty.toUpperCase());
     this.setText('moves', this.moves);
-    this.setText('hints', this.hintsUsed);
     this.setText('currentScore', this.currentScore());
     this.setText('lifetimeScore', this.stats.totalScore);
     this.setText('gamesWon', this.stats.gamesWon);
     this.setText('bestTime', this.formatTime(this.stats.bestTime));
+    this.updateHintUI();
   }
 
   formatTime(ms) {
