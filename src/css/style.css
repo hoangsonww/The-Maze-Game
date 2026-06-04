@@ -524,6 +524,82 @@ body::after {
   border-bottom-right-radius: 4px;
 }
 
+/* Start gate — see-through overlay + Play button over the frozen maze */
+.start-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  border-radius: var(--r-card);
+  background: color-mix(in srgb, var(--ink) 42%, transparent);
+  backdrop-filter: blur(1px);
+  transition:
+    opacity 0.3s,
+    visibility 0.3s;
+}
+.start-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.start-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: var(--ink);
+  background: linear-gradient(95deg, var(--lime-deep), var(--lime));
+  border: none;
+  border-radius: 999px;
+  padding: 0.8rem 2.2rem;
+  cursor: pointer;
+  box-shadow:
+    0 16px 36px -14px var(--lime),
+    0 0 0 6px color-mix(in srgb, var(--lime) 18%, transparent);
+  transition:
+    transform 0.16s,
+    box-shadow 0.2s;
+  animation: start-pulse 2.2s ease-in-out infinite;
+}
+.start-btn svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+.start-btn:hover {
+  transform: scale(1.05);
+}
+@keyframes start-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 16px 36px -14px var(--lime),
+      0 0 0 6px color-mix(in srgb, var(--lime) 18%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 16px 36px -14px var(--lime),
+      0 0 0 13px color-mix(in srgb, var(--lime) 5%, transparent);
+  }
+}
+.start-hint {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  background: color-mix(in srgb, var(--ink) 72%, transparent);
+  border: 1px solid var(--line);
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  text-align: center;
+}
+
 /* ----- Controls ----- */
 .game-controls {
   display: flex;

@@ -41,6 +41,9 @@
 
 - **Multiple Difficulty Levels**: Easy, Medium, Hard, and Expert modes
 - **Procedural Maze Generation**: Unique maze every time using Depth-First Search algorithm
+- **Start Gate**: The maze stays frozen behind a see-through Play overlay; the
+  timer only starts when you press Play (which also reshuffles the maze, so
+  peeking ahead doesn't help)
 - **Timer & Scoring System**: Compete for the best time and highest score
 - **Hint System**: Get pathfinding hints when stuck (costs points)
 - **Pause/Resume**: Pause the game anytime without losing progress

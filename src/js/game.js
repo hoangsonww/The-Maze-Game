@@ -194,10 +194,41 @@ class MazeGame {
     this.paused = false;
     this.won = false;
     this.confetti = [];
-    this.gameStartTime = Date.now();
+    // Frozen until the player presses Play (the clock does not run yet).
+    this.started = false;
+    this.gameStartTime = null;
     this.pausedAt = 0;
     this.gameSessionId = null;
+    this.setText('timer', '00:00');
+    this.setText('currentScore', '0');
+    this.showStartOverlay();
+  }
+
+  // Player pressed Play: reshuffle the maze (so any peeking is moot), start the
+  // clock, and hide the start overlay.
+  begin() {
+    if (this.started) return;
+    this.buildMaze();
+    this.player = { x: 0, y: 0, rx: 0, ry: 0 };
+    this.exit = { x: this.cols - 1, y: this.rows - 1 };
+    this.trail = new Set(['0,0']);
+    this.moves = 0;
+    this.hintsUsed = 0;
+    this.hintPath = [];
+    this.showingHint = false;
+    this.started = true;
+    this.gameStartTime = Date.now();
+    this.hideStartOverlay();
+    this.updateHUD();
     this.startGameSession();
+  }
+
+  showStartOverlay() {
+    document.getElementById('startOverlay')?.classList.remove('hidden');
+  }
+
+  hideStartOverlay() {
+    document.getElementById('startOverlay')?.classList.add('hidden');
   }
 
   buildMaze() {
@@ -244,6 +275,7 @@ class MazeGame {
     click('moveDown', () => this.move(0, 1));
     click('moveLeft', () => this.move(-1, 0));
     click('moveRight', () => this.move(1, 0));
+    click('startBtn', () => this.begin());
     click('pauseGame', () => this.togglePause());
     click('useHint', () => this.showHint());
     click('regenerateMaze', () => this.regenerate());
@@ -359,7 +391,7 @@ class MazeGame {
   }
 
   move(dx, dy) {
-    if (this.paused || this.won) return;
+    if (!this.started || this.paused || this.won) return;
     const nx = this.player.x + dx;
     const ny = this.player.y + dy;
     if (nx < 0 || nx >= this.cols || ny < 0 || ny >= this.rows || this.maze[ny][nx] === 1) {
@@ -379,7 +411,7 @@ class MazeGame {
   }
 
   togglePause() {
-    if (this.won) return;
+    if (this.won || !this.started) return;
     this.paused = !this.paused;
     if (this.paused) this.pausedAt = Date.now();
     else this.gameStartTime += Date.now() - this.pausedAt;
@@ -398,7 +430,7 @@ class MazeGame {
   // ---- hints (A*) ----------------------------------------------------------
 
   showHint() {
-    if (this.paused || this.won || this.showingHint) return;
+    if (!this.started || this.paused || this.won || this.showingHint) return;
     if (this.currentScore() < this.hintCost) {
       this.flashMessage(`Need ${this.hintCost} points for a hint.`);
       return;
@@ -503,6 +535,7 @@ class MazeGame {
   }
 
   currentScore() {
+    if (!this.started || !this.gameStartTime) return 0;
     return this.calcScore(Date.now() - this.gameStartTime);
   }
 
@@ -571,7 +604,7 @@ class MazeGame {
     this.drawPlayer();
     if (this.paused) this.drawOverlay('PAUSED');
 
-    if (!this.paused && !this.won) {
+    if (this.started && !this.paused && !this.won) {
       const elapsed = Date.now() - this.gameStartTime;
       const s = Math.floor(elapsed / 1000);
       this.setText(
