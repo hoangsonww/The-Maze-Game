@@ -1,10 +1,23 @@
+/**
+ * The Maze Game
+ *
+ * @author Son Nguyen <hoangson091104@gmail.com>
+ * @copyright Copyright (c) 2026 Son Nguyen. All rights reserved.
+ * @license MIT
+ * @see https://github.com/hoangsonww/The-Maze-Game
+ *
+ * @jest-environment node
+ */
 const request = require('supertest');
 const express = require('express');
 const gameRoutes = require('../../server/routes/game');
 
+const errorHandler = require('../../server/middleware/errorHandler');
+
 const app = express();
 app.use(express.json());
 app.use('/api/v1/games', gameRoutes);
+app.use(errorHandler);
 
 describe('Game API', () => {
   let sessionId;
@@ -41,18 +54,14 @@ describe('Game API', () => {
     });
 
     it('should track player moves', async () => {
-      const response = await request(app)
-        .put(`/api/v1/games/${sessionId}/move`)
-        .expect(200);
+      const response = await request(app).put(`/api/v1/games/${sessionId}/move`).expect(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.data.moves).toBe(1);
     });
 
     it('should return 404 for invalid session', async () => {
-      const response = await request(app)
-        .put('/api/v1/games/999999/move')
-        .expect(404);
+      const response = await request(app).put('/api/v1/games/999999/move').expect(404);
 
       expect(response.body.success).toBe(false);
     });
@@ -71,9 +80,7 @@ describe('Game API', () => {
       await request(app).put(`/api/v1/games/${sessionId}/move`);
       await request(app).put(`/api/v1/games/${sessionId}/move`);
 
-      const response = await request(app)
-        .put(`/api/v1/games/${sessionId}/complete`)
-        .expect(200);
+      const response = await request(app).put(`/api/v1/games/${sessionId}/complete`).expect(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.data.status).toBe('completed');
@@ -82,9 +89,7 @@ describe('Game API', () => {
     });
 
     it('should apply difficulty multiplier to score', async () => {
-      const response = await request(app)
-        .put(`/api/v1/games/${sessionId}/complete`)
-        .expect(200);
+      const response = await request(app).put(`/api/v1/games/${sessionId}/complete`).expect(200);
 
       // Hard difficulty should give higher score
       expect(response.body.data.score).toBeGreaterThan(0);
@@ -93,9 +98,7 @@ describe('Game API', () => {
 
   describe('GET /api/v1/games/stats', () => {
     it('should return game statistics', async () => {
-      const response = await request(app)
-        .get('/api/v1/games/stats')
-        .expect(200);
+      const response = await request(app).get('/api/v1/games/stats').expect(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.data).toHaveProperty('totalGames');

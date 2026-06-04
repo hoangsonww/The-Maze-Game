@@ -1,17 +1,28 @@
+/**
+ * The Maze Game
+ *
+ * @author Son Nguyen <hoangson091104@gmail.com>
+ * @copyright Copyright (c) 2026 Son Nguyen. All rights reserved.
+ * @license MIT
+ * @see https://github.com/hoangsonww/The-Maze-Game
+ *
+ * @jest-environment node
+ */
 const request = require('supertest');
 const express = require('express');
 const achievementRoutes = require('../../server/routes/achievements');
 
+const errorHandler = require('../../server/middleware/errorHandler');
+
 const app = express();
 app.use(express.json());
 app.use('/api/v1/achievements', achievementRoutes);
+app.use(errorHandler);
 
 describe('Achievements API', () => {
   describe('GET /api/v1/achievements', () => {
     it('should return all achievements', async () => {
-      const response = await request(app)
-        .get('/api/v1/achievements')
-        .expect(200);
+      const response = await request(app).get('/api/v1/achievements').expect(200);
 
       expect(response.body.success).toBe(true);
       expect(Array.isArray(response.body.data)).toBe(true);
@@ -19,9 +30,7 @@ describe('Achievements API', () => {
     });
 
     it('should return achievements with required fields', async () => {
-      const response = await request(app)
-        .get('/api/v1/achievements')
-        .expect(200);
+      const response = await request(app).get('/api/v1/achievements').expect(200);
 
       const achievement = response.body.data[0];
       expect(achievement).toHaveProperty('id');
@@ -34,9 +43,7 @@ describe('Achievements API', () => {
 
   describe('GET /api/v1/achievements/user/:userId', () => {
     it('should return user achievements', async () => {
-      const response = await request(app)
-        .get('/api/v1/achievements/user/test-user')
-        .expect(200);
+      const response = await request(app).get('/api/v1/achievements/user/test-user').expect(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.data).toHaveProperty('achievements');

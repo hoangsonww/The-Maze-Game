@@ -1,3 +1,12 @@
+/**
+ * The Maze Game
+ *
+ * @author Son Nguyen <hoangson091104@gmail.com>
+ * @copyright Copyright (c) 2026 Son Nguyen. All rights reserved.
+ * @license MIT
+ * @see https://github.com/hoangsonww/The-Maze-Game
+ */
+
 const express = require('express');
 const { query, transaction } = require('../database/connection');
 const { authenticate } = require('../middleware/auth');
@@ -104,10 +113,7 @@ router.post('/friend-request', async (req, res, next) => {
     );
 
     // Get friend details for notification
-    const friendResult = await query(
-      'SELECT username, email FROM users WHERE id = $1',
-      [friendId]
-    );
+    const friendResult = await query('SELECT username, email FROM users WHERE id = $1', [friendId]);
 
     if (friendResult.rows.length > 0) {
       // Send email notification
@@ -115,7 +121,7 @@ router.post('/friend-request', async (req, res, next) => {
         template: 'friendRequest',
         data: [friendResult.rows[0].username, req.user.username],
         to: friendResult.rows[0].email,
-      }).catch(err => logger.error('Failed to send friend request email:', err));
+      }).catch((err) => logger.error('Failed to send friend request email:', err));
     }
 
     logger.info(`Friend request sent from ${req.user.id} to ${friendId}`);
@@ -179,10 +185,10 @@ router.put('/friend-request/:id', async (req, res, next) => {
         data: result.rows[0],
       });
     } else {
-      await query(
-        'DELETE FROM friendships WHERE user_id = $1 AND friend_id = $2',
-        [id, req.user.id]
-      );
+      await query('DELETE FROM friendships WHERE user_id = $1 AND friend_id = $2', [
+        id,
+        req.user.id,
+      ]);
 
       res.json({
         success: true,

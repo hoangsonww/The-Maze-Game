@@ -1,4 +1,13 @@
 /**
+ * The Maze Game
+ *
+ * @author Son Nguyen <hoangson091104@gmail.com>
+ * @copyright Copyright (c) 2026 Son Nguyen. All rights reserved.
+ * @license MIT
+ * @see https://github.com/hoangsonww/The-Maze-Game
+ */
+
+/**
  * Internationalization (i18n) Support
  */
 
@@ -255,7 +264,8 @@ class I18n {
   }
 
   t(key, replacements = {}) {
-    const translation = this.translations[this.currentLang][key] || this.translations.en[key] || key;
+    const translation =
+      this.translations[this.currentLang][key] || this.translations.en[key] || key;
 
     // Replace placeholders like {name}
     return translation.replace(/\{(\w+)\}/g, (match, placeholder) => {
@@ -265,19 +275,19 @@ class I18n {
 
   updatePage() {
     // Update all elements with data-i18n attribute
-    document.querySelectorAll('[data-i18n]').forEach(element => {
+    document.querySelectorAll('[data-i18n]').forEach((element) => {
       const key = element.getAttribute('data-i18n');
       element.textContent = this.t(key);
     });
 
     // Update placeholders
-    document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+    document.querySelectorAll('[data-i18n-placeholder]').forEach((element) => {
       const key = element.getAttribute('data-i18n-placeholder');
       element.placeholder = this.t(key);
     });
 
     // Update aria-labels
-    document.querySelectorAll('[data-i18n-aria]').forEach(element => {
+    document.querySelectorAll('[data-i18n-aria]').forEach((element) => {
       const key = element.getAttribute('data-i18n-aria');
       element.setAttribute('aria-label', this.t(key));
     });

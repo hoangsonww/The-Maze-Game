@@ -1,0 +1,39 @@
+# Dependencies & build output
+node_modules/
+coverage/
+dist/
+build/
+
+# Python virtualenvs
+.venv/
+venv/
+__pycache__/
+
+# Lockfiles & generated
+package-lock.json
+
+# Tooling / vendor
+.vercel/
+.idea/
+.github/
+
+# Binary & non-formattable assets
+utils/
+*.ico
+*.png
+*.svg
+
+# Python (not handled by Prettier)
+src/python/
+
+# SQL schemas (kept hand-formatted)
+server/database/*.sql
+/.playwright-mcp
+
+# Markdown is excluded so Prettier never reflows Mermaid diagrams / tables
+*.md
+**/*.md
+
+# Build outputs
+frontend-dist/
+openapi.json

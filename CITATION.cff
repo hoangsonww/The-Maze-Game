@@ -1,0 +1,40 @@
+cff-version: 1.2.0
+message: 'If you use The Maze Game or the mazeforge library, please cite it as below.'
+title: 'The Maze Game'
+abstract: >-
+  A fully-featured, open-source maze game with procedurally generated,
+  always-solvable mazes, accounts and per-user progress, achievements, global
+  leaderboards, and a standalone Python maze generation/solving library
+  (mazeforge). Vanilla-JS frontend, MongoDB-backed Express API, and a
+  production-grade Python package.
+type: software
+version: '1.3.0'
+date-released: '2026-06-03'
+license: MIT
+repository-code: 'https://github.com/hoangsonww/The-Maze-Game'
+url: 'https://the-maze-game.onrender.com/'
+keywords:
+  - maze
+  - maze-generator
+  - maze-solver
+  - pathfinding
+  - astar
+  - dijkstra
+  - game
+  - javascript
+  - html5-canvas
+  - express
+  - mongodb
+  - python
+authors:
+  - family-names: 'Nguyen'
+    given-names: 'Son'
+    alias: 'David Nguyen'
+    orcid: 'https://orcid.org/0009-0002-7806-068X'
+    website: 'https://sonnguyenhoang.com/'
+    email: 'hoangson091104@gmail.com'
+contact:
+  - family-names: 'Nguyen'
+    given-names: 'Son'
+    orcid: 'https://orcid.org/0009-0002-7806-068X'
+    website: 'https://sonnguyenhoang.com/'

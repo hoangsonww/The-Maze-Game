@@ -1,36 +1,65 @@
 {
+  "id": "/?source=pwa",
   "name": "The Maze Game",
-  "short_name": "The Maze Game",
-  "start_url": "index.html",
+  "short_name": "Maze Game",
+  "description": "Procedurally generated, always-solvable mazes with difficulty levels, A* hints, accounts, stats, achievements, global leaderboards, and 10 themes. Free & open-source.",
+  "lang": "en",
+  "dir": "ltr",
+  "start_url": "./?source=pwa",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#7378c5",
-  "author": "Son Nguyen Hoang",
-  "description": "An interactive app that allows you to play a maze game",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#0b0e11",
+  "theme_color": "#0b0e11",
+  "categories": ["games", "entertainment", "puzzle"],
   "icons": [
+    { "src": "utils/image-72x72.png", "sizes": "72x72", "type": "image/png", "purpose": "any" },
+    { "src": "utils/image-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "utils/image-384x384.png", "sizes": "384x384", "type": "image/png", "purpose": "any" },
+    { "src": "utils/image-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
     {
       "src": "utils/image-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     },
     {
-        "src": "utils/image-512x512.png",
-        "sizes": "512x512",
-        "type": "image/png",
-        "purpose": "any maskable"
+      "src": "utils/image-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "utils/MazeUI.png",
+      "sizes": "1884x954",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Playing The Maze Game on desktop"
     },
     {
-        "src": "utils/image-384x384.png",
-        "sizes": "384x384",
-        "type": "image/png",
-        "purpose": "any maskable"
+      "src": "utils/MazeUI.png",
+      "sizes": "1884x954",
+      "type": "image/png",
+      "label": "The Maze Game"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Play a maze",
+      "short_name": "Play",
+      "description": "Jump straight into a new maze",
+      "url": "./?source=pwa-shortcut",
+      "icons": [{ "src": "utils/image-192x192.png", "sizes": "192x192", "type": "image/png" }]
     },
     {
-        "src": "utils/image-72x72.png",
-        "sizes": "72x72",
-        "type": "image/png",
-        "purpose": "any maskable"
+      "name": "About",
+      "short_name": "About",
+      "description": "How to play, features, and the tech behind the game",
+      "url": "./src/html/about.html",
+      "icons": [{ "src": "utils/image-192x192.png", "sizes": "192x192", "type": "image/png" }]
     }
   ]
 }

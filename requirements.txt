@@ -1,1 +1,3 @@
-pygame==2.5.2
+# Python maze library + interactive pygame player.
+# See src/python/ (the `mazeforge` package). Editable install with the play extra.
+-e ./src/python[play]

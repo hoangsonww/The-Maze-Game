@@ -1,0 +1,23 @@
+# syntax=docker/dockerfile:1
+# The Maze Game — static frontend image (vanilla HTML/CSS/JS served by nginx).
+
+# --- build: assemble the static site with the shared build script ---
+FROM node:20-bookworm-slim AS build
+WORKDIR /app
+COPY index.html 404.html manifest.json service-worker.js robots.txt sitemap.xml ./
+COPY src ./src
+COPY utils ./utils
+COPY scripts/build-frontend.js ./scripts/build-frontend.js
+RUN node scripts/build-frontend.js /out
+
+# --- serve with nginx ---
+FROM nginx:1.27-alpine
+LABEL org.opencontainers.image.source="https://github.com/hoangsonww/The-Maze-Game" \
+      org.opencontainers.image.description="The Maze Game static frontend (nginx)" \
+      org.opencontainers.image.licenses="MIT" \
+      org.opencontainers.image.title="the-maze-game-frontend"
+COPY --from=build /out /usr/share/nginx/html
+COPY docker/nginx.frontend.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
+  CMD wget -qO- http://localhost/ >/dev/null 2>&1 || exit 1

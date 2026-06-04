@@ -1,0 +1,65 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mazeforge"
+version = "1.0.0"
+description = "Production-grade maze generation, solving, and rendering."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Son Nguyen", email = "hoangson091104@gmail.com" }]
+keywords = [
+  "maze",
+  "maze-generator",
+  "maze-solver",
+  "pathfinding",
+  "astar",
+  "dijkstra",
+  "algorithms",
+  "pygame",
+]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Games/Entertainment :: Puzzle Games",
+  "Topic :: Scientific/Engineering :: Mathematics",
+  "Typing :: Typed",
+]
+# The core library is intentionally dependency-free.
+dependencies = []
+
+[project.optional-dependencies]
+image = ["Pillow>=9"]
+play = ["pygame>=2.5"]
+dev = ["pytest>=7", "mypy>=1.0", "Pillow>=9"]
+
+[project.scripts]
+mazeforge = "mazeforge.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/hoangsonww/The-Maze-Game"
+Repository = "https://github.com/hoangsonww/The-Maze-Game"
+Issues = "https://github.com/hoangsonww/The-Maze-Game/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["mazeforge*"]
+
+[tool.setuptools.package-data]
+mazeforge = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.mypy]
+python_version = "3.9"
+warn_unused_ignores = true
+disallow_untyped_defs = false

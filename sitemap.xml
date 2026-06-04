@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-        <loc>https://hoangsonww.github.io/The-Maze-Game/</loc>
-        <lastmod>2024-06-20</lastmod>
+        <loc>https://the-maze-game.onrender.com/</loc>
+        <lastmod>2026-06-20</lastmod>
+        <changefreq>weekly</changefreq>
         <priority>1.00</priority>
     </url>
     <url>
-        <loc>https://hoangsonww.github.io/The-Maze-Game/src/html/about.html</loc>
-        <lastmod>2024-06-20</lastmod>
+        <loc>https://the-maze-game.onrender.com/src/html/about.html</loc>
+        <lastmod>2026-06-20</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.80</priority>
     </url>
 </urlset>

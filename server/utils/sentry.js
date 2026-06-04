@@ -1,5 +1,13 @@
+/**
+ * The Maze Game
+ *
+ * @author Son Nguyen <hoangson091104@gmail.com>
+ * @copyright Copyright (c) 2026 Son Nguyen. All rights reserved.
+ * @license MIT
+ * @see https://github.com/hoangsonww/The-Maze-Game
+ */
+
 const Sentry = require('@sentry/node');
-const { ProfilingIntegration } = require('@sentry/profiling-node');
 const logger = require('./logger');
 
 /**
@@ -11,17 +19,22 @@ const initSentry = (app) => {
     return;
   }
 
+  const integrations = [
+    new Sentry.Integrations.Http({ tracing: true }),
+    new Sentry.Integrations.Express({ app }),
+  ];
+  // Profiling pulls in a native binding; only load it when Sentry is enabled.
+  try {
+    const { ProfilingIntegration } = require('@sentry/profiling-node');
+    integrations.push(new ProfilingIntegration());
+  } catch (err) {
+    logger.warn(`Sentry profiling unavailable: ${err.message}`);
+  }
+
   Sentry.init({
     dsn: process.env.SENTRY_DSN,
     environment: process.env.SENTRY_ENVIRONMENT || process.env.NODE_ENV || 'development',
-    integrations: [
-      // Enable HTTP calls tracing
-      new Sentry.Integrations.Http({ tracing: true }),
-      // Enable Express.js middleware tracing
-      new Sentry.Integrations.Express({ app }),
-      // Enable profiling
-      new ProfilingIntegration(),
-    ],
+    integrations,
     // Performance Monitoring
     tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
     // Profiling

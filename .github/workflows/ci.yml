@@ -1,0 +1,197 @@
+name: CI/CD Pipeline for The Maze Game
+
+on:
+  push:
+    branches: ['master', 'main', 'feat/**']
+  pull_request:
+  workflow_dispatch:
+
+# Allow pushing images to GHCR (linked to this repo via the OCI source label).
+permissions:
+  contents: read
+  packages: write
+
+env:
+  NODE_VERSION: '20'
+  REGISTRY: ghcr.io
+  BACKEND_IMAGE: ghcr.io/${{ github.repository_owner }}/the-maze-game-backend
+  FRONTEND_IMAGE: ghcr.io/${{ github.repository_owner }}/the-maze-game-frontend
+
+jobs:
+  # 1 ── formatting gate ────────────────────────────────────────────────────
+  format-check:
+    name: 1 · Format check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: Prettier --check
+        run: npm run format:check
+
+  # 2 ── build & package the server (Node/JS) ───────────────────────────────
+  build-server:
+    name: 2 · Build server
+    needs: format-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: Test (Jest)
+        run: npm test
+      - name: Validate OpenAPI spec
+        run: node scripts/validate-openapi.js
+      - name: Smoke-load the server app
+        run: node -e "process.env.NODE_ENV='test'; require('./server/app'); console.log('server app loads OK')"
+      - name: Export OpenAPI artifact
+        run: node scripts/export-openapi.js openapi.json
+      - name: Package server bundle
+        run: |
+          mkdir -p server-dist
+          cp -r server api package.json package-lock.json openapi.json server-dist/
+          tar -czf server-dist.tar.gz -C server-dist .
+      - name: Upload server artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: server-dist
+          path: |
+            server-dist.tar.gz
+            openapi.json
+          retention-days: 7
+
+  # 3 ── build the static frontend (vanilla HTML/CSS/JS) ────────────────────
+  build-frontend:
+    name: 3 · Build frontend
+    needs: format-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Assemble static site
+        run: node scripts/build-frontend.js frontend-dist
+      - name: Summarise build
+        run: cat frontend-dist/build-info.json
+      - name: Upload frontend artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend-dist
+          retention-days: 7
+
+  # 4 ── build both Docker images and push to GHCR ──────────────────────────
+  docker:
+    name: 4 · Docker build & push (GHCR)
+    needs: [build-server, build-frontend]
+    runs-on: ubuntu-latest
+    outputs:
+      backend_tags: ${{ steps.meta-backend.outputs.tags }}
+      frontend_tags: ${{ steps.meta-frontend.outputs.tags }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+
+      # Login only when we can push (skipped for fork PRs).
+      - name: Log in to GHCR
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Backend image metadata
+        id: meta-backend
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.BACKEND_IMAGE }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.title=the-maze-game-backend
+          tags: |
+            type=sha
+            type=ref,event=branch
+            type=ref,event=pr
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build & push backend
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.backend
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta-backend.outputs.tags }}
+          labels: ${{ steps.meta-backend.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Frontend image metadata
+        id: meta-frontend
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.FRONTEND_IMAGE }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.title=the-maze-game-frontend
+          tags: |
+            type=sha
+            type=ref,event=branch
+            type=ref,event=pr
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build & push frontend
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.frontend
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta-frontend.outputs.tags }}
+          labels: ${{ steps.meta-frontend.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # 5 ── cosmetic pipeline summary ──────────────────────────────────────────
+  success:
+    name: 5 · Pipeline summary
+    needs: [format-check, build-server, build-frontend, docker]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Annotations
+        run: |
+          echo "::notice title=Pipeline::✅ The Maze Game CI completed successfully"
+          echo "::group::Pipeline stages"
+          echo "1. Format check ........ ✅"
+          echo "2. Build server ........ ✅ (artifact: server-dist)"
+          echo "3. Build frontend ...... ✅ (artifact: frontend-dist)"
+          echo "4. Docker build & push . ✅ (GHCR: backend + frontend)"
+          echo "5. Summary ............. ✅"
+          echo "::endgroup::"
+      - name: Job summary
+        run: |
+          pushed='${{ github.event_name != 'pull_request' }}'
+          {
+            echo "## 🎮 The Maze Game — CI Pipeline"
+            echo ""
+            echo "| # | Stage | Result | Output |"
+            echo "|---|-------|--------|--------|"
+            echo "| 1 | Format check | ✅ | prettier |"
+            echo "| 2 | Build server | ✅ | artifact \`server-dist\` + \`openapi.json\` |"
+            echo "| 3 | Build frontend | ✅ | artifact \`frontend-dist\` |"
+            echo "| 4 | Docker build & push | ✅ | images pushed: \`$pushed\` |"
+            echo "| 5 | Summary | ✅ | this report |"
+            echo ""
+            echo "### 📦 Images (GHCR)"
+            echo '```'
+            echo "${{ env.BACKEND_IMAGE }}"
+            echo "${{ env.FRONTEND_IMAGE }}"
+            echo '```'
+            echo "Commit \`${{ github.sha }}\` on \`${{ github.ref_name }}\`."
+          } >> "$GITHUB_STEP_SUMMARY"

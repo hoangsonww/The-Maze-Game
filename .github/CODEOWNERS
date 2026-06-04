@@ -1,0 +1,16 @@
+# Code owners for The Maze Game.
+# These owners are requested for review on every pull request.
+
+# Default owner for everything in the repo.
+*                       @hoangsonww
+
+# Areas (all owned by the maintainer; listed for clarity).
+/server/                @hoangsonww
+/src/                   @hoangsonww
+/src/python/            @hoangsonww
+/.github/               @hoangsonww
+/scripts/               @hoangsonww
+Dockerfile*             @hoangsonww
+docker-compose.yml      @hoangsonww
+Makefile                @hoangsonww
+*.md                    @hoangsonww
