@@ -1,3 +1,10 @@
+# The Maze Game
+#
+# @author Son Nguyen <hoangson091104@gmail.com>
+# @copyright Copyright (c) 2026 Son Nguyen. All rights reserved.
+# @license MIT
+# @see https://github.com/hoangsonww/The-Maze-Game
+
 """PNG rendering of a maze via Pillow (an optional dependency).
 
 Install with ``pip install mazeforge[image]``.

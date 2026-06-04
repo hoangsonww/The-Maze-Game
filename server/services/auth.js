@@ -1,4 +1,13 @@
 /**
+ * The Maze Game
+ *
+ * @author Son Nguyen <hoangson091104@gmail.com>
+ * @copyright Copyright (c) 2026 Son Nguyen. All rights reserved.
+ * @license MIT
+ * @see https://github.com/hoangsonww/The-Maze-Game
+ */
+
+/**
  * Authentication helpers: password hashing (bcrypt) + JWT issue/verify.
  * The signing secret comes from JWT_SECRET; a dev fallback is used locally so
  * the app still boots, with a warning. Always set JWT_SECRET in production.

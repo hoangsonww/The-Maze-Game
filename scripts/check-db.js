@@ -1,5 +1,14 @@
 #!/usr/bin/env node
 /**
+ * The Maze Game
+ *
+ * @author Son Nguyen <hoangson091104@gmail.com>
+ * @copyright Copyright (c) 2026 Son Nguyen. All rights reserved.
+ * @license MIT
+ * @see https://github.com/hoangsonww/The-Maze-Game
+ */
+
+/**
  * Check datastore connectivity for the configured driver(s).
  *
  * Pings MongoDB when MONGODB_URI is set and PostgreSQL when DATABASE_URL/DB_HOST

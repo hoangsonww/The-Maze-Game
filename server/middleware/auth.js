@@ -1,4 +1,13 @@
 /**
+ * The Maze Game
+ *
+ * @author Son Nguyen <hoangson091104@gmail.com>
+ * @copyright Copyright (c) 2026 Son Nguyen. All rights reserved.
+ * @license MIT
+ * @see https://github.com/hoangsonww/The-Maze-Game
+ */
+
+/**
  * Auth middleware — verifies a Bearer JWT and loads the user from the active
  * datastore (mongo / postgres / memory) via the users repository.
  */

@@ -1,3 +1,10 @@
+# The Maze Game
+#
+# @author Son Nguyen <hoangson091104@gmail.com>
+# @copyright Copyright (c) 2026 Son Nguyen. All rights reserved.
+# @license MIT
+# @see https://github.com/hoangsonww/The-Maze-Game
+
 """Interactive pygame maze — a thin player built on the mazeforge library.
 
 Run with ``mazeforge play`` (after ``pip install mazeforge[play]``) or

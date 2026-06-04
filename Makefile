@@ -1,5 +1,6 @@
 # The Maze Game — project Makefile.
 # Run `make` or `make help` for the full list.
+# Author: Son Nguyen <hoangson091104@gmail.com>
 
 # --- config ---------------------------------------------------------------
 REGISTRY     ?= ghcr.io

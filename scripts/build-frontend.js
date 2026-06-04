@@ -1,5 +1,14 @@
 #!/usr/bin/env node
 /**
+ * The Maze Game
+ *
+ * @author Son Nguyen <hoangson091104@gmail.com>
+ * @copyright Copyright (c) 2026 Son Nguyen. All rights reserved.
+ * @license MIT
+ * @see https://github.com/hoangsonww/The-Maze-Game
+ */
+
+/**
  * Build the static frontend into `frontend-dist/`.
  *
  * The game is vanilla HTML/CSS/JS (deployed to GitHub Pages), so the "build" is

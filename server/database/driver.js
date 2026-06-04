@@ -1,4 +1,13 @@
 /**
+ * The Maze Game
+ *
+ * @author Son Nguyen <hoangson091104@gmail.com>
+ * @copyright Copyright (c) 2026 Son Nguyen. All rights reserved.
+ * @license MIT
+ * @see https://github.com/hoangsonww/The-Maze-Game
+ */
+
+/**
  * Shared datastore-driver resolver (kept in its own module so both the gameplay
  * repository and the users repository can use it without a circular import).
  *

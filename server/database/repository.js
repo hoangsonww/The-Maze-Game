@@ -1,4 +1,13 @@
 /**
+ * The Maze Game
+ *
+ * @author Son Nguyen <hoangson091104@gmail.com>
+ * @copyright Copyright (c) 2026 Son Nguyen. All rights reserved.
+ * @license MIT
+ * @see https://github.com/hoangsonww/The-Maze-Game
+ */
+
+/**
  * Data-access layer for the gameplay features the public site uses
  * (leaderboard, game sessions, achievements).
  *

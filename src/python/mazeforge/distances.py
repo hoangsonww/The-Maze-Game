@@ -1,3 +1,10 @@
+# The Maze Game
+#
+# @author Son Nguyen <hoangson091104@gmail.com>
+# @copyright Copyright (c) 2026 Son Nguyen. All rights reserved.
+# @license MIT
+# @see https://github.com/hoangsonww/The-Maze-Game
+
 """Distance fields over a maze (BFS/Dijkstra) and longest-path discovery."""
 
 from __future__ import annotations

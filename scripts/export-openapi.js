@@ -1,5 +1,14 @@
 #!/usr/bin/env node
 /**
+ * The Maze Game
+ *
+ * @author Son Nguyen <hoangson091104@gmail.com>
+ * @copyright Copyright (c) 2026 Son Nguyen. All rights reserved.
+ * @license MIT
+ * @see https://github.com/hoangsonww/The-Maze-Game
+ */
+
+/**
  * Write the OpenAPI spec (from server/swagger.js) to a file.
  *
  * Usage: node scripts/export-openapi.js [outFile=openapi.json]

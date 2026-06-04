@@ -1,4 +1,13 @@
 /**
+ * The Maze Game
+ *
+ * @author Son Nguyen <hoangson091104@gmail.com>
+ * @copyright Copyright (c) 2026 Son Nguyen. All rights reserved.
+ * @license MIT
+ * @see https://github.com/hoangsonww/The-Maze-Game
+ */
+
+/**
  * MongoDB connection (the ACTIVE datastore).
  *
  * Database name defaults to `maze-game`. Connection is lazy and cached on the
