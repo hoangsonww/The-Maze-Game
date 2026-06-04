@@ -1,108 +1,135 @@
 /**
- * Service Worker for Progressive Web App
+ * Service Worker — The Maze Game PWA.
+ *
+ * Strategy:
+ *   - Navigations: network-first, falling back to the cached app shell
+ *     (index.html) so the game launches and deep-links work fully offline.
+ *   - Same-origin static assets: cache-first, then network (and cache it).
+ *   - API (cross-origin Vercel) is left to the browser; any same-origin
+ *     /api/ call is network-first with a cache fallback.
+ *
+ * Paths are RELATIVE to this script's location, so the worker works whether
+ * the site is served from the domain root (Render) or a sub-path (GitHub Pages).
  */
 
-const CACHE_NAME = 'maze-game-v1.3.0';
-const RUNTIME_CACHE = 'maze-game-runtime';
+const VERSION = 'v1.4.0';
+const CACHE_NAME = `maze-game-${VERSION}`;
+const RUNTIME_CACHE = `maze-game-runtime-${VERSION}`;
+const APP_SHELL = './index.html';
 
-// Assets to cache on install
+// Core assets cached on install (relative → resolved against the SW scope).
 const PRECACHE_ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/src/css/style.css',
-  '/src/js/game.js',
-  '/src/js/ui-components.js',
-  '/src/js/auth.js',
-  '/utils/favicon.ico',
-  '/utils/image-192x192.png',
-  '/utils/image-512x512.png',
+  './',
+  './index.html',
+  './manifest.json',
+  './src/css/style.css',
+  './src/js/game.js',
+  './src/js/ui-components.js',
+  './src/js/auth.js',
+  './src/js/i18n.js',
+  './src/html/about.html',
+  './utils/favicon.ico',
+  './utils/image-72x72.png',
+  './utils/image-192x192.png',
+  './utils/image-384x384.png',
+  './utils/image-512x512.png',
+  './utils/MazeUI.png',
 ];
 
-// Install event - cache assets
+// Install — precache the app shell + core assets. Tolerate individual misses
+// (a single 404 must not abort the whole install on a static host).
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches
       .open(CACHE_NAME)
-      .then((cache) => {
-        console.log('Opened cache');
-        return cache.addAll(PRECACHE_ASSETS);
-      })
+      .then((cache) =>
+        Promise.allSettled(
+          // `cache: 'reload'` bypasses the browser HTTP cache so a version bump
+          // always precaches the freshest files (avoids stale-asset traps).
+          PRECACHE_ASSETS.map((asset) => cache.add(new Request(asset, { cache: 'reload' })))
+        )
+      )
       .then(() => self.skipWaiting())
   );
 });
 
-// Activate event - clean up old caches
+// Activate — drop caches from older versions, take control immediately.
 self.addEventListener('activate', (event) => {
-  const currentCaches = [CACHE_NAME, RUNTIME_CACHE];
+  const keep = [CACHE_NAME, RUNTIME_CACHE];
   event.waitUntil(
     caches
       .keys()
-      .then((cacheNames) => {
-        return cacheNames.filter((cacheName) => !currentCaches.includes(cacheName));
-      })
-      .then((cachesToDelete) => {
-        return Promise.all(
-          cachesToDelete.map((cacheToDelete) => {
-            return caches.delete(cacheToDelete);
-          })
-        );
-      })
+      .then((names) =>
+        Promise.all(names.filter((n) => !keep.includes(n)).map((n) => caches.delete(n)))
+      )
       .then(() => self.clients.claim())
   );
 });
 
-// Fetch event - serve from cache, fallback to network
-self.addEventListener('fetch', (event) => {
-  // Skip cross-origin requests
-  if (!event.request.url.startsWith(self.location.origin)) {
-    return;
+// Let the page trigger an immediate update (postMessage 'SKIP_WAITING').
+self.addEventListener('message', (event) => {
+  if (event.data === 'SKIP_WAITING' || event.data?.type === 'SKIP_WAITING') {
+    self.skipWaiting();
   }
+});
 
-  // API requests - network first, cache fallback
-  if (event.request.url.includes('/api/')) {
+self.addEventListener('fetch', (event) => {
+  const { request } = event;
+
+  // Only handle GET (POST/PUT etc. must always hit the network).
+  if (request.method !== 'GET') return;
+
+  // Navigations: network-first, fall back to the cached app shell offline.
+  if (request.mode === 'navigate') {
     event.respondWith(
-      fetch(event.request)
+      fetch(request)
         .then((response) => {
-          // Clone response for cache
-          const responseToCache = response.clone();
-          caches.open(RUNTIME_CACHE).then((cache) => {
-            cache.put(event.request, responseToCache);
-          });
+          const copy = response.clone();
+          caches.open(RUNTIME_CACHE).then((cache) => cache.put(request, copy));
           return response;
         })
-        .catch(() => {
-          return caches.match(event.request);
+        .catch(async () => {
+          const cached = await caches.match(request);
+          return cached || (await caches.match(APP_SHELL)) || Response.error();
         })
     );
     return;
   }
 
-  // Static assets - cache first, network fallback
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
+  // Cross-origin (e.g. the Vercel API, Google Fonts) — let the browser handle it.
+  if (!request.url.startsWith(self.location.origin)) return;
 
-      return fetch(event.request).then((response) => {
-        // Don't cache non-successful responses
+  // Same-origin API — network-first, cache fallback.
+  if (request.url.includes('/api/')) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(RUNTIME_CACHE).then((cache) => cache.put(request, copy));
+          return response;
+        })
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
+
+  // Same-origin static assets — cache-first, then network (and cache it).
+  event.respondWith(
+    caches.match(request).then((cached) => {
+      if (cached) return cached;
+      return fetch(request).then((response) => {
         if (!response || response.status !== 200 || response.type !== 'basic') {
           return response;
         }
-
-        const responseToCache = response.clone();
-        caches.open(RUNTIME_CACHE).then((cache) => {
-          cache.put(event.request, responseToCache);
-        });
-
+        const copy = response.clone();
+        caches.open(RUNTIME_CACHE).then((cache) => cache.put(request, copy));
         return response;
       });
     })
   );
 });
 
-// Background sync for offline score submissions
+// ---- Background sync for offline score submissions ----
 self.addEventListener('sync', (event) => {
   if (event.tag === 'sync-scores') {
     event.waitUntil(syncScores());
@@ -111,13 +138,11 @@ self.addEventListener('sync', (event) => {
 
 async function syncScores() {
   try {
-    // Get pending scores from IndexedDB
     const db = await openDB();
     const tx = db.transaction('pending-scores', 'readonly');
     const store = tx.objectStore('pending-scores');
     const scores = await store.getAll();
 
-    // Submit each score
     for (const score of scores) {
       try {
         const response = await fetch('/api/v1/leaderboard', {
@@ -125,9 +150,7 @@ async function syncScores() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(score.data),
         });
-
         if (response.ok) {
-          // Remove from pending
           const deleteTx = db.transaction('pending-scores', 'readwrite');
           await deleteTx.objectStore('pending-scores').delete(score.id);
         }
@@ -143,10 +166,8 @@ async function syncScores() {
 function openDB() {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open('maze-game-db', 1);
-
     request.onerror = () => reject(request.error);
     request.onsuccess = () => resolve(request.result);
-
     request.onupgradeneeded = (event) => {
       const db = event.target.result;
       if (!db.objectStoreNames.contains('pending-scores')) {
@@ -156,22 +177,20 @@ function openDB() {
   });
 }
 
-// Push notifications
+// ---- Push notifications ----
 self.addEventListener('push', (event) => {
   const data = event.data ? event.data.json() : {};
-  const title = data.title || 'Maze Game';
+  const title = data.title || 'The Maze Game';
   const options = {
     body: data.body || 'New update available!',
-    icon: '/utils/image-192x192.png',
-    badge: '/utils/image-72x72.png',
+    icon: './utils/image-192x192.png',
+    badge: './utils/image-72x72.png',
     vibrate: [200, 100, 200],
-    data: data.url || '/',
+    data: data.url || './',
   };
-
   event.waitUntil(self.registration.showNotification(title, options));
 });
 
-// Notification click
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   event.waitUntil(clients.openWindow(event.notification.data));

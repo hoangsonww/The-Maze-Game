@@ -64,3 +64,5 @@ dist/
 frontend-dist/
 openapi.json
 logs/
+
+.playwright-mcp/

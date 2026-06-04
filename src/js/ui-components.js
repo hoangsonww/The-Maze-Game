@@ -256,19 +256,85 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Service Worker Registration for PWA
+// Service Worker Registration for PWA.
+// Registered with a relative URL so it works at the domain root (Render) and
+// under a sub-path (GitHub Pages) alike.
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
+    const swUrl = new URL('service-worker.js', document.baseURI).toString();
     navigator.serviceWorker
-      .register('/service-worker.js')
+      .register(swUrl, { scope: './' })
       .then((registration) => {
         console.log('ServiceWorker registered:', registration.scope);
+
+        // When a new worker is found, activate it immediately so updates land
+        // on the next load without the user getting stuck on a stale version.
+        registration.addEventListener('updatefound', () => {
+          const installing = registration.installing;
+          if (!installing) return;
+          installing.addEventListener('statechange', () => {
+            if (installing.state === 'installed' && navigator.serviceWorker.controller) {
+              installing.postMessage('SKIP_WAITING');
+            }
+          });
+        });
       })
       .catch((err) => {
         console.log('ServiceWorker registration failed:', err);
       });
+
+    // Reload once when a new service worker takes control (after SKIP_WAITING).
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (refreshing) return;
+      refreshing = true;
+      window.location.reload();
+    });
   });
 }
+
+// ----- Installable PWA: capture the prompt and surface an Install button -----
+(function setupInstallPrompt() {
+  let deferredPrompt = null;
+
+  const makeButton = () => {
+    let btn = document.getElementById('installAppBtn');
+    if (btn) return btn;
+    btn = document.createElement('button');
+    btn.id = 'installAppBtn';
+    btn.type = 'button';
+    btn.className = 'install-btn';
+    btn.hidden = true;
+    btn.setAttribute('aria-label', 'Install The Maze Game');
+    btn.innerHTML =
+      '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg><span>Install</span>';
+    const slot = document.querySelector('.header-meta') || document.body;
+    slot.insertBefore(btn, slot.firstChild);
+    btn.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (typeof trackEvent === 'function') trackEvent('pwa', 'install_prompt', outcome);
+      deferredPrompt = null;
+      btn.hidden = true;
+    });
+    return btn;
+  };
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault(); // suppress the mini-infobar; we drive our own button
+    deferredPrompt = e;
+    const btn = makeButton();
+    btn.hidden = false;
+  });
+
+  window.addEventListener('appinstalled', () => {
+    deferredPrompt = null;
+    const btn = document.getElementById('installAppBtn');
+    if (btn) btn.hidden = true;
+    if (typeof trackEvent === 'function') trackEvent('pwa', 'installed', 'appinstalled');
+  });
+})();
 
 // Analytics Event Tracking
 function trackEvent(category, action, label, value) {

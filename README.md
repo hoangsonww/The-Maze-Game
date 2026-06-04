@@ -1,51 +1,58 @@
-# 🎮 The Maze Game - Production Ready
+# 🎮 The Maze Game - Full-Stack JavaScript Game with Express API and MongoDB
 
 <div align="center">
 
-![The Maze Game](./utils/MazeUI.png)
-
 **A fully-featured maze game: procedural mazes, difficulty levels, A\* hints, accounts, per-user stats & progress, achievements, global leaderboards, and multiplayer — with a MongoDB-backed, Vercel-deployable API documented in Swagger.**
 
-<!-- Project status -->
-
-[![CI/CD](https://github.com/hoangsonww/The-Maze-Game/actions/workflows/ci.yml/badge.svg)](https://github.com/hoangsonww/The-Maze-Game/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-A31F34.svg?style=flat)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.3.0-blue.svg)](https://github.com/hoangsonww/The-Maze-Game/releases)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/hoangsonww/The-Maze-Game/pulls)
-[![Jest](https://img.shields.io/badge/tests-53%20passing-success.svg?logo=jest&logoColor=white)](./__tests__)
-
-<!-- Languages -->
-
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6%2B-F7DF1E?style=flat&logo=javascript&logoColor=black)](https://developer.mozilla.org/docs/Web/JavaScript)
-[![TypeScript-ready](https://img.shields.io/badge/Type%20Hints-py.typed-3178C6?style=flat&logo=typescript&logoColor=white)](#-python-library-mazeforge)
-[![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
 [![HTML5](https://img.shields.io/badge/HTML5-Canvas-E34F26?style=flat&logo=html5&logoColor=white)](https://developer.mozilla.org/docs/Web/HTML)
 [![CSS3](https://img.shields.io/badge/CSS3-Grid%20%2B%20Flexbox-1572B6?style=flat&logo=css3&logoColor=white)](https://developer.mozilla.org/docs/Web/CSS)
-
-<!-- Backend & data -->
-
-[![Node.js](https://img.shields.io/badge/Node.js-%E2%89%A518-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Sass](https://img.shields.io/badge/Sass-loader-CC6699?style=flat&logo=sass&logoColor=white)](https://sass-lang.com/)
+[![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-%E2%89%A518-339933?style=flat&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![Express](https://img.shields.io/badge/Express-4-000000?style=flat&logo=express&logoColor=white)](https://expressjs.com/)
+[![Socket.IO](https://img.shields.io/badge/Socket.IO-realtime-010101?style=flat&logo=socketdotio&logoColor=white)](https://socket.io/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-maze--game-47A248?style=flat&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-switchable-4169E1?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![JWT](https://img.shields.io/badge/JWT-auth-000000?style=flat&logo=jsonwebtokens&logoColor=white)](https://jwt.io/)
-[![Socket.IO](https://img.shields.io/badge/Socket.IO-realtime-010101?style=flat&logo=socket.io&logoColor=white)](https://socket.io/)
-[![Swagger](https://img.shields.io/badge/OpenAPI-3.0-85EA2D?style=flat&logo=swagger&logoColor=black)](https://maze-game-api.vercel.app/api-docs)
-
-<!-- Build, tooling & DevOps -->
-
+[![bcrypt](https://img.shields.io/badge/bcrypt-hashing-525252?style=flat)](https://github.com/dcodeIO/bcrypt.js)
+[![Helmet](https://img.shields.io/badge/Helmet.js-headers-0A0A0A?style=flat)](https://helmetjs.github.io/)
+[![express-rate-limit](https://img.shields.io/badge/rate--limit-throttling-FF6F00?style=flat)](https://github.com/express-rate-limit/express-rate-limit)
+[![express-validator](https://img.shields.io/badge/express--validator-validation-3C873A?style=flat)](https://express-validator.github.io/)
+[![CORS](https://img.shields.io/badge/CORS-open-1E88E5?style=flat)](https://github.com/expressjs/cors)
+[![compression](https://img.shields.io/badge/compression-gzip-607D8B?style=flat)](https://github.com/expressjs/compression)
+[![Swagger / OpenAPI](https://img.shields.io/badge/Swagger%20%2F%20OpenAPI-3.0-85EA2D?style=flat&logo=swagger&logoColor=black)](https://maze-game-api.vercel.app/api-docs)
+[![Winston](https://img.shields.io/badge/Winston-logging-22A699?style=flat)](https://github.com/winstonjs/winston)
+[![Morgan](https://img.shields.io/badge/Morgan-HTTP%20logs-8E44AD?style=flat)](https://github.com/expressjs/morgan)
+[![Sentry](https://img.shields.io/badge/Sentry-errors-362D59?style=flat&logo=sentry&logoColor=white)](https://sentry.io/)
+[![Nodemailer](https://img.shields.io/badge/Nodemailer-email-29A4D9?style=flat)](https://nodemailer.com/)
+[![dotenv](https://img.shields.io/badge/dotenv-config-ECD53F?style=flat&logo=dotenv&logoColor=black)](https://github.com/motdotla/dotenv)
 [![Webpack](https://img.shields.io/badge/Webpack-5-8DD6F9?style=flat&logo=webpack&logoColor=black)](https://webpack.js.org/)
 [![Babel](https://img.shields.io/badge/Babel-7-F9DC3E?style=flat&logo=babel&logoColor=black)](https://babeljs.io/)
-[![Jest](https://img.shields.io/badge/Jest-tested-C21325?style=flat&logo=jest&logoColor=white)](https://jestjs.io/)
+[![npm](https://img.shields.io/badge/npm-scripts-CB3837?style=flat&logo=npm&logoColor=white)](https://www.npmjs.com/)
+[![nodemon](https://img.shields.io/badge/nodemon-hot%20reload-76D04B?style=flat&logo=nodemon&logoColor=white)](https://nodemon.io/)
+[![http-server](https://img.shields.io/badge/http--server-static-555555?style=flat)](https://github.com/http-party/http-server)
+[![Jest](https://img.shields.io/badge/Jest-tests-C21325?style=flat&logo=jest&logoColor=white)](https://jestjs.io/)
+[![Supertest](https://img.shields.io/badge/Supertest-API%20tests-4B5563?style=flat)](https://github.com/ladjs/supertest)
+[![pytest](https://img.shields.io/badge/pytest-suite-0A9EDC?style=flat&logo=pytest&logoColor=white)](https://docs.pytest.org/)
+[![mypy](https://img.shields.io/badge/mypy-typed-2A6DB2?style=flat&logo=python&logoColor=white)](https://mypy-lang.org/)
+[![ESLint](https://img.shields.io/badge/ESLint-google-4B32C3?style=flat&logo=eslint&logoColor=white)](https://eslint.org/)
 [![Prettier](https://img.shields.io/badge/Prettier-enforced-F7B93E?style=flat&logo=prettier&logoColor=black)](https://prettier.io/)
-[![ESLint](https://img.shields.io/badge/ESLint-linted-4B32C3?style=flat&logo=eslint&logoColor=white)](https://eslint.org/)
-[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Docker](https://img.shields.io/badge/Docker-images-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Docker Compose](https://img.shields.io/badge/Docker%20Compose-stack-2496ED?style=flat&logo=docker&logoColor=white)](https://docs.docker.com/compose/)
 [![Nginx](https://img.shields.io/badge/Nginx-frontend%20image-009639?style=flat&logo=nginx&logoColor=white)](https://nginx.org/)
-[![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-CI%2FCD-2088FF?style=flat&logo=githubactions&logoColor=white)](./.github/workflows/ci.yml)
 [![GHCR](https://img.shields.io/badge/GHCR-images-181717?style=flat&logo=github&logoColor=white)](https://github.com/hoangsonww/The-Maze-Game/pkgs/container/the-maze-game-backend)
+[![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-CI-2088FF?style=flat&logo=githubactions&logoColor=white)](./.github/workflows/ci.yml)
+[![Jenkins](https://img.shields.io/badge/Jenkins-pipeline-D24939?style=flat&logo=jenkins&logoColor=white)](./Jenkinsfile)
 [![Vercel](https://img.shields.io/badge/Vercel-API-000000?style=flat&logo=vercel&logoColor=white)](https://maze-game-api.vercel.app/)
 [![Render](https://img.shields.io/badge/Render-frontend-46E3B7?style=flat&logo=render&logoColor=white)](https://the-maze-game.onrender.com/)
+[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-frontend%20alt-222222?style=flat&logo=githubpages&logoColor=white)](https://pages.github.com/)
 [![PWA](https://img.shields.io/badge/PWA-installable-5A0FC8?style=flat&logo=pwa&logoColor=white)](./manifest.json)
+[![Pillow](https://img.shields.io/badge/Pillow-PNG%20render-11557C?style=flat)](https://python-pillow.org/)
+[![pygame](https://img.shields.io/badge/pygame-player-6E9F18?style=flat)](https://www.pygame.org/)
+[![GNU Make](https://img.shields.io/badge/GNU%20Make-targets-A42E2B?style=flat&logo=gnu&logoColor=white)](https://www.gnu.org/software/make/)
+[![Markdown](https://img.shields.io/badge/Markdown-docs-000000?style=flat&logo=markdown&logoColor=white)](https://www.markdownguide.org/)
+[![Mermaid](https://img.shields.io/badge/Mermaid-diagrams-FF3670?style=flat&logo=mermaid&logoColor=white)](https://mermaid.js.org/)
 
 [Play Now](https://the-maze-game.onrender.com/) | [API Docs](./API_DOCUMENTATION.md) | [Live Swagger](https://maze-game-api.vercel.app/api-docs) | [Report Bug](https://github.com/hoangsonww/The-Maze-Game/issues)
 
@@ -65,7 +72,6 @@
 - [Development](#-development)
 - [Testing](#-testing)
 - [Deployment](#-deployment)
-- [Technologies](#-technologies)
 - [Contributing](#-contributing)
 - [License](#-license)
 
@@ -128,7 +134,11 @@
 - **CI/CD Pipeline**: Automated testing (Jenkins / GitHub Actions)
 - **Docker Support**: Containerized deployment with Docker Compose
 - **Security**: Helmet.js, rate limiting, open CORS for the public API
-- **PWA Support**: Offline capability, installable, service-worker caching
+- **Installable PWA**: Offline-capable app shell (the game launches and deep
+  links work with no network), an in-app **Install** button (`beforeinstallprompt`),
+  app **shortcuts** + **maskable icons** in the manifest, and a service worker
+  that auto-updates and precaches fresh assets on each version bump — all of it
+  works on the static host (Render / GitHub Pages), no server required
 - **Code quality**: Project-wide Prettier, ESLint, Jest (53 tests)
 - **Accessibility & Responsive**: ARIA labels, keyboard nav, focus styles;
   mobile-first layout that stacks the maze + controls above stats, keeps the
@@ -146,7 +156,11 @@
 ### Screenshots
 
 <div align="center">
-<img src="./utils/MazeUI.png" alt="Game Screenshot" width="600">
+<img src="./utils/MazeUI.png" alt="Game Screenshot" width="100%">
+</div>
+
+<div align="center">
+<img src="./utils/about.png" alt="About Screenshot" width="100%">
 </div>
 
 ### Features Preview
@@ -179,7 +193,7 @@ cd The-Maze-Game
 docker-compose up -d
 
 # API + Swagger docs at http://localhost:3000/api-docs
-# (the game frontend is static — open index.html or use GitHub Pages)
+# (the game frontend is static — open index.html, or use the live Render site)
 ```
 
 ### Local Development
@@ -215,6 +229,7 @@ the scripts load (or in the console).
 - **Docker** (optional, for containerized deployment)
 - **PostgreSQL** >= 13.x (optional — only if you switch `DB_DRIVER=postgres`)
 
+> [!TIP]
 > The API also runs with **no database** (in-memory driver) for quick local play
 > and tests.
 
@@ -266,6 +281,7 @@ the scripts load (or in the console).
 - **R** - Generate a new maze
 - **On-screen buttons** - Alternative controls
 
+> [!NOTE]
 > On phones the maze and controls sit at the top with stats below, and you can
 > play entirely with swipes or the on-screen D-pad.
 
@@ -388,7 +404,7 @@ sequenceDiagram
 
 ```
 The-Maze-Game/
-├── index.html                    # Game page (GitHub Pages frontend)
+├── index.html                    # Game page (static frontend — Render / GitHub Pages)
 ├── src/                          # Frontend source
 │   ├── css/style.css             # "Wayfinder" UI styles
 │   ├── js/
@@ -453,7 +469,7 @@ The-Maze-Game/
 
 **DevOps**
 
-- Vercel (serverless API) · GitHub Pages (frontend)
+- Render (static frontend, canonical) · GitHub Pages (frontend, alt) · Vercel (serverless API)
 - Docker & Docker Compose, Nginx
 - Jenkins / GitHub Actions (CI/CD)
 
@@ -741,7 +757,7 @@ vercel --prod
 - All requests are routed to `api/index.js` (see `vercel.json`), which exports the shared app from `server/app.js`.
 - `GET /` redirects to `/api-docs` — interactive **Swagger UI** whose assets (CSS, JS, favicon) load entirely from a CDN. The raw spec is served at `/openapi.json`.
 - The active datastore is **MongoDB** (database `maze-game`). PostgreSQL is wired and correct but inactive; switch with `DB_DRIVER=postgres` and apply `server/database/schema-game.sql`. With no DB configured the API falls back to an in-memory store.
-- **CORS allows all origins**, so the GitHub Pages frontend (or anything) can call it directly.
+- **CORS allows all origins**, so the static frontend (Render / GitHub Pages) or anything else can call it directly.
 - **Accounts** (`/api/v1/auth/register`, `/login`, `/me`) issue JWTs (bcrypt-hashed passwords); per-user stats and progress live at `/api/v1/users/me/stats` and `/me/games`. Set `JWT_SECRET` to enable them.
 - Real-time multiplayer (Socket.IO) runs only via `npm start` (`server/index.js`), not on serverless.
 
@@ -759,11 +775,23 @@ vercel --prod
 | `SENTRY_DSN`                                      | optional          | Enables error tracking                                            |
 | `RATE_LIMIT_WINDOW_MS`, `RATE_LIMIT_MAX_REQUESTS` | optional          | Rate-limit tuning                                                 |
 
-The static game frontend stays vanilla JS on **GitHub Pages**; point its API calls at the Vercel URL when you deploy the backend.
+The static game frontend is vanilla JS and is hosted on **Render**
+([the-maze-game.onrender.com](https://the-maze-game.onrender.com/)) — **GitHub
+Pages** works equally well. Point its API calls at the Vercel URL when you deploy
+the backend.
 
-### GitHub Pages (Static Only)
+### Render (Static Site — canonical)
 
-Automatic deployment via GitHub Actions to `gh-pages` branch.
+The live frontend runs as a **Render Static Site**: build command
+`node scripts/build-frontend.js` (publishing `frontend-dist/`) — or serve the repo
+root directly, since the app needs no build step. Relative asset paths and the
+service worker's `scope: ./` mean it just works at the domain root.
+
+### GitHub Pages (Static — alternative)
+
+Automatic deployment via GitHub Actions to the `gh-pages` branch. Because all
+paths are relative and the service worker is scoped relatively, the PWA installs
+and runs offline under the project sub-path too.
 
 ### Cloud Platforms
 
@@ -810,11 +838,11 @@ doctl apps create --spec .do/app.yaml
 - ✅ Parameterized SQL (PostgreSQL driver)
 - ✅ Output escaping for user-rendered content (leaderboard, profile)
 - ✅ Open CORS — intentional for a public, read-mostly game API
-- ✅ HTTPS via the host (Vercel) / GitHub Pages
+- ✅ HTTPS via the host (Render / GitHub Pages for the frontend, Vercel for the API)
 
 > The API host serves only JSON + the Swagger docs (no same-origin app), so the
 > strict Content-Security-Policy is disabled there; the game frontend ships
-> separately on GitHub Pages.
+> separately as a static site (Render, or GitHub Pages).
 
 ### Security Best Practices
 
@@ -888,7 +916,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 <div align="center">
 
-**[⬆ back to top](#-the-maze-game---production-ready)**
+**[⬆ Back to top](#-the-maze-game---production-ready)**
 
 Made with ❤️ by [Son Nguyen](https://github.com/hoangsonww)
 

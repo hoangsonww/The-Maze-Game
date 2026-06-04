@@ -20,6 +20,7 @@ can assemble a `frontend-dist/` for Docker/CI.
 - [Talking to the API](#talking-to-the-api)
 - [Directory layout](#directory-layout)
 - [Styling & theming](#styling--theming)
+- [Progressive Web App](#progressive-web-app)
 - [Running locally](#running-locally)
 - [The `python/` subfolder](#the-python-subfolder)
 
@@ -214,6 +215,54 @@ flowchart LR
   above stats, with swipe and an on-screen D-pad. No horizontal overflow.
 - **Canvas colors** are read from the computed CSS variables, so the maze
   re-themes in lockstep with the UI.
+
+---
+
+## Progressive Web App
+
+The game is an installable, offline-capable PWA. Two root-level files drive it —
+[`manifest.json`](../manifest.json) and [`service-worker.js`](../service-worker.js) —
+and registration + the install button live in `js/ui-components.js`. Every path
+is relative and the worker is scoped `./`, so it works at the domain root
+(Render) and under a sub-path (GitHub Pages) alike.
+
+**Caching strategy**
+
+```mermaid
+flowchart TD
+    R["fetch event"] --> M{"request type"}
+    M -->|"navigation"| NAV["network-first<br/>→ fall back to cached<br/>app shell (index.html)"]
+    M -->|"cross-origin<br/>(API, fonts)"| PASS["pass through<br/>(browser handles)"]
+    M -->|"same-origin /api/"| API["network-first<br/>→ cache fallback"]
+    M -->|"same-origin static"| STA["cache-first<br/>→ network + cache"]
+    NAV --> OFF(["launches & deep links<br/>work fully offline"])
+    STA --> OFF
+```
+
+**Lifecycle & updates**
+
+```mermaid
+sequenceDiagram
+    participant Page
+    participant SW as service worker
+    participant Cache
+
+    Page->>SW: register('service-worker.js', { scope: './' })
+    SW->>Cache: install → precache app shell + assets (cache:'reload')
+    Note over SW: bumping VERSION invalidates old caches
+    SW-->>Page: updatefound → installed
+    Page->>SW: postMessage('SKIP_WAITING')
+    SW-->>Page: controllerchange → reload once (fresh version)
+```
+
+- **App shell offline:** any navigation falls back to the cached `index.html`, so
+  the game opens with no network.
+- **Fresh precache:** assets are precached with `cache: 'reload'`, so a `VERSION`
+  bump always pulls the latest files (no stale-asset traps).
+- **Install button:** `beforeinstallprompt` is captured and surfaced as an
+  in-header **Install** button; `appinstalled` hides it (both tracked via GA).
+- **Manifest:** standalone display, ink theme/background, `any` + `maskable`
+  icons, **shortcuts** (Play, About), and **screenshots** for a rich install UI.
 
 ---
 

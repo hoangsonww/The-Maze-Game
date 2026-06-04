@@ -9,7 +9,7 @@ Author: Son Nguyen (David Nguyen) — https://sonnguyenhoang.com/
 
 ## Overview
 
-- The frontend is dependency-free vanilla JavaScript + HTML5 Canvas. Mazes are generated with a randomized depth-first search (recursive backtracker) and guaranteed solvable (odd dimensions place the exit on the carved lattice).
+- The frontend is dependency-free vanilla JavaScript + HTML5 Canvas, shipped as an installable, offline-capable PWA (cached app shell, in-app install button, app shortcuts, maskable icons). Mazes are generated with a randomized depth-first search (recursive backtracker) and guaranteed solvable (odd dimensions place the exit on the carved lattice).
 - The backend is an Express API with a pluggable datastore: MongoDB (active, database `maze-game`), PostgreSQL (switchable via `DB_DRIVER=postgres`), or in-memory (fallback/tests). It is serverless-ready (deploys to Vercel) and also ships as a Docker image.
 - The Python package `mazeforge` (src/python/) is an independently usable library: 11 generation algorithms, 7 solvers (BFS/DFS/Dijkstra/A\*/greedy/wall-follower/dead-end-filling), distance fields, ASCII + PNG rendering, and a CLI.
 
@@ -18,7 +18,8 @@ Author: Son Nguyen (David Nguyen) — https://sonnguyenhoang.com/
 - [Project README](https://github.com/hoangsonww/The-Maze-Game/blob/master/README.md): features, architecture, quick start, deployment.
 - [API documentation](https://github.com/hoangsonww/The-Maze-Game/blob/master/API_DOCUMENTATION.md): every REST endpoint, parameters, bodies, examples.
 - [Server README](https://github.com/hoangsonww/The-Maze-Game/blob/master/server/README.md): backend architecture, datastore drivers, auth, routes.
-- [Frontend README](https://github.com/hoangsonww/The-Maze-Game/blob/master/src/README.md): the vanilla-JS game engine, modules, and rendering.
+- [Frontend README](https://github.com/hoangsonww/The-Maze-Game/blob/master/src/README.md): the vanilla-JS game engine, modules, rendering, and PWA.
+- [About page](https://the-maze-game.onrender.com/src/html/about.html): how to play, features, scoring, achievements, and FAQ.
 - [mazeforge (Python)](https://github.com/hoangsonww/The-Maze-Game/blob/master/src/python/README.md): the maze generation/solving/rendering library.
 - [Scripts](https://github.com/hoangsonww/The-Maze-Game/blob/master/scripts/README.md): project automation utilities.
 

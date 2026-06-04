@@ -2,20 +2,496 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>About The Maze Game</title>
-    <link rel="stylesheet" href="../css/style.css" />
-    <link rel="icon" type="image/x-icon" href="../../utils/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="manifest" href="../../manifest.json" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <title>About - The Maze Game</title>
+    <meta
+      name="description"
+      content="About The Maze Game: how to play, the features, the maze-generation algorithm, the tech behind it, and where to find the source and API."
+    />
+    <meta name="author" content="Son Nguyen (David Nguyen)" />
     <meta name="theme-color" content="#0b0e11" />
+    <meta name="color-scheme" content="dark light" />
+    <link rel="canonical" href="https://the-maze-game.onrender.com/src/html/about.html" />
+    <link rel="icon" type="image/x-icon" href="../../utils/favicon.ico" />
+    <link rel="apple-touch-icon" href="../../utils/image-192x192.png" />
+    <link rel="manifest" href="../../manifest.json" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="The Maze Game" />
+    <meta property="og:title" content="About - The Maze Game" />
+    <meta
+      property="og:description"
+      content="How to play, the features, the algorithm, and the tech behind The Maze Game."
+    />
+    <meta property="og:url" content="https://the-maze-game.onrender.com/src/html/about.html" />
+    <meta property="og:image" content="https://the-maze-game.onrender.com/utils/MazeUI.png" />
+
+    <link rel="stylesheet" href="../css/style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
+
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+
+      .ab-wrap {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 0 1.25rem 5rem;
+      }
+
+      /* ---- Hero ---- */
+      .ab-hero {
+        position: relative;
+        padding: 4.5rem 0 3rem;
+        text-align: center;
+      }
+      .ab-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--muted);
+        border: 1px solid var(--line);
+        background: var(--surface);
+        padding: 0.4rem 0.85rem;
+        border-radius: 999px;
+      }
+      .ab-eyebrow .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--lime);
+        box-shadow: 0 0 10px var(--lime);
+      }
+      .ab-hero h1 {
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: clamp(2.4rem, 7vw, 4.2rem);
+        line-height: 1.02;
+        letter-spacing: -0.02em;
+        margin: 1.2rem 0 0.8rem;
+      }
+      .ab-hero h1 em {
+        font-style: normal;
+        background: linear-gradient(120deg, var(--lime), var(--cyan));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .ab-lede {
+        max-width: 640px;
+        margin: 0 auto;
+        color: var(--muted);
+        font-size: 1.08rem;
+        line-height: 1.65;
+      }
+      .ab-cta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        justify-content: center;
+        margin-top: 2rem;
+      }
+
+      /* ---- Buttons / links ---- */
+      .ab-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        font-family: var(--font-ui);
+        font-weight: 700;
+        font-size: 0.95rem;
+        text-decoration: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: var(--r-btn);
+        border: 1px solid var(--line);
+        color: var(--text);
+        background: var(--surface-2);
+        transition:
+          transform 0.15s ease,
+          border-color 0.15s ease,
+          background 0.15s ease;
+      }
+      .ab-btn:hover {
+        transform: translateY(-2px);
+        border-color: var(--line-lime);
+        background: var(--surface-3);
+      }
+      .ab-btn.primary {
+        color: var(--ink);
+        border-color: transparent;
+        background: linear-gradient(95deg, var(--lime-deep), var(--lime));
+        box-shadow: var(--glow-lime);
+      }
+      .ab-btn svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      /* ---- Sections ---- */
+      .ab-section {
+        margin-top: 3.5rem;
+      }
+      .ab-section > h2 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1.5rem;
+        letter-spacing: -0.01em;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        margin-bottom: 1.5rem;
+      }
+      .ab-section > h2::before {
+        content: '';
+        width: 10px;
+        height: 22px;
+        border-radius: 3px;
+        background: linear-gradient(var(--lime), var(--lime-deep));
+        box-shadow: 0 0 14px -2px var(--lime);
+      }
+
+      /* ---- How to play ---- */
+      .ab-steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1rem;
+      }
+      .ab-step {
+        position: relative;
+        padding: 1.4rem 1.25rem 1.25rem;
+        border: 1px solid var(--line);
+        border-radius: var(--r-card);
+        background: var(--surface);
+        overflow: hidden;
+      }
+      .ab-step::after {
+        content: counter(ab) '';
+        counter-increment: ab;
+        position: absolute;
+        top: 0.6rem;
+        right: 0.9rem;
+        font-family: var(--font-mono);
+        font-size: 2.6rem;
+        font-weight: 700;
+        color: var(--surface-3);
+      }
+      .ab-steps {
+        counter-reset: ab;
+      }
+      .ab-step h3 {
+        font-size: 1.02rem;
+        margin-bottom: 0.4rem;
+      }
+      .ab-step p {
+        color: var(--muted);
+        font-size: 0.92rem;
+        line-height: 1.55;
+      }
+      .ab-keys {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-top: 0.85rem;
+      }
+      .ab-key {
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--text);
+        padding: 0.28rem 0.55rem;
+        border-radius: 7px;
+        border: 1px solid var(--line);
+        border-bottom-width: 2px;
+        background: var(--surface-2);
+        min-width: 1.9rem;
+        text-align: center;
+      }
+
+      /* ---- Feature grid ---- */
+      .ab-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1rem;
+      }
+      .ab-card {
+        padding: 1.3rem;
+        border: 1px solid var(--line);
+        border-radius: var(--r-card);
+        background: var(--surface);
+        transition:
+          transform 0.15s ease,
+          border-color 0.15s ease;
+      }
+      .ab-card:hover {
+        transform: translateY(-3px);
+        border-color: var(--line-lime);
+      }
+      .ab-ico {
+        display: inline-grid;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: var(--surface-2);
+        border: 1px solid var(--line);
+        margin-bottom: 0.85rem;
+        font-size: 1.2rem;
+      }
+      .ab-card h3 {
+        font-size: 1.04rem;
+        margin-bottom: 0.35rem;
+      }
+      .ab-card p {
+        color: var(--muted);
+        font-size: 0.9rem;
+        line-height: 1.55;
+      }
+
+      /* ---- Under the hood ---- */
+      .ab-hood {
+        padding: 1.75rem;
+        border: 1px solid var(--line);
+        border-radius: var(--r-card);
+        background: linear-gradient(180deg, var(--surface-2), var(--surface));
+      }
+      .ab-hood p {
+        color: var(--muted);
+        line-height: 1.7;
+        margin-bottom: 1rem;
+      }
+      .ab-hood p:last-of-type {
+        margin-bottom: 0;
+      }
+      .ab-hood strong {
+        color: var(--text);
+        font-weight: 600;
+      }
+      .ab-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1.25rem;
+      }
+      .ab-chip {
+        font-family: var(--font-mono);
+        font-size: 0.76rem;
+        letter-spacing: 0.04em;
+        color: var(--muted);
+        padding: 0.34rem 0.7rem;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: var(--surface);
+      }
+      .ab-chip b {
+        color: var(--lime);
+        font-weight: 700;
+      }
+
+      /* ---- Other apps ---- */
+      .ab-apps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 0.9rem;
+      }
+      .ab-app {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding: 1rem 1.15rem;
+        border: 1px solid var(--line);
+        border-radius: var(--r-card);
+        background: var(--surface);
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 600;
+        transition:
+          transform 0.15s ease,
+          border-color 0.15s ease;
+      }
+      .ab-app:hover {
+        transform: translateY(-3px);
+        border-color: var(--line-lime);
+      }
+      .ab-app span.arrow {
+        color: var(--muted);
+        transition:
+          transform 0.15s ease,
+          color 0.15s ease;
+      }
+      .ab-app:hover span.arrow {
+        transform: translate(3px, -3px);
+        color: var(--lime);
+      }
+
+      /* ---- Difficulty / scoring table ---- */
+      .ab-table-wrap {
+        overflow-x: auto;
+        border: 1px solid var(--line);
+        border-radius: var(--r-card);
+        background: var(--surface);
+      }
+      .ab-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.92rem;
+        min-width: 460px;
+      }
+      .ab-table th,
+      .ab-table td {
+        text-align: left;
+        padding: 0.85rem 1.1rem;
+        border-bottom: 1px solid var(--line);
+      }
+      .ab-table thead th {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .ab-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+      .ab-table td:first-child {
+        font-weight: 600;
+      }
+      .ab-table .mono {
+        font-family: var(--font-mono);
+        color: var(--lime);
+      }
+      .ab-formula {
+        margin-top: 1rem;
+        padding: 1rem 1.15rem;
+        border: 1px dashed var(--line-lime);
+        border-radius: var(--r-card);
+        background: rgba(198, 242, 78, 0.04);
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+        line-height: 1.7;
+        color: var(--muted);
+        overflow-x: auto;
+      }
+      .ab-formula b {
+        color: var(--text);
+      }
+
+      /* ---- Achievement badges ---- */
+      .ab-badges {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 0.85rem;
+      }
+      .ab-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        padding: 0.85rem 1rem;
+        border: 1px solid var(--line);
+        border-radius: var(--r-card);
+        background: var(--surface);
+      }
+      .ab-badge .em {
+        font-size: 1.5rem;
+        line-height: 1;
+      }
+      .ab-badge b {
+        display: block;
+        font-size: 0.92rem;
+      }
+      .ab-badge small {
+        color: var(--muted);
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+      }
+
+      /* ---- FAQ ---- */
+      .ab-faq details {
+        border: 1px solid var(--line);
+        border-radius: var(--r-card);
+        background: var(--surface);
+        margin-bottom: 0.7rem;
+        overflow: hidden;
+      }
+      .ab-faq summary {
+        cursor: pointer;
+        list-style: none;
+        padding: 1rem 1.2rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+      .ab-faq summary::-webkit-details-marker {
+        display: none;
+      }
+      .ab-faq summary::after {
+        content: '+';
+        font-family: var(--font-mono);
+        font-size: 1.3rem;
+        color: var(--lime);
+        transition: transform 0.18s ease;
+      }
+      .ab-faq details[open] summary::after {
+        transform: rotate(45deg);
+      }
+      .ab-faq details[open] summary {
+        border-bottom: 1px solid var(--line);
+      }
+      .ab-faq p {
+        padding: 1rem 1.2rem;
+        color: var(--muted);
+        line-height: 1.65;
+        font-size: 0.92rem;
+      }
+      .ab-faq p a {
+        color: var(--lime);
+        text-decoration: none;
+      }
+
+      /* ---- Footer ---- */
+      .ab-footer {
+        margin-top: 4rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--line);
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        color: var(--muted-2);
+        font-size: 0.85rem;
+      }
+      .ab-footer a {
+        color: var(--muted);
+        text-decoration: none;
+      }
+      .ab-footer a:hover {
+        color: var(--lime);
+      }
+
+      @media (max-width: 540px) {
+        .ab-hero {
+          padding-top: 3rem;
+        }
+      }
+    </style>
   </head>
 
+  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-CZ3YJF00CG"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -23,73 +499,351 @@
       dataLayer.push(arguments);
     }
     gtag('js', new Date());
-
     gtag('config', 'G-CZ3YJF00CG');
   </script>
 
-  <style>
-    body,
-    html {
-      scroll-behavior: smooth;
-      overflow-x: auto;
-    }
-  </style>
-
   <body>
-    <header style="margin-bottom: 50px">
-      <h1>The Maze Game</h1>
-      <p>A simple yet fun game to play when you're bored.</p>
+    <header class="game-header">
+      <div class="header-inner">
+        <a class="brand" href="../../index.html" style="text-decoration: none; color: inherit">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" width="30" height="30" fill="none">
+              <path
+                d="M6 7 H16 V14 H10 V21 H22 V14 H26"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <circle cx="6" cy="7" r="3" fill="#ff6a4d" />
+              <circle cx="26" cy="14" r="3" fill="#c6f24e" />
+            </svg>
+          </span>
+          <span class="brand-text">
+            <span class="brand-name">The <em>Maze</em> Game</span>
+            <span class="brand-tag">Navigate · Solve · Conquer</span>
+          </span>
+        </a>
+        <div class="header-meta">
+          <span class="header-pill"><span class="dot"></span> About</span>
+        </div>
+      </div>
     </header>
 
-    <div style="margin-top: -20px" class="game-container">
-      <h2 style="color: white">About The Maze Game</h2>
-      <p style="color: white">
-        You can use the arrow keys or the four control buttons below the maze to help the player navigate through the
-        maze.
-      </p>
-      <p style="color: white">The player's goal is to reach the end of the maze.</p>
-      <p style="color: white">
-        If the player reaches the end of the maze, the maze will regenerate and the player will be placed at the start
-        of the new maze.
-      </p>
-      <p style="color: white">
-        If you find yourself stuck, you can regenerate the maze by clicking the "Regenerate Maze" button.
-      </p>
-      <p style="color: white">Good luck!</p>
+    <main class="ab-wrap">
+      <!-- Hero -->
+      <section class="ab-hero">
+        <span class="ab-eyebrow"><span class="dot"></span> Open-source · free to play</span>
+        <h1>Find the way <em>out</em>.</h1>
+        <p class="ab-lede">
+          A fast, procedurally generated maze game in your browser. Every maze is unique, always solvable, and built to
+          be beaten - race the clock, climb the leaderboard, and unlock achievements.
+        </p>
+        <div class="ab-cta">
+          <a class="ab-btn primary" href="../../index.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M8 5v14l11-7z" fill="currentColor" stroke="none" />
+            </svg>
+            Play now
+          </a>
+          <a class="ab-btn" href="https://github.com/hoangsonww/The-Maze-Game" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.87-.01-1.71-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05A9.34 9.34 0 0 1 12 6.84c.85 0 1.71.12 2.51.34 1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.48-.01 2.82 0 .27.18.6.69.49A10.02 10.02 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"
+              />
+            </svg>
+            Source on GitHub
+          </a>
+          <a class="ab-btn" href="https://maze-game-api.vercel.app/api-docs" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 7h16M4 12h16M4 17h10" stroke-linecap="round" />
+            </svg>
+            API docs
+          </a>
+        </div>
+      </section>
 
-      <button id="regenerateMaze" onclick="window.location.href='../../index.html'" style="margin-top: 25px">
-        Back to Game
-      </button>
+      <!-- How to play -->
+      <section class="ab-section">
+        <h2>How to play</h2>
+        <div class="ab-steps">
+          <div class="ab-step">
+            <h3>Press Play</h3>
+            <p>
+              The maze stays frozen behind the Play overlay. Pressing Play reshuffles it and starts the clock - no
+              peeking ahead.
+            </p>
+          </div>
+          <div class="ab-step">
+            <h3>Move the player</h3>
+            <p>Guide the coral square from the top-left to the lime exit at the bottom-right.</p>
+            <div class="ab-keys">
+              <span class="ab-key">W</span><span class="ab-key">A</span><span class="ab-key">S</span
+              ><span class="ab-key">D</span> <span class="ab-key">↑</span><span class="ab-key">←</span
+              ><span class="ab-key">↓</span><span class="ab-key">→</span>
+            </div>
+          </div>
+          <div class="ab-step">
+            <h3>Stuck? Get a hint</h3>
+            <p>An A* hint lights the next step toward the exit - handy, but it costs you points.</p>
+            <div class="ab-keys">
+              <span class="ab-key">H</span><span class="ab-key">P&nbsp;pause</span
+              ><span class="ab-key">R&nbsp;new</span>
+            </div>
+          </div>
+          <div class="ab-step">
+            <h3>Beat your best</h3>
+            <p>Finish fast with few moves for a high score, then submit to the global leaderboard.</p>
+          </div>
+        </div>
+      </section>
 
-      <h2 style="color: white; margin-top: 25px">Explore Our Other Apps</h2>
-      <button
-        style="font: inherit; margin-top: 10px"
-        id="regenerateMaze1"
-        onclick="window.location.href='https://movie-verse.com';"
-      >
-        Visit The MovieVerse
-      </button>
-      <button
-        style="font: inherit; margin-top: 10px"
-        id="regenerateMaze2"
-        onclick="window.location.href='https://hoangsonww.github.io/RecipeGenie-App/';"
-      >
-        Visit RecipeGenie
-      </button>
-      <button
-        style="font: inherit; margin-top: 10px"
-        id="regenerateMaze3"
-        onclick="window.location.href='https://hoangsonww.github.io/The-StickyNotes-App/';"
-      >
-        Visit StickyNotes
-      </button>
-      <button
-        style="font: inherit; margin-top: 10px; margin-bottom: 20px"
-        id="regenerateMaze4"
-        onclick="window.location.href='https://hoangsonww.github.io/WeatherMate-App/';"
-      >
-        Visit WeatherMate
-      </button>
-    </div>
+      <!-- Features -->
+      <section class="ab-section">
+        <h2>What's inside</h2>
+        <div class="ab-grid">
+          <div class="ab-card">
+            <span class="ab-ico">🧩</span>
+            <h3>Procedural mazes</h3>
+            <p>A fresh, perfect maze every round - exactly one path between any two cells, always solvable.</p>
+          </div>
+          <div class="ab-card">
+            <span class="ab-ico">🎚️</span>
+            <h3>Four difficulties</h3>
+            <p>From Easy (11×15) to Expert (25×35), with scoring multipliers that reward the hard ones.</p>
+          </div>
+          <div class="ab-card">
+            <span class="ab-ico">💡</span>
+            <h3>A* hints</h3>
+            <p>Optimal next-step guidance when you're lost, computed with A* pathfinding.</p>
+          </div>
+          <div class="ab-card">
+            <span class="ab-ico">🏆</span>
+            <h3>Achievements</h3>
+            <p>Eight to unlock - Speed Demon, Perfectionist, Streak Master, Night Owl, and more.</p>
+          </div>
+          <div class="ab-card">
+            <span class="ab-ico">📊</span>
+            <h3>Accounts &amp; stats</h3>
+            <p>Sign in to track level &amp; XP, win rate, streaks, and a per-difficulty breakdown.</p>
+          </div>
+          <div class="ab-card">
+            <span class="ab-ico">🎨</span>
+            <h3>10 themes</h3>
+            <p>Daylight, Midnight, Neon, Dracula, Sunset, Ocean… the whole board re-themes instantly.</p>
+          </div>
+          <div class="ab-card">
+            <span class="ab-ico">📱</span>
+            <h3>Plays anywhere</h3>
+            <p>Swipe or an on-screen D-pad on phones, keyboard on desktop. Installable as a PWA.</p>
+          </div>
+          <div class="ab-card">
+            <span class="ab-ico">🌍</span>
+            <h3>Global leaderboard</h3>
+            <p>Compete worldwide with daily, weekly, monthly, and all-time rankings.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Under the hood -->
+      <section class="ab-section">
+        <h2>Under the hood</h2>
+        <div class="ab-hood">
+          <p>
+            Mazes are carved with a <strong>randomized depth-first search</strong> (recursive backtracker), producing
+            long, winding corridors. Because the carve visits every cell exactly once, the result is a
+            <strong>perfect maze</strong> - guaranteed to have a solution. Hints and the optional auto-solver use
+            <strong>A*</strong> with a Manhattan heuristic to find the shortest path.
+          </p>
+          <p>
+            The frontend is <strong>dependency-free vanilla JavaScript</strong> on an HTML5 Canvas. Scores, accounts,
+            and leaderboards are served by an <strong>Express API</strong> backed by MongoDB (with PostgreSQL and
+            in-memory drivers behind the same interface), documented in Swagger and deployed serverless on Vercel.
+          </p>
+          <p>
+            Want the algorithms on their own? <strong>mazeforge</strong>, the Python library powering the maze logic,
+            ships separately with 11 generators, 7 solvers, and ASCII/PNG rendering.
+          </p>
+          <div class="ab-chips">
+            <span class="ab-chip"><b>JS</b> Canvas</span>
+            <span class="ab-chip"><b>Node</b> Express</span>
+            <span class="ab-chip"><b>Mongo</b> DB</span>
+            <span class="ab-chip"><b>JWT</b> auth</span>
+            <span class="ab-chip"><b>OpenAPI</b> Swagger</span>
+            <span class="ab-chip"><b>Docker</b> + CI</span>
+            <span class="ab-chip"><b>Python</b> mazeforge</span>
+            <span class="ab-chip"><b>PWA</b></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Difficulty & scoring -->
+      <section class="ab-section">
+        <h2>Difficulty &amp; scoring</h2>
+        <div class="ab-table-wrap">
+          <table class="ab-table">
+            <thead>
+              <tr>
+                <th>Level</th>
+                <th>Grid</th>
+                <th>Multiplier</th>
+                <th>Hint cost</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Easy</td>
+                <td>11 × 15</td>
+                <td class="mono">1.0×</td>
+                <td class="mono">5 pts</td>
+              </tr>
+              <tr>
+                <td>Medium</td>
+                <td>15 × 21</td>
+                <td class="mono">1.5×</td>
+                <td class="mono">10 pts</td>
+              </tr>
+              <tr>
+                <td>Hard</td>
+                <td>21 × 31</td>
+                <td class="mono">2.0×</td>
+                <td class="mono">15 pts</td>
+              </tr>
+              <tr>
+                <td>Expert</td>
+                <td>25 × 35</td>
+                <td class="mono">3.0×</td>
+                <td class="mono">20 pts</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="ab-formula">
+          <b>score</b> = max(0, (100 − time·0.1/s − moves·0.5 − hints·cost) × multiplier)
+          <br />
+          Finish fast, move efficiently, and skip the hints to top the board.
+        </div>
+      </section>
+
+      <!-- Achievements -->
+      <section class="ab-section">
+        <h2>Achievements to unlock</h2>
+        <div class="ab-badges">
+          <div class="ab-badge">
+            <span class="em">🏆</span>
+            <div><b>First Victory</b><small>10 pts</small></div>
+          </div>
+          <div class="ab-badge">
+            <span class="em">⚡</span>
+            <div><b>Speed Demon</b><small>25 pts · &lt; 30s</small></div>
+          </div>
+          <div class="ab-badge">
+            <span class="em">✨</span>
+            <div><b>Perfectionist</b><small>20 pts · no hints</small></div>
+          </div>
+          <div class="ab-badge">
+            <span class="em">🧭</span>
+            <div><b>Efficient Navigator</b><small>30 pts</small></div>
+          </div>
+          <div class="ab-badge">
+            <span class="em">🏃</span>
+            <div><b>Marathon Runner</b><small>50 pts · 100 wins</small></div>
+          </div>
+          <div class="ab-badge">
+            <span class="em">👑</span>
+            <div><b>Expert Conqueror</b><small>40 pts · expert</small></div>
+          </div>
+          <div class="ab-badge">
+            <span class="em">🔥</span>
+            <div><b>Streak Master</b><small>35 pts · 10 in a row</small></div>
+          </div>
+          <div class="ab-badge">
+            <span class="em">🦉</span>
+            <div><b>Night Owl</b><small>15 pts · 12–4am</small></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section class="ab-section">
+        <h2>FAQ</h2>
+        <div class="ab-faq">
+          <details open>
+            <summary>Is every maze actually solvable?</summary>
+            <p>
+              Yes. Mazes are carved with a recursive backtracker that visits every cell exactly once, producing a
+              <em>perfect maze</em> - exactly one path between any two cells, so a solution always exists.
+            </p>
+          </details>
+          <details>
+            <summary>Do I need an account to play?</summary>
+            <p>
+              No. Pick a leaderboard name and play as a guest - stats are saved locally. Create an account any time to
+              sync your level, win rate, streaks, and per-difficulty stats across devices.
+            </p>
+          </details>
+          <details>
+            <summary>Does it work on mobile?</summary>
+            <p>
+              Fully. Swipe to move or use the on-screen D-pad, the layout stacks for small screens, and you can install
+              it as a PWA for an app-like, offline-capable experience.
+            </p>
+          </details>
+          <details>
+            <summary>Is there a multiplayer mode?</summary>
+            <p>
+              The realtime backend (Socket.IO rooms, position broadcast, finish events) is in place on the long-lived
+              server. A multiplayer frontend is on the roadmap.
+            </p>
+          </details>
+          <details>
+            <summary>Can I use the maze algorithms in my own project?</summary>
+            <p>
+              Yes -
+              <a
+                href="https://github.com/hoangsonww/The-Maze-Game/tree/master/src/python"
+                target="_blank"
+                rel="noopener"
+                >mazeforge</a
+              >
+              is a standalone, MIT-licensed Python library with 11 generators, 7 solvers, and ASCII/PNG rendering. The
+              REST API is also
+              <a href="https://maze-game-api.vercel.app/api-docs" target="_blank" rel="noopener">openly documented</a>.
+            </p>
+          </details>
+        </div>
+      </section>
+
+      <!-- Other apps -->
+      <section class="ab-section">
+        <h2>Explore more apps</h2>
+        <div class="ab-apps">
+          <a class="ab-app" href="https://movie-verse.com" target="_blank" rel="noopener">
+            The MovieVerse <span class="arrow">↗</span>
+          </a>
+          <a class="ab-app" href="https://hoangsonww.github.io/RecipeGenie-App/" target="_blank" rel="noopener">
+            RecipeGenie <span class="arrow">↗</span>
+          </a>
+          <a class="ab-app" href="https://hoangsonww.github.io/The-StickyNotes-App/" target="_blank" rel="noopener">
+            StickyNotes <span class="arrow">↗</span>
+          </a>
+          <a class="ab-app" href="https://hoangsonww.github.io/WeatherMate-App/" target="_blank" rel="noopener">
+            WeatherMate <span class="arrow">↗</span>
+          </a>
+        </div>
+      </section>
+
+      <footer class="ab-footer">
+        <span>© <span id="abYear">2026</span> The Maze Game · MIT licensed</span>
+        <span>
+          Built by <a href="https://sonnguyenhoang.com/" target="_blank" rel="noopener">Son Nguyen</a> ·
+          <a href="../../index.html">Back to the game</a>
+        </span>
+      </footer>
+    </main>
+
+    <script>
+      document.getElementById('abYear').textContent = new Date().getFullYear();
+    </script>
   </body>
 </html>

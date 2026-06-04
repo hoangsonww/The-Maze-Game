@@ -151,6 +151,33 @@ body::after {
   box-shadow: 0 0 10px var(--lime);
   animation: pulse-dot 2.4s ease-in-out infinite;
 }
+/* Installable-PWA button (shown only when the browser offers an install prompt) */
+.install-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 0.74rem;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  cursor: pointer;
+  padding: 0.42rem 0.85rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: linear-gradient(95deg, var(--lime-deep), var(--lime));
+  box-shadow: var(--glow-lime);
+  transition:
+    transform 0.15s ease,
+    filter 0.15s ease;
+}
+.install-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+.install-btn[hidden] {
+  display: none;
+}
 @keyframes pulse-dot {
   0%,
   100% {
@@ -1091,16 +1118,31 @@ kbd {
 .achievements-header {
   text-align: center;
   margin-bottom: 1.75rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--line);
 }
 .achievements-header h3 {
   color: var(--lime);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
   font-family: var(--font-mono);
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+}
+.achievements-header p {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
 }
 .achievements-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
   gap: 1rem;
+}
+@media (max-width: 480px) {
+  .achievements-grid {
+    grid-template-columns: 1fr;
+  }
 }
 .achievement-card {
   display: flex;
@@ -1615,9 +1657,12 @@ kbd {
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--muted);
-  margin: 0 0 0.9rem;
+  margin: 2rem 0 0.9rem;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid var(--line);
+}
+.profile-sub:first-of-type {
+  margin-top: 0;
 }
 .diff-table {
   width: 100%;
