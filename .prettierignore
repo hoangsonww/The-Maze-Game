@@ -29,3 +29,11 @@ src/python/
 # SQL schemas (kept hand-formatted)
 server/database/*.sql
 /.playwright-mcp
+
+# Markdown is excluded so Prettier never reflows Mermaid diagrams / tables
+*.md
+**/*.md
+
+# Build outputs
+frontend-dist/
+openapi.json

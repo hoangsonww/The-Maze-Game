@@ -1,0 +1,39 @@
+# The Maze Game
+
+> A fully-featured, open-source maze game: procedurally generated, always-solvable mazes with four difficulty levels, A\* hints, a "start gate" that freezes the maze until you press Play, accounts with JWT auth, per-user stats & progress (level/XP, win rate, streaks, per-difficulty breakdown), achievements, global leaderboards, 10 themes, and full mobile support. It ships a vanilla-JS frontend (HTML5 Canvas), a MongoDB-backed Express API documented with Swagger/OpenAPI, and a standalone, production-grade Python maze library (`mazeforge`).
+
+Play: https://the-maze-game.onrender.com/
+Repository: https://github.com/hoangsonww/The-Maze-Game
+API docs (Swagger): https://maze-game-api.vercel.app/api-docs
+Author: Son Nguyen (David Nguyen) — https://sonnguyenhoang.com/
+
+## Overview
+
+- The frontend is dependency-free vanilla JavaScript + HTML5 Canvas. Mazes are generated with a randomized depth-first search (recursive backtracker) and guaranteed solvable (odd dimensions place the exit on the carved lattice).
+- The backend is an Express API with a pluggable datastore: MongoDB (active, database `maze-game`), PostgreSQL (switchable via `DB_DRIVER=postgres`), or in-memory (fallback/tests). It is serverless-ready (deploys to Vercel) and also ships as a Docker image.
+- The Python package `mazeforge` (src/python/) is an independently usable library: 11 generation algorithms, 7 solvers (BFS/DFS/Dijkstra/A\*/greedy/wall-follower/dead-end-filling), distance fields, ASCII + PNG rendering, and a CLI.
+
+## Documentation
+
+- [Project README](https://github.com/hoangsonww/The-Maze-Game/blob/master/README.md): features, architecture, quick start, deployment.
+- [API documentation](https://github.com/hoangsonww/The-Maze-Game/blob/master/API_DOCUMENTATION.md): every REST endpoint, parameters, bodies, examples.
+- [Server README](https://github.com/hoangsonww/The-Maze-Game/blob/master/server/README.md): backend architecture, datastore drivers, auth, routes.
+- [Frontend README](https://github.com/hoangsonww/The-Maze-Game/blob/master/src/README.md): the vanilla-JS game engine, modules, and rendering.
+- [mazeforge (Python)](https://github.com/hoangsonww/The-Maze-Game/blob/master/src/python/README.md): the maze generation/solving/rendering library.
+- [Scripts](https://github.com/hoangsonww/The-Maze-Game/blob/master/scripts/README.md): project automation utilities.
+
+## API (live, MongoDB-backed)
+
+- `GET /api/health` — service status + active datastore driver.
+- `POST /api/v1/auth/register`, `POST /api/v1/auth/login`, `GET /api/v1/auth/me` — accounts (JWT).
+- `POST /api/v1/auth/reset/verify`, `POST /api/v1/auth/reset` — 2-step password reset.
+- `GET /api/v1/users/me/stats`, `POST /api/v1/users/me/games`, `PATCH /api/v1/users/me`, `POST /api/v1/users/me/password` — per-user stats & profile.
+- `GET|POST /api/v1/leaderboard`, `GET /api/v1/leaderboard/rank/{name}` — global leaderboard.
+- `POST /api/v1/games/start`, `PUT /api/v1/games/{id}/move`, `PUT /api/v1/games/{id}/complete`, `GET /api/v1/games/stats` — game sessions.
+- `GET /api/v1/achievements`, `GET /api/v1/achievements/user/{id}`, `POST /api/v1/achievements/unlock` — achievements.
+- OpenAPI spec: https://maze-game-api.vercel.app/openapi.json
+
+## Optional
+
+- Postgres-only endpoint groups (Social, Challenges, Mazes, Admin) are documented in Swagger and activate with `DB_DRIVER=postgres`.
+- Real-time multiplayer (Socket.IO) runs on the long-lived server, not on serverless.

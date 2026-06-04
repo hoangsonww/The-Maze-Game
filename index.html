@@ -2,40 +2,106 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>The Maze Game</title>
-    <link rel="stylesheet" href="src/css/style.css" />
-    <link rel="icon" type="image/x-icon" href="utils/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="manifest" href="manifest.json" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <title>The Maze Game — Navigate. Solve. Conquer.</title>
     <meta
       name="description"
-      content="Navigate procedurally generated mazes. Difficulty levels, timer, A* hints, achievements, leaderboards, and themes."
+      content="Play The Maze Game: procedurally generated, always-solvable mazes with four difficulty levels, A* pathfinding hints, accounts, per-user stats, achievements, global leaderboards, and 10 themes. Free, open-source, and mobile-friendly."
     />
-    <meta property="og:title" content="The Maze Game - Navigate. Solve. Conquer." />
-    <meta property="og:locale" content="en_US" />
-    <meta property="og:type" content="website" />
-    <meta http-equiv="content-language" content="en" />
-    <meta
-      property="og:description"
-      content="A challenging maze game with multiple difficulty levels, hints, achievements, and global leaderboards."
-    />
-    <meta property="og:url" content="https://hoangsonww.github.io/The-Maze-Game/" />
-    <meta property="og:site_name" content="The Maze Game" />
     <meta
       name="keywords"
-      content="maze game, puzzle game, pathfinding, browser game, achievements, leaderboard, html5 canvas"
+      content="maze game, maze puzzle, online maze, browser maze game, pathfinding, A* algorithm, procedural maze generator, html5 canvas game, puzzle game, leaderboard, achievements, free maze game, open source game"
     />
-    <meta name="author" content="Son Nguyen" />
-    <link rel="canonical" href="https://hoangsonww.github.io/The-Maze-Game/" />
-    <meta name="robots" content="index, follow" />
-    <meta name="rating" content="General" />
+    <meta name="author" content="Son Nguyen (David Nguyen)" />
     <meta name="theme-color" content="#0b0e11" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="application-name" content="The Maze Game" />
+
+    <link rel="canonical" href="https://the-maze-game.onrender.com/" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" type="image/x-icon" href="utils/favicon.ico" />
+    <link rel="apple-touch-icon" href="utils/image-192x192.png" />
+    <link rel="author" href="https://sonnguyenhoang.com/" />
+    <link rel="sitemap" type="application/xml" href="sitemap.xml" />
+
+    <!-- Indexing -->
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="rating" content="General" />
+    <meta name="revisit-after" content="7 days" />
+    <meta name="distribution" content="global" />
+    <meta http-equiv="content-language" content="en" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="The Maze Game" />
+    <meta property="og:title" content="The Maze Game — Navigate. Solve. Conquer." />
+    <meta
+      property="og:description"
+      content="Procedurally generated, always-solvable mazes with difficulty levels, A* hints, accounts, stats, achievements, leaderboards, and 10 themes. Free & open-source."
+    />
+    <meta property="og:url" content="https://the-maze-game.onrender.com/" />
+    <meta property="og:image" content="https://the-maze-game.onrender.com/utils/MazeUI.png" />
+    <meta property="og:image:alt" content="The Maze Game gameplay" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="The Maze Game — Navigate. Solve. Conquer." />
+    <meta
+      name="twitter:description"
+      content="Procedurally generated, always-solvable mazes with hints, accounts, stats, achievements, leaderboards, and 10 themes. Free & open-source."
+    />
+    <meta name="twitter:image" content="https://the-maze-game.onrender.com/utils/MazeUI.png" />
+    <meta name="twitter:creator" content="@hoangsonww" />
+
+    <!-- PWA / mobile -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Maze Game" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <!-- Structured data (schema.org VideoGame) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "VideoGame",
+        "name": "The Maze Game",
+        "url": "https://the-maze-game.onrender.com/",
+        "description": "Procedurally generated, always-solvable mazes with four difficulty levels, A* hints, accounts, per-user stats, achievements, global leaderboards, and 10 themes.",
+        "image": "https://the-maze-game.onrender.com/utils/MazeUI.png",
+        "genre": ["Puzzle", "Maze"],
+        "applicationCategory": "Game",
+        "operatingSystem": "Any (modern web browser)",
+        "browserRequirements": "Requires JavaScript and HTML5 Canvas",
+        "gamePlatform": "Web browser",
+        "playMode": "SinglePlayer",
+        "inLanguage": "en",
+        "license": "https://opensource.org/licenses/MIT",
+        "codeRepository": "https://github.com/hoangsonww/The-Maze-Game",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "author": {
+          "@type": "Person",
+          "name": "Son Nguyen",
+          "alternateName": "David Nguyen",
+          "url": "https://sonnguyenhoang.com/",
+          "sameAs": [
+            "https://github.com/hoangsonww",
+            "https://www.linkedin.com/in/hoangsonw/",
+            "https://orcid.org/0009-0002-7806-068X"
+          ]
+        }
+      }
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="src/css/style.css" />
   </head>
 
   <!-- Google Analytics -->

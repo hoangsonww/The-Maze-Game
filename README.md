@@ -4,14 +4,50 @@
 
 ![The Maze Game](./utils/MazeUI.png)
 
-[![CI/CD](https://github.com/hoangsonww/The-Maze-Game/actions/workflows/ci.yml/badge.svg)](https://github.com/hoangsonww/The-Maze-Game/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.3.0-blue.svg)](https://github.com/hoangsonww/The-Maze-Game)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/hoangsonww/The-Maze-Game/pulls)
-
 **A fully-featured maze game: procedural mazes, difficulty levels, A\* hints, accounts, per-user stats & progress, achievements, global leaderboards, and multiplayer — with a MongoDB-backed, Vercel-deployable API documented in Swagger.**
 
-[Play Now](https://hoangsonww.github.io/The-Maze-Game/) | [API Docs](./API_DOCUMENTATION.md) | [Live Swagger](https://maze-game-api.vercel.app/api-docs) | [Report Bug](https://github.com/hoangsonww/The-Maze-Game/issues)
+<!-- Project status -->
+
+[![CI/CD](https://github.com/hoangsonww/The-Maze-Game/actions/workflows/ci.yml/badge.svg)](https://github.com/hoangsonww/The-Maze-Game/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-A31F34.svg?style=flat)](https://opensource.org/licenses/MIT)
+[![Version](https://img.shields.io/badge/version-1.3.0-blue.svg)](https://github.com/hoangsonww/The-Maze-Game/releases)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/hoangsonww/The-Maze-Game/pulls)
+[![Jest](https://img.shields.io/badge/tests-53%20passing-success.svg?logo=jest&logoColor=white)](./__tests__)
+
+<!-- Languages -->
+
+[![JavaScript](https://img.shields.io/badge/JavaScript-ES6%2B-F7DF1E?style=flat&logo=javascript&logoColor=black)](https://developer.mozilla.org/docs/Web/JavaScript)
+[![TypeScript-ready](https://img.shields.io/badge/Type%20Hints-py.typed-3178C6?style=flat&logo=typescript&logoColor=white)](#-python-library-mazeforge)
+[![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
+[![HTML5](https://img.shields.io/badge/HTML5-Canvas-E34F26?style=flat&logo=html5&logoColor=white)](https://developer.mozilla.org/docs/Web/HTML)
+[![CSS3](https://img.shields.io/badge/CSS3-Grid%20%2B%20Flexbox-1572B6?style=flat&logo=css3&logoColor=white)](https://developer.mozilla.org/docs/Web/CSS)
+
+<!-- Backend & data -->
+
+[![Node.js](https://img.shields.io/badge/Node.js-%E2%89%A518-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Express](https://img.shields.io/badge/Express-4-000000?style=flat&logo=express&logoColor=white)](https://expressjs.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-maze--game-47A248?style=flat&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-switchable-4169E1?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![JWT](https://img.shields.io/badge/JWT-auth-000000?style=flat&logo=jsonwebtokens&logoColor=white)](https://jwt.io/)
+[![Socket.IO](https://img.shields.io/badge/Socket.IO-realtime-010101?style=flat&logo=socket.io&logoColor=white)](https://socket.io/)
+[![Swagger](https://img.shields.io/badge/OpenAPI-3.0-85EA2D?style=flat&logo=swagger&logoColor=black)](https://maze-game-api.vercel.app/api-docs)
+
+<!-- Build, tooling & DevOps -->
+
+[![Webpack](https://img.shields.io/badge/Webpack-5-8DD6F9?style=flat&logo=webpack&logoColor=black)](https://webpack.js.org/)
+[![Babel](https://img.shields.io/badge/Babel-7-F9DC3E?style=flat&logo=babel&logoColor=black)](https://babeljs.io/)
+[![Jest](https://img.shields.io/badge/Jest-tested-C21325?style=flat&logo=jest&logoColor=white)](https://jestjs.io/)
+[![Prettier](https://img.shields.io/badge/Prettier-enforced-F7B93E?style=flat&logo=prettier&logoColor=black)](https://prettier.io/)
+[![ESLint](https://img.shields.io/badge/ESLint-linted-4B32C3?style=flat&logo=eslint&logoColor=white)](https://eslint.org/)
+[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Nginx](https://img.shields.io/badge/Nginx-frontend%20image-009639?style=flat&logo=nginx&logoColor=white)](https://nginx.org/)
+[![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-CI%2FCD-2088FF?style=flat&logo=githubactions&logoColor=white)](./.github/workflows/ci.yml)
+[![GHCR](https://img.shields.io/badge/GHCR-images-181717?style=flat&logo=github&logoColor=white)](https://github.com/hoangsonww/The-Maze-Game/pkgs/container/the-maze-game-backend)
+[![Vercel](https://img.shields.io/badge/Vercel-API-000000?style=flat&logo=vercel&logoColor=white)](https://maze-game-api.vercel.app/)
+[![Render](https://img.shields.io/badge/Render-frontend-46E3B7?style=flat&logo=render&logoColor=white)](https://the-maze-game.onrender.com/)
+[![PWA](https://img.shields.io/badge/PWA-installable-5A0FC8?style=flat&logo=pwa&logoColor=white)](./manifest.json)
+
+[Play Now](https://the-maze-game.onrender.com/) | [API Docs](./API_DOCUMENTATION.md) | [Live Swagger](https://maze-game-api.vercel.app/api-docs) | [Report Bug](https://github.com/hoangsonww/The-Maze-Game/issues)
 
 </div>
 
@@ -105,7 +141,7 @@
 
 ### Live Demo
 
-👉 **[Play Now](https://hoangsonww.github.io/The-Maze-Game/)**
+👉 **[Play Now](https://the-maze-game.onrender.com/)**
 
 ### Screenshots
 
@@ -277,6 +313,77 @@ const response = await fetch('/api/v1/leaderboard', {
 
 ## 🏗️ Architecture
 
+### System Overview
+
+A static vanilla-JS client (Render / GitHub Pages) talks to a serverless Express
+API (Vercel) that fans out to one of three interchangeable datastores. A
+standalone Python library (`mazeforge`) shares the maze concepts but ships
+independently.
+
+```mermaid
+flowchart TB
+    subgraph client["Frontend — static (Render / GitHub Pages)"]
+        IDX["index.html + canvas"]
+        JS["game.js · ui-components.js<br/>auth.js · i18n.js"]
+        CSS["style.css — Wayfinder · 10 themes"]
+        SW["service-worker.js (PWA)"]
+    end
+
+    subgraph api["Backend — Express (Vercel serverless)"]
+        APP["app.js — middleware + routes"]
+        SWG["Swagger UI /api-docs · /openapi.json"]
+        REPO["repository.js · users.js"]
+    end
+
+    subgraph stores["Datastores (DB_DRIVER)"]
+        MONGO[("MongoDB · maze-game")]
+        PG[("PostgreSQL")]
+        MEM[["in-memory"]]
+    end
+
+    subgraph lib["mazeforge (Python)"]
+        GEN["11 generators"]
+        SOL["7 solvers"]
+        REN["ASCII / PNG render · CLI · pygame"]
+    end
+
+    JS -->|"fetch /api/v1/* (CORS *)"| APP
+    JS -->|"JWT bearer"| APP
+    IDX --- JS --- CSS
+    SW -.offline cache.- IDX
+    APP --> SWG
+    APP --> REPO
+    REPO --> MONGO
+    REPO --> PG
+    REPO --> MEM
+    GEN --> SOL --> REN
+```
+
+### Data flow — a completed game
+
+```mermaid
+sequenceDiagram
+    participant Player
+    participant Game as game.js
+    participant API as Maze Game API
+    participant DB as datastore
+
+    Player->>Game: press Play → solve maze
+    Game->>Game: stop timer · compute score
+    Game->>API: POST /api/v1/leaderboard { name, score, time, moves }
+    API->>DB: insert leaderboard row
+    DB-->>API: created entry
+    alt signed in
+        Game->>API: POST /api/v1/users/me/games (Bearer)
+        API->>DB: update stats · streaks · level
+        DB-->>API: decorated stats
+        API-->>Game: 201 stats → refresh dashboard
+    end
+    Game->>API: POST /api/v1/achievements/unlock (if newly earned)
+    API-->>Game: 201 achievement
+    Game-->>Player: win modal · updated leaderboard
+```
+
 ### Project Structure
 
 ```
@@ -323,14 +430,7 @@ The-Maze-Game/
 
 ### Technology Stack
 
-**Frontend**
-
-- Vanilla JavaScript (ES6+)
-- HTML5 Canvas API
-- CSS3 with Flexbox/Grid
-- Service Worker API (PWA)
-
-**Frontend** (vanilla, GitHub Pages)
+**Frontend** (vanilla, static — Render / GitHub Pages)
 
 - Vanilla JavaScript (ES6+), HTML5 Canvas
 - CSS3 (Grid/Flexbox), Service Worker (PWA)
@@ -565,6 +665,33 @@ pip install "./src/python[dev]" && pytest src/python
 ---
 
 ## 🚢 Deployment
+
+### Topology
+
+```mermaid
+flowchart LR
+    user(["Player"]) -->|HTTPS| FE["Static frontend<br/>Render / GitHub Pages"]
+    FE -->|"fetch /api/v1/*"| BE["Express API<br/>Vercel serverless"]
+    BE --> MDB[("MongoDB Atlas<br/>maze-game")]
+    dev(["Maintainer"]) -->|git push| GH["GitHub"]
+    GH --> CI["GitHub Actions CI"]
+    CI -->|"build + push"| GHCR["GHCR images<br/>backend · frontend"]
+    GH -->|deploy hook| FE
+    GH -->|deploy hook| BE
+    GHCR -.self-host.-> any["Any Docker host"]
+```
+
+### CI pipeline
+
+`.github/workflows/ci.yml` runs five ordered jobs — a failure stops the chain:
+
+```mermaid
+flowchart LR
+    A["1 · format check<br/>prettier --check"] --> B["2 · build + test server<br/>↑ server-dist"]
+    B --> C["3 · build frontend<br/>↑ frontend-dist"]
+    C --> D["4 · docker build<br/>login GHCR · push backend + frontend"]
+    D --> E["5 · summary<br/>::notice pipeline success"]
+```
 
 ### Docker
 

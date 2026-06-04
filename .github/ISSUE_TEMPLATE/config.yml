@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: ▶️ Play the game
+    url: https://the-maze-game.onrender.com/
+    about: Try The Maze Game in your browser.
+  - name: 📚 API documentation (Swagger)
+    url: https://maze-game-api.vercel.app/api-docs
+    about: Browse and try the REST API.
+  - name: 💬 Discussions
+    url: https://github.com/hoangsonww/The-Maze-Game/discussions
+    about: Ask questions and share ideas.

@@ -3,6 +3,25 @@
 Project automation scripts. Most are also exposed via `package.json` scripts and
 the root `Makefile`.
 
+```mermaid
+flowchart LR
+    subgraph dev["Local dev"]
+        S1["gen-secret.js<br/>→ JWT secret"]
+        S2["check-db.js<br/>→ ping Mongo/PG"]
+        S3["seed-leaderboard.js<br/>→ demo rows"]
+    end
+    subgraph build["Build / CI"]
+        B1["build-frontend.js<br/>→ frontend-dist/"]
+        B2["export-openapi.js<br/>→ openapi.json"]
+        B3["validate-openapi.js<br/>(CI gate)"]
+    end
+    subgraph ops["Run against a live API"]
+        O1["smoke-test.js<br/>→ assert endpoints"]
+        O2["clean-leaderboard.js<br/>→ delete by name"]
+    end
+    B2 --> B3
+```
+
 | Script                 | What it does                                                          |
 | ---------------------- | --------------------------------------------------------------------- |
 | `build-frontend.js`    | Assemble the static site into `frontend-dist/` (used by CI + Docker). |

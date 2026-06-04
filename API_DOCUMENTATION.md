@@ -29,6 +29,39 @@ The API runs on one of three interchangeable drivers (selected by `DB_DRIVER`):
 
 `GET /api/health` reports the resolved driver.
 
+```mermaid
+flowchart TD
+    A["incoming request"] --> B["repository / users layer"]
+    B --> C{"resolveDriver()"}
+    C -->|"DB_DRIVER=postgres"| PG[("PostgreSQL")]
+    C -->|"DB_DRIVER=mongo"| MO[("MongoDB · maze-game")]
+    C -->|"DB_DRIVER=memory"| ME[["in-memory"]]
+    C -->|"unset + MONGODB_URI"| MO
+    C -->|"unset + no URI"| ME
+```
+
+## Request lifecycle
+
+Every call passes the same middleware chain; thrown errors short-circuit to a
+single JSON error formatter.
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant M as helmet · cors(*) · rate-limit · json
+    participant R as route (/api/v1/*)
+    participant D as datastore (driver)
+    participant E as errorHandler
+
+    C->>M: request
+    M->>R: parsed, rate-checked
+    R->>D: domain query
+    D-->>R: data
+    R-->>C: 2xx { success: true, data }
+    R--xE: throw / reject
+    E-->>C: 4xx/5xx { success: false, error }
+```
+
 ## Authentication
 
 - **Anonymous play** (leaderboard, game sessions, achievements) needs no auth —
@@ -42,6 +75,27 @@ The API runs on one of three interchangeable drivers (selected by `DB_DRIVER`):
 
 Passwords are hashed with bcrypt and never returned. Set `JWT_SECRET` on the
 server to enable accounts.
+
+```mermaid
+sequenceDiagram
+    participant U as Client
+    participant API
+    participant DB as users store
+
+    U->>API: POST /auth/register or /auth/login
+    API->>DB: hash (register) / verify (login) — bcrypt
+    DB-->>API: user row
+    API->>API: sign JWT (JWT_SECRET, exp JWT_EXPIRATION)
+    API-->>U: { token, user(+stats) }
+    Note over U,API: subsequent protected calls
+    U->>API: GET /users/me/stats  ·  Authorization: Bearer <token>
+    API->>API: verify JWT → req.user
+    alt valid
+        API-->>U: 200 { data }
+    else missing / invalid / expired
+        API-->>U: 401 Unauthorized
+    end
+```
 
 ## CORS & Rate Limiting
 
@@ -272,6 +326,18 @@ Public profile (username + stats; email and recent games omitted).
 ---
 
 ## Game Sessions
+
+A server-side session tracks a single play from start to completion. Moves
+increment a counter; completion computes the score (see
+[Score Calculation](#score-calculation)).
+
+```mermaid
+stateDiagram-v2
+    [*] --> in_progress: POST /games/start
+    in_progress --> in_progress: PUT /games/:id/move
+    in_progress --> completed: PUT /games/:id/complete (score computed)
+    completed --> [*]
+```
 
 ### `POST /api/v1/games/start`
 

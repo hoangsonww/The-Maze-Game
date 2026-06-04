@@ -1,4 +1,32 @@
+# robots.txt — The Maze Game
+# https://the-maze-game.onrender.com/
+
+# Allow everything to all crawlers.
 User-agent: *
+Allow: /
 Disallow:
 
-Sitemap: https://hoangsonww.github.io/The-Maze-Game/sitemap.xml
+# Common AI / LLM crawlers — explicitly welcome (see also /llms.txt).
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Host: https://the-maze-game.onrender.com
+Sitemap: https://the-maze-game.onrender.com/sitemap.xml

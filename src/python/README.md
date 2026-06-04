@@ -14,6 +14,42 @@ packaged as a clean, typed, dependency-free library that any app or dev can use.
 - **Interop** — convert to/from a `(2r+1)×(2c+1)` wall grid.
 - **Typed** (`py.typed`), reproducible (seedable), zero core dependencies.
 
+## Pipeline
+
+```mermaid
+flowchart LR
+    A["generate(rows, cols,<br/>algorithm, seed, braid?)"] --> M["Grid (perfect maze)"]
+    M --> S["solve(maze,<br/>algorithm, heuristic)"]
+    S --> P["Solution { path, cost, explored }"]
+    M --> D["distances_from(cell)<br/>longest_path(maze)"]
+    M --> W["to_wall_grid() /<br/>Grid.from_wall_grid()"]
+    P --> R1["to_ascii(maze, path)"]
+    P --> R2["render_image(maze, path)<br/>(Pillow)"]
+    M --> CLI["mazeforge CLI<br/>generate · list · benchmark · play"]
+```
+
+## Module layout
+
+```mermaid
+flowchart TB
+    PKG["mazeforge"] --> GRID["grid.py<br/>Cell · Grid"]
+    PKG --> GENS["generators/<br/>11 algorithms"]
+    PKG --> SOLV["solvers/<br/>7 algorithms"]
+    PKG --> DIST["distances.py<br/>fields · diameter"]
+    PKG --> REND["render.py<br/>ASCII · PNG"]
+    PKG --> CLI2["cli.py<br/>argparse entry"]
+    PKG --> PLAY["play.py<br/>pygame player"]
+    GENS --> GRID
+    SOLV --> GRID
+    DIST --> GRID
+    REND --> GRID
+    CLI2 --> GENS
+    CLI2 --> SOLV
+    CLI2 --> REND
+    PLAY --> GENS
+    PLAY --> SOLV
+```
+
 ## Install
 
 ```bash

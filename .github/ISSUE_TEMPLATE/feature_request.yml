@@ -1,0 +1,45 @@
+name: ✨ Feature request
+description: Suggest a new feature or enhancement.
+title: '[Feature]: '
+labels: ['enhancement']
+assignees: ['hoangsonww']
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Frontend (game UI)
+        - Backend API
+        - Accounts / social / challenges
+        - mazeforge (Python library)
+        - Docker / CI / tooling
+        - Docs
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / motivation
+      description: What problem would this solve? Who benefits?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe the feature. Mock-ups, API shapes, or examples welcome.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-flight
+      options:
+        - label: I searched existing issues and this is not a duplicate.
+          required: true

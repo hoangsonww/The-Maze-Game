@@ -2,20 +2,65 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>404 Not Found - The Maze Game</title>
-    <link rel="stylesheet" href="https://hoangsonww.github.io/The-Maze-Game/src/css/style.css" />
-    <link rel="icon" type="image/x-icon" href="https://hoangsonww.github.io/The-Maze-Game/utils/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="manifest" href="https://hoangsonww.github.io/The-Maze-Game/manifest.json" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>404 — Lost in the Maze | The Maze Game</title>
+    <meta name="description" content="This page took a wrong turn. Head back to The Maze Game." />
+    <meta name="robots" content="noindex, follow" />
     <meta name="theme-color" content="#0b0e11" />
+    <meta name="color-scheme" content="dark light" />
+    <link rel="canonical" href="https://the-maze-game.onrender.com/404.html" />
+    <link rel="stylesheet" href="src/css/style.css" />
+    <link rel="icon" type="image/x-icon" href="utils/favicon.ico" />
+    <link rel="apple-touch-icon" href="utils/image-192x192.png" />
+    <link rel="manifest" href="manifest.json" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
+    <style>
+      .nf {
+        max-width: 560px;
+        margin: 4rem auto;
+        padding: 2.5rem 1.5rem;
+        text-align: center;
+      }
+      .nf-code {
+        font-family: var(--font-mono);
+        font-size: clamp(4rem, 18vw, 7rem);
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        background: linear-gradient(135deg, var(--primary-color, #c6f24e), var(--coral, #ff6a4d));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .nf h1 {
+        font-family: var(--font-display);
+        font-size: 1.6rem;
+        margin: 0.75rem 0 0.5rem;
+      }
+      .nf p {
+        color: var(--muted, #8b978c);
+        line-height: 1.6;
+        margin-bottom: 1.75rem;
+      }
+      .nf a.btn {
+        display: inline-block;
+        font-family: var(--font-ui);
+        font-weight: 700;
+        color: var(--ink, #0b0e11);
+        background: linear-gradient(95deg, var(--lime-deep, #9bd61f), var(--lime, #c6f24e));
+        text-decoration: none;
+        padding: 0.8rem 1.8rem;
+        border-radius: 999px;
+      }
+    </style>
   </head>
 
+  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-CZ3YJF00CG"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -23,27 +68,39 @@
       dataLayer.push(arguments);
     }
     gtag('js', new Date());
-
     gtag('config', 'G-CZ3YJF00CG');
   </script>
 
-  <style>
-    body,
-    html {
-      scroll-behavior: smooth;
-      overflow-x: auto;
-    }
-  </style>
-
   <body>
-    <h1 style="color: white">404 Not Found</h1>
-    <p style="color: white">The page you are looking for does not exist.</p>
-    <button
-      id="regenerateMaze"
-      onclick="window.location.href='https://hoangsonww.github.io/The-Maze-Game/'"
-      style="margin-top: 25px"
-    >
-      Back to Game
-    </button>
+    <header class="game-header">
+      <div class="header-inner">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" width="30" height="30" fill="none">
+              <path
+                d="M6 7 H16 V14 H10 V21 H22 V14 H26"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <circle cx="6" cy="7" r="3" fill="#ff6a4d" />
+              <circle cx="26" cy="14" r="3" fill="#c6f24e" />
+            </svg>
+          </span>
+          <span class="brand-text">
+            <span class="brand-name">The <em>Maze</em> Game</span>
+            <span class="brand-tag">Navigate · Solve · Conquer</span>
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <main class="nf">
+      <div class="nf-code">404</div>
+      <h1>You hit a dead end</h1>
+      <p>This page took a wrong turn somewhere in the maze. Let's get you back to the start.</p>
+      <a class="btn" href="/">← Back to the Game</a>
+    </main>
   </body>
 </html>
