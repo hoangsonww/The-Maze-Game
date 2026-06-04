@@ -19,13 +19,14 @@ const spec = {
   openapi: '3.0.3',
   info: {
     title: 'The Maze Game API',
-    version: '1.2.0',
+    version: '1.3.0',
     description:
-      'Backend API for The Maze Game. The leaderboard, game-session and ' +
-      'achievement endpoints are backed by MongoDB (database `maze-game`) and ' +
-      'are live. Account/social/maze/challenge/admin endpoints require the ' +
-      'PostgreSQL driver (DB_DRIVER=postgres) and are documented for when it ' +
-      'is switched on.',
+      'Backend API for The Maze Game. **Auth, Users, Leaderboard, Games and ' +
+      'Achievements** are backed by MongoDB (database `maze-game`) and are live. ' +
+      'The **Social, Challenges, Mazes and Admin** groups require the PostgreSQL ' +
+      'driver (`DB_DRIVER=postgres`) and are documented here for when it is ' +
+      'switched on. Authenticated endpoints take a JWT via `Authorization: ' +
+      'Bearer <token>` (obtain one from `/api/v1/auth/register` or `/login`).',
     contact: { name: 'Son Nguyen', url: 'https://github.com/hoangsonww/The-Maze-Game' },
     license: { name: 'MIT' },
   },
@@ -37,6 +38,23 @@ const spec = {
     { name: 'Leaderboard', description: 'Global score leaderboard' },
     { name: 'Games', description: 'Game sessions and statistics' },
     { name: 'Achievements', description: 'Player achievements' },
+    {
+      name: 'Social',
+      description:
+        'Friends and activity (requires DB_DRIVER=postgres; inactive on the Mongo deploy)',
+    },
+    {
+      name: 'Challenges',
+      description: 'Daily challenges and tournaments (requires DB_DRIVER=postgres)',
+    },
+    {
+      name: 'Mazes',
+      description: 'User-created custom mazes (requires DB_DRIVER=postgres)',
+    },
+    {
+      name: 'Admin',
+      description: 'Administration (admin/moderator role; requires DB_DRIVER=postgres)',
+    },
   ],
   paths: {
     '/api/v1/auth/register': {
@@ -284,6 +302,420 @@ const spec = {
         },
       },
     },
+
+    // ----- Social (requires DB_DRIVER=postgres) -----
+    '/api/v1/social/friends': {
+      get: {
+        tags: ['Social'],
+        summary: "List the current user's accepted friends",
+        security: [{ bearerAuth: [] }],
+        responses: { 200: { description: 'Friends list' }, 401: ok('Unauthorized', 'Error') },
+      },
+    },
+    '/api/v1/social/friend-requests': {
+      get: {
+        tags: ['Social'],
+        summary: 'List incoming pending friend requests',
+        security: [{ bearerAuth: [] }],
+        responses: { 200: { description: 'Pending requests' }, 401: ok('Unauthorized', 'Error') },
+      },
+    },
+    '/api/v1/social/friend-request': {
+      post: {
+        tags: ['Social'],
+        summary: 'Send a friend request',
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': { schema: { $ref: '#/components/schemas/FriendRequest' } },
+          },
+        },
+        responses: {
+          201: { description: 'Request created' },
+          400: ok('Bad request', 'Error'),
+          409: ok('Already exists', 'Error'),
+        },
+      },
+    },
+    '/api/v1/social/friend-request/{id}': {
+      put: {
+        tags: ['Social'],
+        summary: 'Accept or reject a friend request',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          {
+            name: 'id',
+            in: 'path',
+            required: true,
+            schema: { type: 'string', format: 'uuid' },
+            description: 'requester user id',
+          },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': { schema: { $ref: '#/components/schemas/FriendRequestAction' } },
+          },
+        },
+        responses: {
+          200: { description: 'Updated' },
+          400: ok('Invalid action', 'Error'),
+          404: ok('Not found', 'Error'),
+        },
+      },
+    },
+    '/api/v1/social/friends/{id}': {
+      delete: {
+        tags: ['Social'],
+        summary: 'Remove a friend',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } },
+        ],
+        responses: { 200: { description: 'Removed' }, 404: ok('Not found', 'Error') },
+      },
+    },
+    '/api/v1/social/search': {
+      get: {
+        tags: ['Social'],
+        summary: 'Search users by username',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          {
+            name: 'q',
+            in: 'query',
+            required: true,
+            schema: { type: 'string', minLength: 2 },
+            description: 'username fragment (min 2 chars)',
+          },
+        ],
+        responses: { 200: { description: 'Matching users' }, 400: ok('Query too short', 'Error') },
+      },
+    },
+    '/api/v1/social/activity': {
+      get: {
+        tags: ['Social'],
+        summary: "Recent completed games of the user's friends",
+        security: [{ bearerAuth: [] }],
+        responses: { 200: { description: 'Activity feed' }, 401: ok('Unauthorized', 'Error') },
+      },
+    },
+
+    // ----- Challenges (requires DB_DRIVER=postgres) -----
+    '/api/v1/challenges/daily': {
+      get: {
+        tags: ['Challenges'],
+        summary: "Today's daily challenge (auto-created if missing)",
+        description: 'Optional bearer token — include it to get `completed_by_user`.',
+        responses: { 200: { description: 'Daily challenge' } },
+      },
+    },
+    '/api/v1/challenges/daily/complete': {
+      post: {
+        tags: ['Challenges'],
+        summary: "Submit today's daily-challenge result",
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': { schema: { $ref: '#/components/schemas/DailyComplete' } },
+          },
+        },
+        responses: {
+          200: { description: 'Recorded (returns final score + bonus)' },
+          400: ok('Missing fields', 'Error'),
+          404: ok('No challenge today', 'Error'),
+          409: ok('Already completed', 'Error'),
+        },
+      },
+    },
+    '/api/v1/challenges/daily/leaderboard': {
+      get: {
+        tags: ['Challenges'],
+        summary: "Today's daily-challenge leaderboard (top 100)",
+        responses: { 200: { description: 'Leaderboard' } },
+      },
+    },
+    '/api/v1/challenges/tournaments': {
+      get: {
+        tags: ['Challenges'],
+        summary: 'List upcoming and active tournaments',
+        responses: { 200: { description: 'Tournaments with participant counts' } },
+      },
+    },
+    '/api/v1/challenges/tournaments/{id}/join': {
+      post: {
+        tags: ['Challenges'],
+        summary: 'Join an upcoming tournament',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } },
+        ],
+        responses: {
+          201: { description: 'Joined' },
+          404: ok('Not found / already started', 'Error'),
+          409: ok('Full / already joined', 'Error'),
+        },
+      },
+    },
+    '/api/v1/challenges/tournaments/{id}/leaderboard': {
+      get: {
+        tags: ['Challenges'],
+        summary: 'Tournament leaderboard (top 100)',
+        parameters: [
+          { name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } },
+        ],
+        responses: { 200: { description: 'Leaderboard' } },
+      },
+    },
+
+    // ----- Mazes (requires DB_DRIVER=postgres) -----
+    '/api/v1/mazes/custom': {
+      get: {
+        tags: ['Mazes'],
+        summary: 'Browse public custom mazes',
+        parameters: [
+          { name: 'page', in: 'query', schema: { type: 'integer', default: 1 } },
+          { name: 'limit', in: 'query', schema: { type: 'integer', default: 20 } },
+          {
+            name: 'sortBy',
+            in: 'query',
+            schema: {
+              type: 'string',
+              enum: ['created_at', 'rating', 'popular'],
+              default: 'created_at',
+            },
+          },
+          {
+            name: 'difficulty',
+            in: 'query',
+            schema: { type: 'string', enum: ['easy', 'medium', 'hard', 'expert'] },
+          },
+        ],
+        responses: { 200: { description: 'Custom mazes' } },
+      },
+      post: {
+        tags: ['Mazes'],
+        summary: 'Create a custom maze',
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: { 'application/json': { schema: { $ref: '#/components/schemas/CreateMaze' } } },
+        },
+        responses: { 201: { description: 'Created' }, 400: ok('Validation error', 'Error') },
+      },
+    },
+    '/api/v1/mazes/custom/{id}': {
+      get: {
+        tags: ['Mazes'],
+        summary: 'Get a custom maze (public, or your own private one)',
+        parameters: [
+          { name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } },
+        ],
+        responses: { 200: { description: 'Maze' }, 404: ok('Not found', 'Error') },
+      },
+      put: {
+        tags: ['Mazes'],
+        summary: 'Update your custom maze',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } },
+        ],
+        requestBody: {
+          required: true,
+          content: { 'application/json': { schema: { $ref: '#/components/schemas/UpdateMaze' } } },
+        },
+        responses: {
+          200: { description: 'Updated' },
+          400: ok('No updates', 'Error'),
+          404: ok('Not found / unauthorized', 'Error'),
+        },
+      },
+      delete: {
+        tags: ['Mazes'],
+        summary: 'Delete your custom maze',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } },
+        ],
+        responses: {
+          200: { description: 'Deleted' },
+          404: ok('Not found / unauthorized', 'Error'),
+        },
+      },
+    },
+    '/api/v1/mazes/custom/{id}/play': {
+      post: {
+        tags: ['Mazes'],
+        summary: 'Increment a maze play count',
+        parameters: [
+          { name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } },
+        ],
+        responses: { 200: { description: 'Recorded' } },
+      },
+    },
+    '/api/v1/mazes/custom/{id}/rate': {
+      post: {
+        tags: ['Mazes'],
+        summary: 'Rate a custom maze (1-5)',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } },
+        ],
+        requestBody: {
+          required: true,
+          content: { 'application/json': { schema: { $ref: '#/components/schemas/RateMaze' } } },
+        },
+        responses: { 200: { description: 'Rating submitted' }, 400: ok('Invalid rating', 'Error') },
+      },
+    },
+    '/api/v1/mazes/my': {
+      get: {
+        tags: ['Mazes'],
+        summary: "List the current user's custom mazes",
+        security: [{ bearerAuth: [] }],
+        responses: { 200: { description: 'Your mazes' }, 401: ok('Unauthorized', 'Error') },
+      },
+    },
+
+    // ----- Admin (admin/moderator role; requires DB_DRIVER=postgres) -----
+    '/api/v1/admin/stats': {
+      get: {
+        tags: ['Admin'],
+        summary: 'Platform statistics (users / games / achievements / mazes)',
+        security: [{ bearerAuth: [] }],
+        responses: { 200: { description: 'Stats' }, 403: ok('Forbidden', 'Error') },
+      },
+    },
+    '/api/v1/admin/users': {
+      get: {
+        tags: ['Admin'],
+        summary: 'List users (paginated, filterable)',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: 'page', in: 'query', schema: { type: 'integer', default: 1 } },
+          { name: 'limit', in: 'query', schema: { type: 'integer', default: 50 } },
+          {
+            name: 'search',
+            in: 'query',
+            schema: { type: 'string' },
+            description: 'username or email fragment',
+          },
+          {
+            name: 'role',
+            in: 'query',
+            schema: { type: 'string', enum: ['user', 'admin', 'moderator'] },
+          },
+          { name: 'isActive', in: 'query', schema: { type: 'boolean' } },
+        ],
+        responses: { 200: { description: 'Users page' }, 403: ok('Forbidden', 'Error') },
+      },
+    },
+    '/api/v1/admin/users/{id}': {
+      put: {
+        tags: ['Admin'],
+        summary: 'Update a user (activate / change role)',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': { schema: { $ref: '#/components/schemas/AdminUpdateUser' } },
+          },
+        },
+        responses: {
+          200: { description: 'Updated' },
+          400: ok('Invalid role / no updates', 'Error'),
+          404: ok('Not found', 'Error'),
+        },
+      },
+      delete: {
+        tags: ['Admin'],
+        summary: 'Delete a user',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } },
+        ],
+        responses: { 200: { description: 'Deleted' }, 404: ok('Not found', 'Error') },
+      },
+    },
+    '/api/v1/admin/games': {
+      get: {
+        tags: ['Admin'],
+        summary: 'List game sessions (paginated, filterable)',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: 'page', in: 'query', schema: { type: 'integer', default: 1 } },
+          { name: 'limit', in: 'query', schema: { type: 'integer', default: 50 } },
+          {
+            name: 'status',
+            in: 'query',
+            schema: { type: 'string', enum: ['in_progress', 'completed', 'abandoned'] },
+          },
+          {
+            name: 'difficulty',
+            in: 'query',
+            schema: { type: 'string', enum: ['easy', 'medium', 'hard', 'expert'] },
+          },
+        ],
+        responses: { 200: { description: 'Games page' }, 403: ok('Forbidden', 'Error') },
+      },
+    },
+    '/api/v1/admin/announcements': {
+      post: {
+        tags: ['Admin'],
+        summary: 'Email an announcement to users',
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': { schema: { $ref: '#/components/schemas/Announcement' } },
+          },
+        },
+        responses: { 200: { description: 'Sent' }, 400: ok('Missing fields', 'Error') },
+      },
+    },
+    '/api/v1/admin/analytics': {
+      get: {
+        tags: ['Admin'],
+        summary: 'DAU, mode popularity, and difficulty distribution',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: 'startDate', in: 'query', schema: { type: 'string', format: 'date' } },
+          { name: 'endDate', in: 'query', schema: { type: 'string', format: 'date' } },
+        ],
+        responses: { 200: { description: 'Analytics' }, 403: ok('Forbidden', 'Error') },
+      },
+    },
+    '/api/v1/admin/tournaments': {
+      post: {
+        tags: ['Admin'],
+        summary: 'Create a tournament',
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': { schema: { $ref: '#/components/schemas/CreateTournament' } },
+          },
+        },
+        responses: { 201: { description: 'Created' }, 400: ok('Missing fields', 'Error') },
+      },
+    },
+    '/api/v1/admin/logs': {
+      get: {
+        tags: ['Admin'],
+        summary: 'Recent error events (admin role only)',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: 'level', in: 'query', schema: { type: 'string', default: 'info' } },
+          { name: 'limit', in: 'query', schema: { type: 'integer', default: 100 } },
+        ],
+        responses: { 200: { description: 'Log events' }, 403: ok('Forbidden', 'Error') },
+      },
+    },
   },
   components: {
     securitySchemes: {
@@ -363,6 +795,106 @@ const spec = {
         required: ['password'],
         properties: {
           password: { type: 'string', format: 'password', minLength: 6, example: 'newpass1' },
+        },
+      },
+      FriendRequest: {
+        type: 'object',
+        required: ['friendId'],
+        properties: {
+          friendId: {
+            type: 'string',
+            format: 'uuid',
+            description: 'user id to befriend',
+            example: '665f1c…',
+          },
+        },
+      },
+      FriendRequestAction: {
+        type: 'object',
+        required: ['action'],
+        properties: {
+          action: { type: 'string', enum: ['accept', 'reject'], example: 'accept' },
+        },
+      },
+      DailyComplete: {
+        type: 'object',
+        required: ['score', 'completionTime', 'moves'],
+        properties: {
+          score: { type: 'integer', example: 180 },
+          completionTime: { type: 'integer', description: 'milliseconds', example: 22000 },
+          moves: { type: 'integer', example: 95 },
+        },
+      },
+      CreateMaze: {
+        type: 'object',
+        required: ['name', 'mazeData', 'rows', 'cols'],
+        properties: {
+          name: { type: 'string', example: 'My twisty maze' },
+          description: { type: 'string', example: 'A tricky one' },
+          mazeData: { type: 'object', description: 'maze layout (JSON; e.g. a wall grid)' },
+          difficulty: {
+            type: 'string',
+            enum: ['easy', 'medium', 'hard', 'expert'],
+            example: 'hard',
+          },
+          rows: { type: 'integer', minimum: 5, maximum: 50, example: 20 },
+          cols: { type: 'integer', minimum: 5, maximum: 50, example: 20 },
+          isPublic: { type: 'boolean', default: false },
+        },
+      },
+      UpdateMaze: {
+        type: 'object',
+        description: 'Any subset of these fields',
+        properties: {
+          name: { type: 'string', example: 'Renamed maze' },
+          description: { type: 'string' },
+          isPublic: { type: 'boolean' },
+        },
+      },
+      RateMaze: {
+        type: 'object',
+        required: ['rating'],
+        properties: {
+          rating: { type: 'integer', minimum: 1, maximum: 5, example: 4 },
+          comment: { type: 'string', example: 'Loved it' },
+        },
+      },
+      AdminUpdateUser: {
+        type: 'object',
+        description: 'Any subset of these fields',
+        properties: {
+          isActive: { type: 'boolean', example: true },
+          role: { type: 'string', enum: ['user', 'admin', 'moderator'], example: 'moderator' },
+        },
+      },
+      Announcement: {
+        type: 'object',
+        required: ['subject', 'message'],
+        properties: {
+          subject: { type: 'string', example: 'New season!' },
+          message: { type: 'string', example: 'Tournaments are live.' },
+          targetRole: {
+            type: 'string',
+            enum: ['all', 'user', 'admin', 'moderator'],
+            default: 'all',
+          },
+        },
+      },
+      CreateTournament: {
+        type: 'object',
+        required: ['name', 'startTime', 'endTime', 'difficulty'],
+        properties: {
+          name: { type: 'string', example: 'Weekend Cup' },
+          description: { type: 'string' },
+          startTime: { type: 'string', format: 'date-time', example: '2026-06-10T18:00:00Z' },
+          endTime: { type: 'string', format: 'date-time', example: '2026-06-12T18:00:00Z' },
+          difficulty: {
+            type: 'string',
+            enum: ['easy', 'medium', 'hard', 'expert'],
+            example: 'hard',
+          },
+          prizePool: { type: 'integer', example: 1000 },
+          maxParticipants: { type: 'integer', example: 64 },
         },
       },
       LeaderboardEntry: {

@@ -407,6 +407,48 @@ Returned (decorated) by `GET /auth/me`, `GET /users/me/stats`, and
 
 ---
 
+## Postgres-only groups (Social · Challenges · Mazes · Admin)
+
+These endpoint groups are fully implemented and **documented in Swagger** (with
+every parameter, body, and example) but require the PostgreSQL driver
+(`DB_DRIVER=postgres`) — they are inactive on the default Mongo deployment.
+Browse them interactively at [`/api-docs`](https://maze-game-api.vercel.app/api-docs).
+
+| Method | Endpoint                                         | Auth     | Summary                                            |
+| ------ | ------------------------------------------------ | -------- | -------------------------------------------------- |
+| GET    | `/api/v1/social/friends`                         | 🔒       | List accepted friends                              |
+| GET    | `/api/v1/social/friend-requests`                 | 🔒       | Incoming pending requests                          |
+| POST   | `/api/v1/social/friend-request`                  | 🔒       | Send a request (`{ friendId }`)                    |
+| PUT    | `/api/v1/social/friend-request/:id`              | 🔒       | Accept/reject (`{ action }`)                       |
+| DELETE | `/api/v1/social/friends/:id`                     | 🔒       | Remove a friend                                    |
+| GET    | `/api/v1/social/search?q=`                       | 🔒       | Search users (q ≥ 2 chars)                         |
+| GET    | `/api/v1/social/activity`                        | 🔒       | Friends' recent games                              |
+| GET    | `/api/v1/challenges/daily`                       | —        | Today's daily challenge                            |
+| POST   | `/api/v1/challenges/daily/complete`              | 🔒       | Submit result                                      |
+| GET    | `/api/v1/challenges/daily/leaderboard`           | —        | Daily leaderboard                                  |
+| GET    | `/api/v1/challenges/tournaments`                 | —        | Upcoming/active tournaments                        |
+| POST   | `/api/v1/challenges/tournaments/:id/join`        | 🔒       | Join a tournament                                  |
+| GET    | `/api/v1/challenges/tournaments/:id/leaderboard` | —        | Tournament leaderboard                             |
+| GET    | `/api/v1/mazes/custom`                           | —        | Browse public mazes (page/limit/sortBy/difficulty) |
+| POST   | `/api/v1/mazes/custom`                           | 🔒       | Create a custom maze                               |
+| GET    | `/api/v1/mazes/custom/:id`                       | —        | Get a maze                                         |
+| PUT    | `/api/v1/mazes/custom/:id`                       | 🔒       | Update your maze                                   |
+| DELETE | `/api/v1/mazes/custom/:id`                       | 🔒       | Delete your maze                                   |
+| POST   | `/api/v1/mazes/custom/:id/play`                  | —        | Increment play count                               |
+| POST   | `/api/v1/mazes/custom/:id/rate`                  | 🔒       | Rate 1–5                                           |
+| GET    | `/api/v1/mazes/my`                               | 🔒       | Your custom mazes                                  |
+| GET    | `/api/v1/admin/stats`                            | 🔒 admin | Platform stats                                     |
+| GET    | `/api/v1/admin/users`                            | 🔒 admin | List users (filterable)                            |
+| PUT    | `/api/v1/admin/users/:id`                        | 🔒 admin | Activate / change role                             |
+| DELETE | `/api/v1/admin/users/:id`                        | 🔒 admin | Delete a user                                      |
+| GET    | `/api/v1/admin/games`                            | 🔒 admin | List game sessions                                 |
+| POST   | `/api/v1/admin/announcements`                    | 🔒 admin | Email an announcement                              |
+| GET    | `/api/v1/admin/analytics`                        | 🔒 admin | DAU / modes / difficulty                           |
+| POST   | `/api/v1/admin/tournaments`                      | 🔒 admin | Create a tournament                                |
+| GET    | `/api/v1/admin/logs`                             | 🔒 admin | Recent error events                                |
+
+---
+
 ## WebSocket Events (multiplayer)
 
 Real-time multiplayer runs only on a long-lived server (`npm start` /
