@@ -2,6 +2,7 @@
   "id": "/?source=pwa",
   "name": "The Maze Game",
   "short_name": "Maze Game",
+  "author": "Son Nguyen",
   "description": "Procedurally generated, always-solvable mazes with difficulty levels, A* hints, accounts, stats, achievements, global leaderboards, and 10 themes. Free & open-source.",
   "lang": "en",
   "dir": "ltr",
