@@ -778,6 +778,50 @@ kbd {
 .action-btn:active {
   transform: translateY(0);
 }
+.action-controls.is-pre-run {
+  position: relative;
+}
+.action-controls.is-pre-run::after {
+  content: "Press Play to unlock";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--line) 90%, transparent);
+  border-radius: var(--r-btn);
+  pointer-events: none;
+}
+.action-btn.is-locked,
+.action-btn:disabled {
+  cursor: not-allowed !important;
+  pointer-events: none;
+  opacity: 0.28;
+  filter: grayscale(1);
+  transform: none !important;
+  box-shadow: none !important;
+  color: var(--muted) !important;
+  background: color-mix(in srgb, var(--muted) 6%, var(--surface-2)) !important;
+  border-color: color-mix(in srgb, var(--line) 70%, transparent) !important;
+}
+.action-btn.is-locked .btn-ico svg,
+.action-btn:disabled .btn-ico svg {
+  opacity: 0.55;
+}
+.action-btn.is-locked:hover,
+.action-btn.is-locked:active,
+.action-btn:disabled:hover,
+.action-btn:disabled:active {
+  transform: none !important;
+  box-shadow: none !important;
+  background: color-mix(in srgb, var(--muted) 6%, var(--surface-2)) !important;
+}
 /* Pause/Play icon swap (selectors specific enough to beat .btn-ico svg) */
 .action-btn .btn-ico .ico-play {
   display: none;
@@ -909,6 +953,24 @@ kbd {
   color: var(--text);
   font-size: 1.1rem;
 }
+.hint-modal-box {
+  width: 420px;
+}
+.hint-modal-text {
+  text-align: left;
+  margin-bottom: 1.5rem;
+  line-height: 1.55;
+}
+.hint-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+.hint-actions .auth-submit,
+.hint-actions .ghost-btn {
+  width: 100%;
+}
+
 #playAgain {
   width: 100%;
   font-family: var(--font-ui);

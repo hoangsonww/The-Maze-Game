@@ -163,7 +163,7 @@
           </div>
           <div class="stat-item"><span class="stat-label">Moves</span><span class="stat-value" id="moves">0</span></div>
           <div class="stat-item">
-            <span class="stat-label">Hints used</span><span class="stat-value" id="hints">0</span>
+            <span class="stat-label">Hints</span><span class="stat-value" id="hints">0 / 5</span>
           </div>
         </section>
 
@@ -384,13 +384,13 @@
                 </svg>
               </button>
             </div>
-            <p class="control-hint">Arrow keys / WASD · swipe on touch</p>
+            <p class="control-hint">Arrow keys / WASD · swipe on the maze · or tap the arrows above</p>
           </div>
 
           <div class="control-group reveal" style="--d: 4">
             <h4>Actions</h4>
             <div class="action-controls">
-              <button id="pauseGame" class="action-btn pause-btn" title="Pause (P)">
+              <button id="pauseGame" class="action-btn pause-btn" title="Pause (P)" disabled>
                 <span class="btn-ico">
                   <svg class="ico-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                     <rect x="6" y="5" width="4" height="14" rx="1.2" />
@@ -402,7 +402,7 @@
                 </span>
                 <span class="btn-label">Pause</span>
               </button>
-              <button id="useHint" class="action-btn hint-btn" title="Show Hint (H)">
+              <button id="useHint" class="action-btn hint-btn" title="Show Hint (H)" disabled>
                 <span class="btn-ico">
                   <svg
                     viewBox="0 0 24 24"
@@ -420,7 +420,7 @@
                 </span>
                 <span class="btn-label">Hint</span>
               </button>
-              <button id="regenerateMaze" class="action-btn regen-btn" title="New Maze (R)">
+              <button id="regenerateMaze" class="action-btn regen-btn" title="New Maze (R)" disabled>
                 <span class="btn-ico">
                   <svg
                     viewBox="0 0 24 24"
@@ -444,6 +444,21 @@
           </div>
         </div>
       </main>
+    </div>
+
+    <!-- Hint Confirmation Modal -->
+    <div id="hintModal" class="modal-overlay" role="dialog" aria-labelledby="hintModalTitle" aria-modal="true">
+      <div class="modal-box hint-modal-box">
+        <span class="win-badge">Hint</span>
+        <h2 id="hintModalTitle">Use a hint?</h2>
+        <p id="hintModalText" class="modal-sub hint-modal-text">
+          This lights up the next few steps toward the exit — not the whole path.
+        </p>
+        <div class="hint-actions">
+          <button id="hintConfirm" type="button" class="auth-submit">Use hint</button>
+          <button id="hintCancel" type="button" class="ghost-btn">Cancel</button>
+        </div>
+      </div>
     </div>
 
     <!-- Win Modal -->
@@ -504,16 +519,18 @@
             <h3>Controls</h3>
             <ul>
               <li><strong>Arrow keys</strong> or <strong>WASD</strong> - move</li>
-              <li><strong>Swipe</strong> - move on touch devices</li>
+              <li><strong>Swipe on the maze</strong> - move on touch devices (or use the on-screen D-pad)</li>
               <li><strong>P</strong> - pause / resume</li>
-              <li><strong>H</strong> - hint (costs points)</li>
+              <li><strong>H</strong> - hint (shows a few steps ahead; costs points; limited per run)</li>
               <li><strong>R</strong> - new maze</li>
             </ul>
           </section>
           <section>
             <h3>Scoring</h3>
             <ul>
-              <li>Base score 100, reduced by time, moves, and hints</li>
+              <li>Base score 100, reduced by time, moves, and hints used</li>
+              <li>Each hint reveals only the next few cells — not the full path</li>
+              <li>Hint allowance scales with difficulty (e.g. Medium: 5 hints max)</li>
               <li>Higher difficulty multiplies your score</li>
               <li>Compete on the global leaderboard</li>
             </ul>

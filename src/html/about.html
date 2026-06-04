@@ -585,7 +585,10 @@
           </div>
           <div class="ab-step">
             <h3>Stuck? Get a hint</h3>
-            <p>An A* hint lights the next step toward the exit - handy, but it costs you points.</p>
+            <p>
+              Press H for a short A* nudge — only the next few cells light up, not the full path. Each hint costs points
+              and you get a limited number per run (more on harder difficulties). You'll confirm before one is spent.
+            </p>
             <div class="ab-keys">
               <span class="ab-key">H</span><span class="ab-key">P&nbsp;pause</span
               ><span class="ab-key">R&nbsp;new</span>
@@ -615,7 +618,7 @@
           <div class="ab-card">
             <span class="ab-ico">💡</span>
             <h3>A* hints</h3>
-            <p>Optimal next-step guidance when you're lost, computed with A* pathfinding.</p>
+            <p>Partial-path guidance when you're lost — a few steps ahead via A*, with a per-run cap and point cost.</p>
           </div>
           <div class="ab-card">
             <span class="ab-ico">🏆</span>
@@ -635,7 +638,7 @@
           <div class="ab-card">
             <span class="ab-ico">📱</span>
             <h3>Plays anywhere</h3>
-            <p>Swipe or an on-screen D-pad on phones, keyboard on desktop. Installable as a PWA.</p>
+            <p>Swipe on the maze (or use the on-screen D-pad) on phones, keyboard on desktop. Installable as a PWA.</p>
           </div>
           <div class="ab-card">
             <span class="ab-ico">🌍</span>
@@ -688,6 +691,8 @@
                 <th>Grid</th>
                 <th>Multiplier</th>
                 <th>Hint cost</th>
+                <th>Max hints</th>
+                <th>Steps shown</th>
               </tr>
             </thead>
             <tbody>
@@ -696,24 +701,32 @@
                 <td>11 × 15</td>
                 <td class="mono">1.0×</td>
                 <td class="mono">5 pts</td>
+                <td class="mono">3</td>
+                <td class="mono">3</td>
               </tr>
               <tr>
                 <td>Medium</td>
                 <td>15 × 21</td>
                 <td class="mono">1.5×</td>
                 <td class="mono">10 pts</td>
+                <td class="mono">5</td>
+                <td class="mono">4</td>
               </tr>
               <tr>
                 <td>Hard</td>
                 <td>21 × 31</td>
                 <td class="mono">2.0×</td>
                 <td class="mono">15 pts</td>
+                <td class="mono">7</td>
+                <td class="mono">5</td>
               </tr>
               <tr>
                 <td>Expert</td>
                 <td>25 × 35</td>
                 <td class="mono">3.0×</td>
                 <td class="mono">20 pts</td>
+                <td class="mono">9</td>
+                <td class="mono">6</td>
               </tr>
             </tbody>
           </table>
@@ -785,8 +798,8 @@
           <details>
             <summary>Does it work on mobile?</summary>
             <p>
-              Fully. Swipe to move or use the on-screen D-pad, the layout stacks for small screens, and you can install
-              it as a PWA for an app-like, offline-capable experience.
+              Fully. Swipe on the maze to move (or use the on-screen D-pad), the layout stacks for small screens, and
+              you can install it as a PWA for an app-like, offline-capable experience.
             </p>
           </details>
           <details>
