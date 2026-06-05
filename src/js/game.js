@@ -102,7 +102,7 @@ function startTimer() {
     timerStarted = true;
     startTime = performance.now();
     function tick() {
-        timerEl.innerText = 'Time: ' + formatTime(performance.now() - startTime);
+        timerEl.textContent = 'Time: ' + formatTime(performance.now() - startTime);
         timerRaf = requestAnimationFrame(tick);
     }
     tick();
@@ -155,7 +155,8 @@ function checkWin() {
         cancelAnimationFrame(timerRaf);
         const elapsed = startTime ? performance.now() - startTime : 0;
 
-        localStorage.getItem('lifetimeScore') ? localStorage.setItem('lifetimeScore', parseInt(localStorage.getItem('lifetimeScore')) + 1) : localStorage.setItem('lifetimeScore', 1);
+        const currentScore = parseInt(localStorage.getItem('lifetimeScore'), 10) || 0;
+        localStorage.setItem('lifetimeScore', currentScore + 1);
 
         document.getElementById('winMessage').innerText =
             "You escaped the maze! Lifetime score: " + localStorage.getItem('lifetimeScore');
