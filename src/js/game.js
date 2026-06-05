@@ -110,6 +110,7 @@ function startTimer() {
 
 // --- Sliding movement: one press glides until a wall (or the exit) ---
 let slideInterval = null;
+let slideDir = null;
 const SLIDE_MS = 35; // smaller = faster slide
 
 function stopSliding() {
@@ -117,6 +118,7 @@ function stopSliding() {
         clearInterval(slideInterval);
         slideInterval = null;
     }
+    slideDir = null;
 }
 
 function step(dx, dy) {
@@ -132,11 +134,13 @@ function step(dx, dy) {
 
 function slide(dx, dy) {
     if (gameWon) return;
+    if (slideDir && slideDir.dx === dx && slideDir.dy === dy) return;
     startTimer();
     stopSliding();
     // Move at least one cell immediately, then keep gliding.
     if (!step(dx, dy)) return;
     if (checkWin()) return;
+    slideDir = { dx, dy };
     slideInterval = setInterval(() => {
         if (!step(dx, dy) || checkWin()) {
             stopSliding();
