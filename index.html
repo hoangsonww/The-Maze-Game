@@ -44,6 +44,7 @@
             <p id="lifetimeScore" style="font-weight: bold">Lifetime Score: 0</p>
             <p id="timer" style="font-weight: bold">Time: 0.0s</p>
             <p id="moveCounter" style="font-weight: bold">Moves: 0</p>
+            <p id="dailyBadge" style="display:none; font-weight:bold; color:#ffd700"></p>
         </header>
 
         <div class="game-container">
@@ -58,7 +59,8 @@
                 </div>
             </div>
             <button id="regenerateMaze" style="margin-top: 25px" title="Too hard? Regenerate the maze! Note that you will lose 1 point for that.">Regenerate Maze</button>
-            <button id="aboutGame" onclick="window.location.href='src/html/about.html'" style="margin-top: 25px; margin-bottom: 200px">About</button>
+            <button id="aboutGame" onclick="window.location.href='src/html/about.html'" style="margin-top: 25px">About</button>
+            <button id="dailyChallenge" style="margin-top: 25px; margin-bottom: 200px">Daily Challenge</button>
         </div>
 
         <div id="winModal" class="modal-overlay">
@@ -68,6 +70,7 @@
                 <p id="winTime" class="win-time">0.0s</p>
                 <p id="winMoves"></p>
                 <button id="playAgain">Play Again</button>
+                <button id="shareResult" style="display:none; margin-left:10px">Share Result</button>
             </div>
         </div>
 

@@ -5,6 +5,30 @@ document.getElementById('regenerateMaze').addEventListener('click', () => {
 
 document.getElementById('lifetimeScore').innerText = localStorage.getItem('lifetimeScore') ? `Lifetime Score: ${localStorage.getItem('lifetimeScore')}` : 'Lifetime Score: 0';
 
+// --- Daily Challenge ---
+const todayStr = new Date().toISOString().slice(0, 10);
+const dayNumber = Math.floor((Date.now() - new Date('2024-01-01').getTime()) / 86400000) + 1;
+const isDailyMode = new URLSearchParams(location.search).has('daily');
+const dailyKey = `dailyMaze_${todayStr}`;
+
+function seededRng(seed) {
+    let s = seed | 0;
+    return () => {
+        s = (s + 0x6D2B79F5) | 0;
+        let t = Math.imul(s ^ (s >>> 15), 1 | s);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+}
+
+function hashStr(str) {
+    let h = 0;
+    for (let i = 0; i < str.length; i++) h = (Math.imul(31, h) + str.charCodeAt(i)) | 0;
+    return h;
+}
+
+const rng = isDailyMode ? seededRng(hashStr(todayStr)) : () => Math.random();
+
 const canvas = document.getElementById('mazeCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -45,7 +69,7 @@ function carvePassagesFrom(x, y) {
         [0, -1]
     ];
 
-    directions.sort(() => Math.random() - 0.5);
+    directions.sort(() => rng() - 0.5);
 
     for (const [dx, dy] of directions) {
         const nx = x + dx * 2;
@@ -99,6 +123,24 @@ const moveCounterEl = document.getElementById('moveCounter');
 
 function formatTime(ms) {
     return (ms / 1000).toFixed(1) + 's';
+}
+
+// Daily mode init
+if (isDailyMode) {
+    document.getElementById('dailyBadge').textContent = `Daily Maze #${dayNumber}`;
+    document.getElementById('dailyBadge').style.display = 'block';
+    document.getElementById('regenerateMaze').style.display = 'none';
+    const prev = localStorage.getItem(dailyKey);
+    if (prev) {
+        const { time, moves } = JSON.parse(prev);
+        gameWon = true;
+        document.getElementById('winMessage').innerText =
+            `Already solved today! Lifetime score: ${localStorage.getItem('lifetimeScore') || 0}`;
+        document.getElementById('winTime').innerText = 'Your time: ' + formatTime(time);
+        document.getElementById('winMoves').innerText = 'Moves: ' + moves;
+        document.getElementById('shareResult').style.display = 'inline-block';
+        document.getElementById('winModal').classList.add('show');
+    }
 }
 
 function startTimer() {
@@ -171,6 +213,10 @@ function checkWin() {
             "You escaped the maze! Lifetime score: " + localStorage.getItem('lifetimeScore');
         document.getElementById('winTime').innerText = 'Your time: ' + formatTime(elapsed);
         document.getElementById('winMoves').innerText = 'Moves: ' + moveCount;
+        if (isDailyMode) {
+            localStorage.setItem(dailyKey, JSON.stringify({ time: elapsed, moves: moveCount }));
+            document.getElementById('shareResult').style.display = 'inline-block';
+        }
         document.getElementById('winModal').classList.add('show');
         return true;
     }
@@ -214,6 +260,23 @@ document.getElementById('moveUp').addEventListener('click', () => slide(0, -1));
 document.getElementById('moveDown').addEventListener('click', () => slide(0, 1));
 document.getElementById('moveLeft').addEventListener('click', () => slide(-1, 0));
 document.getElementById('moveRight').addEventListener('click', () => slide(1, 0));
+
+document.getElementById('dailyChallenge').addEventListener('click', () => {
+    location.href = location.pathname + '?daily';
+});
+
+document.getElementById('shareResult').addEventListener('click', () => {
+    const prev = localStorage.getItem(dailyKey);
+    if (!prev) return;
+    const { time, moves } = JSON.parse(prev);
+    const date = new Date(todayStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const text = `🌀 Daily Maze #${dayNumber} — ${date}\n⏱ ${formatTime(time)} · 👣 ${moves} moves\nPlay at → https://hoangsonww.github.io/The-Maze-Game/?daily`;
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('shareResult');
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = 'Share Result'; }, 2000);
+    });
+});
 
 // --- Touch / swipe support ---
 let touchStart = null;
