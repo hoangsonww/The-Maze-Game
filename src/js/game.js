@@ -134,6 +134,10 @@ function step(dx, dy) {
 function slide(dx, dy) {
     if (gameWon) return;
     if (slideState.direction && slideState.direction.dx === dx && slideState.direction.dy === dy) return;
+    if (slideState.direction && slideState.direction.dx === -dx && slideState.direction.dy === -dy) {
+        stopSliding();
+        return;
+    }
     startTimer();
     stopSliding();
     // Move at least one cell immediately, then keep gliding.
@@ -203,3 +207,26 @@ document.getElementById('moveUp').addEventListener('click', () => slide(0, -1));
 document.getElementById('moveDown').addEventListener('click', () => slide(0, 1));
 document.getElementById('moveLeft').addEventListener('click', () => slide(-1, 0));
 document.getElementById('moveRight').addEventListener('click', () => slide(1, 0));
+
+// --- Touch / swipe support ---
+let touchStart = null;
+const SWIPE_THRESHOLD = 30;
+
+window.addEventListener('touchstart', (e) => {
+    const t = e.touches[0];
+    touchStart = { x: t.clientX, y: t.clientY };
+}, { passive: true });
+
+window.addEventListener('touchend', (e) => {
+    if (!touchStart) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchStart.x;
+    const dy = t.clientY - touchStart.y;
+    touchStart = null;
+    if (Math.abs(dx) < SWIPE_THRESHOLD && Math.abs(dy) < SWIPE_THRESHOLD) return;
+    if (Math.abs(dx) >= Math.abs(dy)) {
+        slide(dx > 0 ? 1 : -1, 0);
+    } else {
+        slide(0, dy > 0 ? 1 : -1);
+    }
+}, { passive: true });
