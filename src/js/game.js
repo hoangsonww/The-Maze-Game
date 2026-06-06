@@ -109,16 +109,15 @@ function startTimer() {
 }
 
 // --- Sliding movement: one press glides until a wall (or the exit) ---
-let slideInterval = null;
-let slideDir = null;
+const slideState = { intervalId: null, direction: null };
 const SLIDE_MS = 35; // smaller = faster slide
 
 function stopSliding() {
-    if (slideInterval) {
-        clearInterval(slideInterval);
-        slideInterval = null;
+    if (slideState.intervalId) {
+        clearInterval(slideState.intervalId);
+        slideState.intervalId = null;
     }
-    slideDir = null;
+    slideState.direction = null;
 }
 
 function step(dx, dy) {
@@ -134,14 +133,14 @@ function step(dx, dy) {
 
 function slide(dx, dy) {
     if (gameWon) return;
-    if (slideDir && slideDir.dx === dx && slideDir.dy === dy) return;
+    if (slideState.direction && slideState.direction.dx === dx && slideState.direction.dy === dy) return;
     startTimer();
     stopSliding();
     // Move at least one cell immediately, then keep gliding.
     if (!step(dx, dy)) return;
     if (checkWin()) return;
-    slideDir = { dx, dy };
-    slideInterval = setInterval(() => {
+    slideState.direction = { dx, dy };
+    slideState.intervalId = setInterval(() => {
         if (!step(dx, dy) || checkWin()) {
             stopSliding();
         }
