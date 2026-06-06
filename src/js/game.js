@@ -93,6 +93,10 @@ let timerRaf = null;
 let gameWon = false;
 const timerEl = document.getElementById('timer');
 
+// --- Move counter ---
+let moveCount = 0;
+const moveCounterEl = document.getElementById('moveCounter');
+
 function formatTime(ms) {
     return (ms / 1000).toFixed(1) + 's';
 }
@@ -126,6 +130,8 @@ function step(dx, dy) {
     if (newX >= 0 && newX < cols && newY >= 0 && newY < rows && !checkCollision(newX, newY)) {
         player.x = newX;
         player.y = newY;
+        moveCount++;
+        moveCounterEl.textContent = 'Moves: ' + moveCount;
         return true;
     }
     return false;
@@ -164,6 +170,7 @@ function checkWin() {
         document.getElementById('winMessage').innerText =
             "You escaped the maze! Lifetime score: " + localStorage.getItem('lifetimeScore');
         document.getElementById('winTime').innerText = 'Your time: ' + formatTime(elapsed);
+        document.getElementById('winMoves').innerText = 'Moves: ' + moveCount;
         document.getElementById('winModal').classList.add('show');
         return true;
     }
